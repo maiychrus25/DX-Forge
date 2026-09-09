@@ -3,6 +3,10 @@ node_modules
 **/node_modules
 **/.next
 **/dist
+# tsc -b keeps its up-to-date state in .tsbuildinfo. Copying a stale one from the host while
+# excluding dist/ makes the root "prepare" build believe there is nothing to emit, so the image
+# ends up with no dist/ at all and next build cannot resolve the workspace packages.
+**/*.tsbuildinfo
 .dxforge
 .git
 docs

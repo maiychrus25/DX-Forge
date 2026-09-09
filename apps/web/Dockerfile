@@ -6,7 +6,9 @@ FROM node:22-bookworm-slim AS build
 WORKDIR /src
 COPY . .
 RUN npm ci
-RUN cd apps/web && FORGE_ADMIN_PASSWORD=build FORGE_SESSION_SECRET=build-only-secret-0000 npx next build
+# Go through the workspace script, not `npx next build`, so apps/web's "prebuild" runs too and the
+# workspace packages are compiled even if the root "prepare" was skipped.
+RUN FORGE_ADMIN_PASSWORD=build FORGE_SESSION_SECRET=build-only-secret-0000 npm run build -w @dx-forge/web
 
 # Runtime stage: only the standalone output is copied, so devDependencies and
 # the full node_modules tree from the build stage never reach this image.
