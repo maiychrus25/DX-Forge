@@ -1,6 +1,8 @@
 <p align="center">
-  <img src="docs/brand/banner.png" alt="DX-Forge" width="100%">
+  <img src="docs/brand/logo-256.png" width="120" alt="DX-Forge mark">
 </p>
+
+<h1 align="center">DX-Forge</h1>
 
 <p align="center">
   <em>Bộ biên dịch Hệ điều hành Doanh nghiệp số (DX-OS): đo tổ chức, phỏng vấn ra đặc tả, sinh kế hoạch bốn lớp, cấp phát lên hệ thống thật, kiểm chứng, viết sổ tay.</em>
@@ -39,6 +41,10 @@ Forge lấy phương pháp luận của cuốn sách mở *Xây dựng Hệ đi�
 > Forge là một CLI và một wizard mỏng; phần nặng nằm ở hệ thống đích.
 
 ## ⚙️ Đường ống
+
+<p align="center">
+  <img src="docs/brand/banner.png" alt="DX-Forge: measure → interview → plan → apply → verify → handbook" width="100%">
+</p>
 
 ```
 measure ──► interview ──► plan ──► apply ──► verify ──► handbook ──► (đo lại)
