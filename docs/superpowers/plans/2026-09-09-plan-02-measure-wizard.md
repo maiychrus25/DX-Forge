@@ -1267,7 +1267,7 @@ export function SurveyForm({ token }: { token: string }) {
 
 - [ ] **Step 6: Run, typecheck, commit**
 
-`npx vitest run apps/web/test/survey.test.ts` (6 passed); `npm run typecheck`.
+`npx vitest run apps/web/test/survey.test.ts` (5 passed); `npm run typecheck`.
 
 ```bash
 git add apps/web && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(web): anonymous survey API and one-question-per-screen survey page"
