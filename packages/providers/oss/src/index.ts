@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type { Credentials, Provider } from "@dx-forge/forge-core";
 import { identityGroup, identityRealm, identityRole } from "./keycloak.js";
+import { portalSite, storageAcl, storageTree } from "./nextcloud.js";
 
 /**
  * Builds the `oss` target provider. `creds` is accepted here (rather than only inside each
@@ -17,6 +18,9 @@ export function ossProvider(creds: Credentials): Provider {
       "identity.realm": identityRealm,
       "identity.role": identityRole,
       "identity.group": identityGroup,
+      "storage.tree": storageTree,
+      "storage.acl": storageAcl,
+      "portal.site": portalSite,
     },
   };
 }
