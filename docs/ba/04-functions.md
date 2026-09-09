@@ -10,7 +10,7 @@ Cột: Trace | Data object | Module | Function | Size | Type | Description | Pha
 | W-02 | Session | Auth | Đăng xuất | S | Basic | | P1 |
 | W-03 | Workspace | Thiết lập | Tạo / chọn thư mục làm việc `.dxforge/` | S | Basic | Một tổ chức một thư mục | P1 |
 | W-04 | Settings | Thiết lập | Cấu hình LLM provider và khoá | S | Basic | gemini/anthropic/ollama/none, nút kiểm tra | P1 |
-| W-05 | Settings | Thiết lập | Cấu hình đích (oss/gws/proteus-manifest) và `credentials_ref` | M | Basic | Không lưu giá trị bí mật | P1 |
+| W-05 | Settings | Thiết lập | Cấu hình đích (oss/gws/manifest) và `credentials_ref` | M | Basic | Không lưu giá trị bí mật | P1 |
 | W-06 | Settings | Thiết lập | Cấu hình notifier tạm cho khảo sát | S | Basic | Telegram/Mattermost | P1 |
 | W-07 | Run | Trang chủ | Thanh đường ống 6 bước, trạng thái từng bước, nút chạy | M | Advanced | Bước sau mở khi bước trước có sản phẩm | P1 |
 | W-08 | Run | Báo cáo | Xem lịch sử chạy (`runs`) và báo cáo | S | Basic | | P2 |
@@ -74,7 +74,7 @@ Cột: Trace | Data object | Module | Function | Size | Type | Description | Pha
 | A-07 | Resource | provider oss | Lớp D: Metabase dashboard, snapshot, lod_context | M | Advanced | | P2 |
 | A-08 | Resource | provider oss | Lớp I: Qdrant + ingest, workflow HITL theo agent_policy | M | Advanced | | P2 |
 | A-09 | Resource | provider gws | Drive, Sheets, Forms, Apps Script, Looker link, AppSheet guide, Telegram | L | Advanced | | P2 |
-| A-10 | Resource | provider proteus-manifest | Xuất manifest.yaml + SQL + workflows + dashboards | M | Other | Validate schema | P2 |
+| A-10 | Resource | provider manifest | Xuất manifest.yaml + SQL + workflows + dashboards | M | Other | Validate schema | P2 |
 | A-11 | Report | verify | Kiểm quy ước đặt tên (`verify --naming`) | S | Other | | P2 |
 
 ## handbook, gói ngành, CLI

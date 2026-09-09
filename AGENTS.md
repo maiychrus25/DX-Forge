@@ -61,12 +61,12 @@ the plan step explicitly says the test is wrong; if you think it is wrong, repor
 - Work on branch `develop`. Never commit to `main`. Never push unless the task says to.
 - One commit per task, message in English, Conventional Commits (`feat(scope): ...`,
   `chore: ...`, `test: ...`, `docs: ...`).
-- Commit with exactly this identity and trailer:
+- Commit with exactly this identity. **No trailers**: never add `Co-Authored-By`, `Signed-off-by`,
+  `Generated-by` or any other line naming a tool or an AI. The message is the subject plus an
+  optional body, nothing else.
 
 ```bash
-git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "<type>(<scope>): <summary>
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "<type>(<scope>): <summary>"
 ```
 
 - `git add` only the files in the task's `Files:` list plus files the task creates

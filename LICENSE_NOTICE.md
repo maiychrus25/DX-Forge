@@ -8,4 +8,4 @@ The HPDI model, the P.A.R.A layout, the 5 RÕ framework, Poka-yoke layers and th
 
 ## Compatible targets
 
-DX-Forge generates artefacts for third-party systems (Keycloak, Nextcloud, PostgreSQL, n8n, Appsmith, Metabase, Qdrant, Telegram, Mattermost, Google Workspace) and can export a plugin manifest compatible with ICTU_Proteus-os. None of their code is vendored here; see `DEPENDENCIES.md`.
+DX-Forge generates artefacts for third-party systems (Keycloak, Nextcloud, PostgreSQL, n8n, Appsmith, Metabase, Qdrant, Telegram, Mattermost, Google Workspace) and can export a plugin manifest for platforms that consume one. None of their code is vendored here; see `DEPENDENCIES.md`.

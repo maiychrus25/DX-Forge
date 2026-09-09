@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="520" viewBox="0 0 1440 520" role="img" aria-labelledby="title desc">
+<title id="title">DX-Forge · Chu trình cải tiến</title>
+<desc id="desc">Sáu bước measure, interview, plan, apply, verify, handbook. Mỗi bước sáng khi tín hiệu tới, sau đó trở lại measure. Chu kỳ chín giây.</desc>
+<defs>
+  <linearGradient id="background" x2="1" y2="1"><stop stop-color="#050810"/><stop offset="1" stop-color="#090b17"/></linearGradient>
+  <linearGradient id="panel" x2="0" y2="1"><stop stop-color="#ffffff" stop-opacity=".035"/><stop offset="1" stop-color="#ffffff" stop-opacity=".008"/></linearGradient>
+  <filter id="glow" x="-50%" y="-60%" width="200%" height="220%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#9fb0cf" stroke-opacity=".025"/></pattern>
+  <style>
+    text {font-family:Inter,system-ui,sans-serif}
+    .label {font-size:22px;font-weight:650;fill:#cbd5e1;text-anchor:middle}
+    .file {font-family:ui-monospace,Consolas,monospace;font-size:13px;fill:#758499;text-anchor:middle}
+    .step {font-size:11px;letter-spacing:2px;fill:#66758c}
+    .shell {fill:#0b111d;stroke:#263144;stroke-width:1}
+    .icon {fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.65}
+    .lit {fill:currentColor;fill-opacity:.06;stroke:currentColor;stroke-width:1.5;filter:url(#glow);opacity:0;animation:light 9s linear infinite}
+    .pulse {fill:#d5fff5;filter:url(#glow)}
+    @keyframes light {0%,8.7%{opacity:1}9.2%,100%{opacity:0}}
+    @media(prefers-reduced-motion:reduce){.lit{animation:none;opacity:.25}.pulse{display:none}}
+  </style>
+</defs>
+<rect width="1440" height="520" rx="20" fill="url(#background)"/>
+<rect width="1440" height="520" rx="20" fill="url(#grid)"/>
+<text x="54" y="60" fill="#e2e8f0" font-size="23" font-weight="700" letter-spacing="1">DX-FORGE</text>
+<text x="54" y="87" fill="#65748b" font-size="13">Chu trình cải tiến liên tục</text>
+<g fill="url(#panel)" stroke="#ffffff" stroke-opacity=".055">
+  <rect x="40" y="120" width="436" height="267" rx="16"/>
+  <rect x="502" y="120" width="436" height="267" rx="16"/>
+  <rect x="964" y="120" width="436" height="267" rx="16"/>
+</g>
+<g class="step"><text x="60" y="148">01 / KHẢO SÁT</text><text x="522" y="148">02 / TRIỂN KHAI</text><text x="984" y="148">03 / KIỂM CHỨNG</text></g>
+<g fill="none" stroke="#344156" stroke-width="1.5">
+  <path d="M237 247H281M467 247H511M697 247H741M927 247H971M1157 247H1201"/>
+  <path d="M1294 302V419Q1294 439 1274 439H164Q144 439 144 419V302" stroke-dasharray="4 6" stroke-opacity=".6"/>
+</g>
+<g fill="#45536a"><path d="m279 243 6 4-6 4zm230 0 6 4-6 4zm230 0 6 4-6 4zm230 0 6 4-6 4zm230 0 6 4-6 4z"/></g>
+<g transform="translate(51 192)" color="#22d3ee">
+  <rect class="shell" width="186" height="110" rx="13"/><rect class="lit" width="186" height="110" rx="13"/>
+  <g class="icon" transform="translate(79 17)"><path d="M1 25V13M9 25V5M17 25V17M25 25V1"/></g>
+  <text class="label" x="93" y="80">measure</text><text class="file" x="93" y="141">ResultV1</text>
+</g>
+<g transform="translate(281 192)" color="#a78bfa">
+  <rect class="shell" width="186" height="110" rx="13"/><rect class="lit" style="animation-delay:-7.5s" width="186" height="110" rx="13"/>
+  <g class="icon" transform="translate(79 17)"><path d="M2 3h24v17H13l-7 6v-6H2zM8 9h12M8 14h8"/></g>
+  <text class="label" x="93" y="80">interview</text><text class="file" x="93" y="141">intent.yaml</text>
+</g>
+<g transform="translate(511 192)" color="#fbbf24">
+  <rect class="shell" width="186" height="110" rx="13"/><rect class="lit" style="animation-delay:-6s" width="186" height="110" rx="13"/>
+  <g class="icon" transform="translate(79 17)"><path d="M5 2h19v25H5zM9 9h10M9 15h10M9 21h6"/></g>
+  <text class="label" x="93" y="80">plan</text><text class="file" x="93" y="141">plan.yaml</text>
+</g>
+<g transform="translate(741 192)" color="#34d399">
+  <rect class="shell" width="186" height="110" rx="13"/><rect class="lit" style="animation-delay:-4.5s" width="186" height="110" rx="13"/>
+  <g class="icon" transform="translate(79 17)"><path d="m4 7 8 7-8 7M16 22h10"/></g>
+  <text class="label" x="93" y="80">apply</text><text class="file" x="93" y="141">state.json</text>
+</g>
+<g transform="translate(971 192)" color="#60a5fa">
+  <rect class="shell" width="186" height="110" rx="13"/><rect class="lit" style="animation-delay:-3s" width="186" height="110" rx="13"/>
+  <g class="icon" transform="translate(79 17)"><path d="m14 1 11 4v9c0 7-11 13-11 13S3 21 3 14V5zM8 13l4 4 8-9"/></g>
+  <text class="label" x="93" y="80">verify</text><text class="file" x="93" y="141">report</text>
+</g>
+<g transform="translate(1201 192)" color="#f472b6">
+  <rect class="shell" width="186" height="110" rx="13"/><rect class="lit" style="animation-delay:-1.5s" width="186" height="110" rx="13"/>
+  <g class="icon" transform="translate(79 17)"><path d="M14 6Q8 1 2 4v21q6-3 12 1 6-4 12-1V4q-6-3-12 2v20"/></g>
+  <text class="label" x="93" y="80">handbook</text><text class="file" x="93" y="141">Resources/00. Portal</text>
+</g>
+<g class="pulse">
+  <circle r="3" opacity="0"><animate attributeName="opacity" values="0;1;0;0" keyTimes="0;.091667;.166667;1" calcMode="discrete" dur="9s" repeatCount="indefinite"/><animateMotion path="M237 247H281" keyPoints="0;0;1;1" keyTimes="0;.091667;.166667;1" calcMode="linear" dur="9s" repeatCount="indefinite"/></circle>
+  <circle r="3" opacity="0"><animate attributeName="opacity" values="0;1;0;0" keyTimes="0;.258333;.333333;1" calcMode="discrete" dur="9s" repeatCount="indefinite"/><animateMotion path="M467 247H511" keyPoints="0;0;1;1" keyTimes="0;.258333;.333333;1" calcMode="linear" dur="9s" repeatCount="indefinite"/></circle>
+  <circle r="3" opacity="0"><animate attributeName="opacity" values="0;1;0;0" keyTimes="0;.425;.5;1" calcMode="discrete" dur="9s" repeatCount="indefinite"/><animateMotion path="M697 247H741" keyPoints="0;0;1;1" keyTimes="0;.425;.5;1" calcMode="linear" dur="9s" repeatCount="indefinite"/></circle>
+  <circle r="3" opacity="0"><animate attributeName="opacity" values="0;1;0;0" keyTimes="0;.591667;.666667;1" calcMode="discrete" dur="9s" repeatCount="indefinite"/><animateMotion path="M927 247H971" keyPoints="0;0;1;1" keyTimes="0;.591667;.666667;1" calcMode="linear" dur="9s" repeatCount="indefinite"/></circle>
+  <circle r="3" opacity="0"><animate attributeName="opacity" values="0;1;0;0" keyTimes="0;.758333;.833333;1" calcMode="discrete" dur="9s" repeatCount="indefinite"/><animateMotion path="M1157 247H1201" keyPoints="0;0;1;1" keyTimes="0;.758333;.833333;1" calcMode="linear" dur="9s" repeatCount="indefinite"/></circle>
+  <circle r="3" opacity="0"><animate attributeName="opacity" values="0;1;1" keyTimes="0;.925;1" calcMode="discrete" dur="9s" repeatCount="indefinite"/><animateMotion path="M1294 302V419Q1294 439 1274 439H164Q144 439 144 419V302" keyPoints="0;0;1" keyTimes="0;.925;1" calcMode="linear" dur="9s" repeatCount="indefinite"/></circle>
+</g>
+<text x="720" y="478" text-anchor="middle" font-size="12" fill="#62728a" letter-spacing="1">ĐO LƯỜNG LẠI · TIẾP TỤC CẢI TIẾN</text>
+</svg>

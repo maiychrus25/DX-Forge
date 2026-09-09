@@ -13,7 +13,7 @@
 
 Hơn 900.000 SME Việt Nam chịu áp lực chuyển đổi số nhưng phần lớn đi sai thứ tự: mua phần mềm trước, kỷ luật vận hành sau. Sách "Xây dựng Hệ điều hành Doanh nghiệp số" đưa ra mô hình HPDI và một "Trạm thực hành DX-Lab" mà doanh nghiệp tự lắp ráp bằng công cụ phổ thông: cây thư mục P.A.R.A, biểu mẫu có rào chắn, bảng tính phẳng, kịch bản tự động, dashboard, trợ lý AI. Sách hướng dẫn từng bước bằng tay; ban tổ chức OLP 2026 yêu cầu sinh viên dựng DX-Lab bằng phần mềm nguồn mở.
 
-Cả hai đường đều gặp một nút thắt: **lắp ráp thủ công**. Doanh nghiệp phải tự tạo hàng chục thư mục, phân quyền, biểu mẫu, quy tắc, workflow; làm sai thứ tự (bật AI khi chưa có quy trình) không ai chặn; đổi công cụ là làm lại từ đầu. Các nền tảng nguồn mở tích hợp (trong đó có ICTU_Proteus-os cùng trường) giải quyết bằng cách cho doanh nghiệp một nền tảng cài sẵn, nhưng vẫn là "cài rồi tự cấu hình", không đo trước, không sinh theo tổ chức.
+Cả hai đường đều gặp một nút thắt: **lắp ráp thủ công**. Doanh nghiệp phải tự tạo hàng chục thư mục, phân quyền, biểu mẫu, quy tắc, workflow; làm sai thứ tự (bật AI khi chưa có quy trình) không ai chặn; đổi công cụ là làm lại từ đầu. Các nền tảng nguồn mở tích hợp giải quyết bằng cách cho doanh nghiệp một nền tảng cài sẵn, nhưng vẫn là "cài rồi tự cấu hình", không đo trước, không sinh theo tổ chức.
 
 ## 2. Vấn đề nghiệp vụ
 
@@ -47,7 +47,7 @@ DX-Forge là bộ biên dịch: **đo → phỏng vấn → lập kế hoạch �
 - Giai đoạn `measure` (module DX-Pulse): khảo sát DTI 360° ba tầng, ánh xạ HPDI, radar, hình dạng, kê đơn AI có fallback, câu đối chất, so sánh vòng đo.
 - `interview`: AI hỏi đáp ra `intent.yaml`; có form thay thế khi không có AI.
 - `plan`: engine luật + gói ngành + AI đề xuất → `plan.yaml` bốn lớp H-P-D-I với lý do, cổng trưởng thành, validator.
-- `apply`/`verify`/`destroy`: provider oss (Keycloak, Nextcloud, Postgres, n8n, Appsmith, Metabase, Qdrant, Telegram/Mattermost), provider gws (Drive, Sheets, Forms, Apps Script, Looker Studio, AppSheet hướng dẫn, Telegram), đích phụ xuất manifest theo chuẩn plugin Proteus; state và diff; dry-run.
+- `apply`/`verify`/`destroy`: provider oss (Keycloak, Nextcloud, Postgres, n8n, Appsmith, Metabase, Qdrant, Telegram/Mattermost), provider gws (Drive, Sheets, Forms, Apps Script, Looker Studio, AppSheet hướng dẫn, Telegram), đích phụ xuất manifest plugin; state và diff; dry-run.
 - `handbook`: sổ tay nghiệp vụ số sinh từ plan, đẩy vào Resources.
 - Sinh chính sách tác tử AI (whitelist, kênh duyệt, hạn duyệt) và workflow HITL trên đích.
 - Gói ngành: `packs/core` (offboarding, audit tên), `packs/dx-ticket` (mẫu), khung đóng góp gói.
@@ -81,7 +81,7 @@ DX-Forge là bộ biên dịch: **đo → phỏng vấn → lập kế hoạch �
 | BR-04 | Bộ kiểm tra chặn kế hoạch sai trật tự trưởng thành hoặc vi phạm luật (một A, ≤ 5 trường bắt buộc, Resources chỉ đọc, PII che, HITL) | P3 | Bắt buộc |
 | BR-05 | Cấp phát tự động lên đích nguồn mở, kiểm chứng được, chạy lại không tạo trùng, huỷ sạch | P2 | Bắt buộc |
 | BR-06 | Cùng intent cấp phát được lên Google Workspace (phần có API), phần không có API sinh hướng dẫn | P4 | Cao |
-| BR-07 | Xuất được gói cho nền tảng khác (manifest Proteus) để chứng minh Forge độc lập với đích | P4 | Trung bình |
+| BR-07 | Xuất được gói cho nền tảng khác (manifest plugin) để chứng minh Forge độc lập với đích | P4 | Trung bình |
 | BR-08 | Sổ tay nghiệp vụ số sinh tự động cho hệ thống vừa cấp phát, nằm trong Resources của đích | P5 | Cao |
 | BR-09 | AI chỉ đề xuất và giải thích; bộ kiểm tra luật đứng sau AI; không có AI vẫn chạy trọn đường ống | P3 | Bắt buộc |
 | BR-10 | Hệ thống sinh ra có chính sách tác tử: hành động trong whitelist, lệnh ghi phải có người duyệt trên kênh chat | P3 | Cao |
@@ -117,7 +117,7 @@ DX-Forge là bộ biên dịch: **đo → phỏng vấn → lập kế hoạch �
 | 30/09/2026 | v0.1.0: measure, plan (luật), apply oss lớp H (Keycloak, Nextcloud P.A.R.A, Telegram), verify, wizard 4 màn; nộp ICTU |
 | 10/10/2026 | Chung kết ICTU |
 | 14/10/2026 | provider oss lớp P + D với gói dx-ticket; AI interview/plan; handbook |
-| 11/11/2026 | provider gws; lớp I (RAG, agent_policy); đích proteus-manifest |
+| 11/11/2026 | provider gws; lớp I (RAG, agent_policy); đích manifest |
 | 25/11/2026 | Điều chỉnh theo đề chính thức; gói ngành thứ hai; wizard hoàn thiện |
 | 02/12/2026 | v1.0.0, PoF, video, demo công khai |
 | 07–10/12/2026 | Chấm kho mã và chung kết OLP |

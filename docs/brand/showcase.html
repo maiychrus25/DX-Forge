@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DX-Forge — Logo Design Exploration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            overflow-x: hidden;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        /* Subtle grain texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Logo hover effects */
+        .logo-card {
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .logo-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .logo-canvas {
+            position: relative;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Aura effect on hover */
+        .logo-aura {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: scale(0.5);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: blur(40px);
+            pointer-events: none;
+        }
+
+        .logo-card:hover .logo-aura {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Divider animation */
+        .divider-line {
+            width: 0;
+            height: 1px;
+            background: #1A1A1A;
+            opacity: 0.2;
+            transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .logo-card:hover .divider-line {
+            width: 100%;
+        }
+
+        /* Showcase image effects */
+        .showcase-img {
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .showcase-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        }
+
+        /* Typography refinements */
+        .tracking-ultra-wide {
+            letter-spacing: 0.2em;
+        }
+
+        .text-balance {
+            text-wrap: balance;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const Logo1 = () => (
+<svg viewBox="0 0 100 100" className="w-full h-full" style={{color:"#0F172A"}}>
+  <g fill="currentColor">
+    <rect x="22" y="68" width="56" height="10" rx="5"/>
+    <rect x="22" y="54" width="44" height="10" rx="5"/>
+    <rect x="22" y="40" width="32" height="10" rx="5"/>
+    <rect x="22" y="26" width="20" height="10" rx="5"/>
+  </g>
+</svg>
+);
+
+const Logo2 = () => (
+<svg viewBox="0 0 100 100" className="w-full h-full" style={{color:"#0F172A"}}>
+  <g fill="currentColor">
+    <circle cx="50.00" cy="22.00" r="6"/>
+    <circle cx="74.25" cy="36.00" r="3.5"/>
+    <circle cx="74.25" cy="64.00" r="3.5"/>
+    <circle cx="50.00" cy="78.00" r="3.5"/>
+    <circle cx="25.75" cy="64.00" r="3.5"/>
+    <circle cx="25.75" cy="36.00" r="3.5"/>
+  </g>
+</svg>
+);
+
+const Logo3 = () => (
+<svg viewBox="0 0 100 100" className="w-full h-full" style={{color:"#0F172A"}}>
+  <g fill="currentColor">
+    <path d="M 28 28 L 32.68 28 L 37.30 36 L 28 36 A 4 4 0 0 1 28 28 Z"/>
+    <path d="M 41.92 28 L 72 28 A 4 4 0 0 1 72 36 L 46.54 36 Z"/>
+    <path d="M 28 42 L 40.76 42 L 45.38 50 L 28 50 A 4 4 0 0 1 28 42 Z"/>
+    <path d="M 50.00 42 L 72 42 A 4 4 0 0 1 72 50 L 54.62 50 Z"/>
+    <path d="M 28 56 L 48.85 56 L 53.46 64 L 28 64 A 4 4 0 0 1 28 56 Z"/>
+    <path d="M 58.08 56 L 72 56 A 4 4 0 0 1 72 64 L 62.70 64 Z"/>
+    <path d="M 28 70 L 56.93 70 L 61.55 78 L 28 78 A 4 4 0 0 1 28 70 Z"/>
+    <path d="M 66.17 70 L 72 70 A 4 4 0 0 1 72 78 L 70.78 78 Z"/>
+  </g>
+</svg>
+);
+
+const Logo4 = () => (
+<svg viewBox="0 0 100 100" className="w-full h-full" style={{color:"#0F172A"}}>
+  <g fill="currentColor">
+    <rect x="28" y="22" width="10" height="56" rx="3"/>
+    <rect x="28" y="22" width="44" height="10" rx="3"/>
+    <rect x="28" y="44" width="32" height="10" rx="3"/>
+    <rect x="52" y="66" width="20" height="10" rx="3" opacity="0.45"/>
+  </g>
+</svg>
+);
+
+const Logo5 = () => (
+<svg viewBox="0 0 100 100" className="w-full h-full" style={{color:"#0F172A"}}>
+  <g fill="currentColor">
+    <circle cx="18" cy="32" r="3"/>
+    <circle cx="28" cy="46" r="3.5"/>
+    <circle cx="16" cy="60" r="2.5"/>
+    <circle cx="26" cy="70" r="3"/>
+    <rect x="42" y="24" width="12" height="52" rx="6"/>
+    <rect x="64" y="31" width="20" height="6" rx="3"/>
+    <rect x="64" y="43" width="20" height="6" rx="3"/>
+    <rect x="64" y="55" width="20" height="6" rx="3"/>
+    <rect x="64" y="67" width="20" height="6" rx="3"/>
+  </g>
+</svg>
+);
+
+const Logo6 = () => (
+<svg viewBox="0 0 100 100" className="w-full h-full" style={{color:"#0F172A"}}>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <path d="M 75.98 35 A 30 30 0 1 1 50 20"/>
+  </g>
+  <g fill="currentColor">
+    <circle cx="50" cy="20" r="4.5"/>
+    <polygon points="50,39 61,50 50,61 39,50"/>
+  </g>
+</svg>
+);
+
+        const LogoShowcase = () => {
+            const logos = [
+                { Component: Logo1, title: "Ziggurat", subtitle: "PURE GEOMETRY \u00b7 FOUR LAYERS", philosophy: "Four rounded bars stacked bottom-up, each shorter than the one below: H (Infrastructure) is the widest foundation, I (Intelligence) the narrowest crown. Left-aligned so the silhouette reads as growth, not a monument. The order P \u2192 D \u2192 I of the DX-OS method is literally the shape." },
+                { Component: Logo2, title: "Cycle", subtitle: "DOT MATRIX \u00b7 SIX STAGES", philosophy: "Six dots on an empty ring: measure, interview, plan, apply, verify, handbook. The first stage is heavier because everything starts with measuring; the hollow centre is the organisation the pipeline keeps circling back to (re-measure)." },
+                { Component: Logo3, title: "Strike", subtitle: "LINE SYSTEM \u00b7 THE HAMMER", philosophy: "Four heavy horizontal strokes are the layers; a single diagonal cut of negative space runs through them like one hammer blow on the anvil. The forge does not add material, it shapes what is already there." },
+                { Component: Logo4, title: "Forge F", subtitle: "LETTER \u00b7 GATED LAYER", philosophy: "A geometric F built from three layer bars on one stem, plus a fourth bar that is not attached yet. That detached bar is the Intelligence layer: present in every plan, applied only when the organisation's maturity gate opens. The letter and the method are the same drawing." },
+                { Component: Logo5, title: "Compile", subtitle: "DOTS + GEOMETRY \u00b7 INPUT TO OUTPUT", philosophy: "Scattered dots on the left are the organisation as it is: people, habits, spreadsheets. They pass through one solid bar, the compiler, and come out as four aligned layers. Assembly line in one glance: chaos, forge, order." },
+                { Component: Logo6, title: "Diamond Loop", subtitle: "LINE + GEOMETRY \u00b7 THE TARGET SHAPE", philosophy: "An open ring with an arrowhead is the measure-again loop; the solid diamond in the centre is the book's ideal radar shape, kim c\u01b0\u01a1ng, where H is small and P, D, I are balanced. Every run of DX-Forge is one lap toward the diamond." }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col items-center py-20 px-6">
+
+                    {/* Header */}
+                    <div className="text-center mb-20 max-w-3xl">
+                        <h1 className="text-6xl md:text-7xl font-extralight tracking-wider mb-6">
+                            DX-Forge
+                        </h1>
+                        <p className="font-mono text-xs opacity-40 uppercase tracking-ultra-wide mb-8">
+                            A compiler for the digital enterprise OS · six explorations
+                        </p>
+                        <div className="w-12 h-[1px] bg-[#1A1A1A] mx-auto opacity-30"></div>
+                    </div>
+
+                    {/* Logo Grid */}
+                    <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-32">
+                        {logos.map((logo, index) => (
+                            <div key={index} className="flex flex-col items-center logo-card cursor-pointer">
+
+                                {/* Logo Canvas */}
+                                <div className="w-64 h-64 mb-10 flex items-center justify-center relative">
+                                    <div className="logo-aura"></div>
+                                    <div className="w-32 h-32 relative z-10 logo-canvas">
+                                        <logo.Component />
+                                    </div>
+                                </div>
+
+                                {/* Text Description */}
+                                <div className="text-center w-full px-4">
+                                    <h2 className="text-xl font-medium tracking-wider mb-2 uppercase">
+                                        {logo.title}
+                                    </h2>
+                                    <h3 className="text-xs font-mono opacity-50 tracking-widest mb-6">
+                                        {logo.subtitle}
+                                    </h3>
+                                    <p className="text-sm leading-relaxed opacity-70 text-left font-light text-balance">
+                                        {logo.philosophy}
+                                    </p>
+                                </div>
+
+                                {/* Bottom Divider */}
+                                <div className="divider-line mt-8 mx-auto"></div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Showcase Images Section */}
+                    
+
+                    {/* Footer */}
+                    <div className="mt-32 max-w-2xl text-center">
+                        <p className="font-mono text-xs opacity-40 uppercase tracking-ultra-wide leading-loose">
+                            Generated with Logo Generator<br/>
+                            2026
+                        </p>
+                    </div>
+
+                </div>
+            );
+        };
+
+        ReactDOM.render(<LogoShowcase />, document.getElementById('root'));
+    </script>
+
+</body>
+</html>

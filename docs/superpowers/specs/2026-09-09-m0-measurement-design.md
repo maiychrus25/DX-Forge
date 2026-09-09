@@ -8,7 +8,7 @@ Ngày: 2026-09-09. Trạng thái: đã duyệt qua thảo luận, chờ người
 
 - Cuộc thi: "Phát triển phần mềm mã nguồn mở tích hợp AI 2026" (Khoa CNTT, ICTU). Nộp kho mã 01/07–30/09/2026, chấm 01–08/10, chung kết 10/10/2026. Bảng điểm: 50 điểm PoF (chấm trước) + 50 điểm sản phẩm (nguyên gốc 10, hoàn thiện 10, thân thiện 10, tích hợp AI 10, trình diễn 10).
 - Đường dài: OLP PMNM quốc gia tháng 12/2026, chủ đề "Xây dựng Hệ điều hành Doanh nghiệp số (DX-OS) dựa trên kiến trúc Open-Core", đề chính thức ra tháng 11. M0 là module đầu tiên của nền tảng và là nội dung chính của ảnh chụp v0.1.0 nộp ICTU 30/09.
-- Sản phẩm tham chiếu: ICTU_Proteus-os là nền tảng vận hành; DX-Forge là bộ biên dịch sinh ra nền tảng. Phần đo lường này Proteus không có.
+- Sản phẩm tham chiếu: các nền tảng vận hành cài sẵn; DX-Forge là bộ biên dịch sinh ra nền tảng. Phần đo lường này các nền tảng đó không có.
 - Góc khác biệt của DX-Pulse: số hoá Phần I của sách "Xây dựng Hệ điều hành Doanh nghiệp số: Từ Tư duy đến Hành động" (TS. Tạ Tuấn Anh, FDS, CC BY 4.0) thành công cụ "bắt mạch" tổ chức, AI kê đơn lộ trình, sinh bộ kỷ luật P.A.R.A/Poka-yoke. Nhỏ, chạy trên 1 container, cài 5 phút.
 - Ghi công: mọi nơi dùng phương pháp luận của sách phải ghi nguồn theo CC BY 4.0 (README, LICENSE_NOTICE, màn hình "Về DX-Pulse").
 
@@ -215,7 +215,7 @@ DESIGN.md tạo trước khi làm UI: token màu sáng/tối, chữ, khoảng c�
 
 - Không có bộ câu hỏi QĐ 1567 gốc → v1 tự soạn, ghi rõ; thay JSON khi có.
 - Tiếng Việt của Ollama 7B yếu → demo chính dùng Gemini/Anthropic, Ollama là minh chứng nguồn mở.
-- Giám khảo so với Proteus về độ "to" → trình bày bằng bảng đối chiếu: Proteus không đo được gì, DX-Pulse là bước 0 bắt buộc trước mọi DX-Lab; M0 chạy được trên profile `core`.
+- Giám khảo so với nền tảng vận hành về độ "to" → trình bày bằng bảng đối chiếu: nền tảng không đo được gì, DX-Pulse là bước 0 bắt buộc trước mọi DX-Lab; M0 chạy được trên profile `core`.
 - Quỹ giờ đội sinh viên → khối 5 (lịch sử) và askReport là hai thứ cắt đầu tiên nếu trễ.
 
 ## 13. Giao diện với các giai đoạn khác

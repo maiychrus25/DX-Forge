@@ -5,7 +5,7 @@ import { z } from "zod";
 
 export const Layer = z.enum(["H", "P", "D", "I"]);
 export type Layer = z.infer<typeof Layer>;
-export const TargetKind = z.enum(["oss", "gws", "proteus-manifest"]);
+export const TargetKind = z.enum(["oss", "gws", "manifest"]);
 export type TargetKind = z.infer<typeof TargetKind>;
 export const ShapeName = z.enum(["spear", "kite", "illusion", "diamond", "transitional"]);
 export type ShapeName = z.infer<typeof ShapeName>;

@@ -11,13 +11,13 @@
 **Spec:** `docs/superpowers/specs/2026-09-09-dx-forge-design.md` (master), `docs/superpowers/specs/2026-09-09-forge-core-oss-provider-design.md` (§1 forge-core), `docs/superpowers/specs/2026-09-09-m0-measurement-design.md` (§5 engine). SRS: `docs/SRS.md` (FR-M0-*, FR-P-01..06, FR-C).
 
 **Plan series (this is 01):**
-01 core engine + CLI plan (this file) → 02 M0 measurement wizard (Next.js, Prisma/SQLite, survey, radar, P.A.R.A kit) → 03 AI layer + interview + handbook → 04 provider oss layer H + apply/state/verify/destroy → 05 provider oss layers P/D/I → 06 wizard plan/apply/verify screens → 07 provider gws → 08 proteus-manifest + PoF release.
+01 core engine + CLI plan (this file) → 02 M0 measurement wizard (Next.js, Prisma/SQLite, survey, radar, P.A.R.A kit) → 03 AI layer + interview + handbook → 04 provider oss layer H + apply/state/verify/destroy → 05 provider oss layers P/D/I → 06 wizard plan/apply/verify screens → 07 provider gws → 08 manifest + PoF release.
 
 ## Global Constraints
 
 - License `AGPL-3.0-or-later`; first line of every `.ts`, `.js`, `.sh`, `.sql` file is `// SPDX-License-Identifier: AGPL-3.0-or-later` (`# ...` for `.sh`/`.yaml` that we author, `-- ...` for `.sql`).
 - Code, comments, tests, commit messages in English. Only strings shown to end users (questionnaire text, prescriptions, CLI messages to the operator) are Vietnamese.
-- Commit author `maiychrus <ninhkhuongpl7@gmail.com>`; every commit ends with the trailer `Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`. Use: `git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit`.
+- Commit author `maiychrus <ninhkhuongpl7@gmail.com>`; no trailers of any kind. Use: `git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit`.
 - Work on branch `develop`; `main` only receives tagged merges.
 - Never write credentials into intent/plan/state; `target.credentials_ref` is an environment-variable name only.
 - Validator rules cannot be disabled by any flag; AI (later plan) runs before the validator, never after.
@@ -190,7 +190,7 @@ The HPDI model, the P.A.R.A layout, the 5 RÕ framework, Poka-yoke layers and th
 
 ## Compatible targets
 
-DX-Forge generates artefacts for third-party systems (Keycloak, Nextcloud, PostgreSQL, n8n, Appsmith, Metabase, Qdrant, Telegram, Mattermost, Google Workspace) and can export a plugin manifest compatible with ICTU_Proteus-os. None of their code is vendored here; see `DEPENDENCIES.md`.
+DX-Forge generates artefacts for third-party systems (Keycloak, Nextcloud, PostgreSQL, n8n, Appsmith, Metabase, Qdrant, Telegram, Mattermost, Google Workspace) and can export a plugin manifest for platforms that consume one. None of their code is vendored here; see `DEPENDENCIES.md`.
 ```
 
 `README.md`:
@@ -260,9 +260,7 @@ Expected: `1 passed`.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add -A && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "chore: bootstrap npm workspaces, vitest, license and notice
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add -A && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "chore: bootstrap npm workspaces, vitest, license and notice"
 ```
 
 ---
@@ -478,9 +476,7 @@ Expected: 5 passed. If a tier count is off, adjust `tiers` arrays (never the 15�
 - [ ] **Step 8: Commit**
 
 ```bash
-git add packages/hpdi-engine && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(hpdi-engine): add types, questionnaire schema and v1 questionnaire
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add packages/hpdi-engine && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(hpdi-engine): add types, questionnaire schema and v1 questionnaire"
 ```
 
 ---
@@ -682,9 +678,7 @@ Expected: 9 passed.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add packages/hpdi-engine && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(hpdi-engine): score pillars by tier with discrepancy and supp coefficients
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add packages/hpdi-engine && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(hpdi-engine): score pillars by tier with discrepancy and supp coefficients"
 ```
 
 ---
@@ -922,9 +916,7 @@ In `docs/superpowers/specs/2026-09-09-m0-measurement-design.md` §5.3 replace th
 - [ ] **Step 8: Commit**
 
 ```bash
-git add -A && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(hpdi-engine): map DTI to HPDI, classify shape, rule-based prescription, compute()
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add -A && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(hpdi-engine): map DTI to HPDI, classify shape, rule-based prescription, compute()"
 ```
 
 ---
@@ -1099,7 +1091,7 @@ import { z } from "zod";
 
 export const Layer = z.enum(["H", "P", "D", "I"]);
 export type Layer = z.infer<typeof Layer>;
-export const TargetKind = z.enum(["oss", "gws", "proteus-manifest"]);
+export const TargetKind = z.enum(["oss", "gws", "manifest"]);
 export type TargetKind = z.infer<typeof TargetKind>;
 export const ShapeName = z.enum(["spear", "kite", "illusion", "diamond", "transitional"]);
 export type ShapeName = z.infer<typeof ShapeName>;
@@ -1332,9 +1324,7 @@ Expected: 12 passed; no type errors.
 - [ ] **Step 7: Commit**
 
 ```bash
-git add examples packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): add IntentV1, PlanV1, StateV1 schemas, typed specs and checksum
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add examples packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): add IntentV1, PlanV1, StateV1 schemas, typed specs and checksum"
 ```
 
 ---
@@ -1658,9 +1648,7 @@ Expected: 7 passed.
 - [ ] **Step 7: Commit**
 
 ```bash
-git add packs packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): pack template renderer and loader with core and dx-ticket packs
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add packs packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): pack template renderer and loader with core and dx-ticket packs"
 ```
 
 ---
@@ -1945,9 +1933,7 @@ Expected: 8 passed; a snapshot file `test/__snapshots__/planner.test.ts.snap` is
 - [ ] **Step 6: Commit**
 
 ```bash
-git add packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): planner builds H/P/D/I plan from intent, packs and rules
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): planner builds H/P/D/I plan from intent, packs and rules"
 ```
 
 ---
@@ -2294,9 +2280,7 @@ Expected: all passed (validator file: 20 tests).
 - [ ] **Step 7: Commit**
 
 ```bash
-git add packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): validator with maturity gate and six rules, compile()
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): validator with maturity gate and six rules, compile()"
 ```
 
 ---
@@ -2493,9 +2477,7 @@ Run: `npx vitest run packages/forge-core && npx tsc -p packages/forge-core --noE
 Expected: all passed.
 
 ```bash
-git add packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): topological apply order and plan/state differ
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add packages/forge-core && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(forge-core): topological apply order and plan/state differ"
 ```
 
 ---
@@ -2784,9 +2766,7 @@ Expected: all tests pass (CLI tests spawn tsx, allow ~10 s); typecheck clean.
 - [ ] **Step 7: Commit**
 
 ```bash
-git add -A && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(cli): dxforge plan, packs list and explain commands
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add -A && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(cli): dxforge plan, packs list and explain commands"
 ```
 
 ---
@@ -2932,9 +2912,7 @@ npm ci && npm run typecheck && npm test && grep -rL "SPDX-License-Identifier" --
 Expected: tests pass, typecheck clean, the grep prints nothing.
 
 ```bash
-git add -A && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "chore: add CI workflow, issue and PR templates, PoF documents and changelog
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+git add -A && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "chore: add CI workflow, issue and PR templates, PoF documents and changelog"
 ```
 
 ---
@@ -2945,7 +2923,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - M0 spec §5.1–5.5 (questionnaire schema, scoring, mapping, shapes, prescription, golden tests): Tasks 2–4. §5.1 "≈30–36 câu, mỗi tầng 15–20": asserted by test. §5.2 weights, evidence weighting, discrepancy threshold, supp minimum: Task 3. §5.5 four goldens: Task 4.
 - forge-core spec §1.1 schemas: Task 5 (maturity optional → `unmeasured` handled in Task 8). §1.2 planner steps 1 (template) and 2 (rules): Tasks 6–7; step 3 (AI patches) is plan 03 and has its insertion point named in `compile.ts`. §1.3 validator table, all seven rows: Task 8. §1.4 order H→P→D→I, checksum skip/update/create, `--prune` destroy: Task 9 (the apply loop, resume and `--dry-run` printing belong to plan 04 with the first provider). §1.5 verify: `Check` type in Task 5; adapters are plan 04.
 - Master spec §3.1/3.2 intent and plan shapes, resource types by layer: Tasks 5–7. §4 layout `packages/forge-core`, `packages/hpdi-engine`, `packs/`, `apps/cli`: Task 1. §6 CLI `plan`, `packs list`: Task 10; `explain` added as the "AI giải thích" fallback. §7 PoF (license, SPDX, notice, DEPENDENCIES, BUILDING, CHANGELOG, templates, CI): Tasks 1 and 11. §7 tests "validator 20 ca", "hpdi golden", "planner snapshot", "differ": Tasks 4, 7, 8, 9.
-- Not in this plan (by design, see series): wizard, Prisma, survey UI, AI adapters, providers, handbook, gws, proteus-manifest, Playwright, compose.
+- Not in this plan (by design, see series): wizard, Prisma, survey UI, AI adapters, providers, handbook, gws, manifest, Playwright, compose.
 
 **Placeholder scan:** no TBD/TODO; every code step has full code; the only deferred items are marked `ponytail:` with the plan number that picks them up.
 
