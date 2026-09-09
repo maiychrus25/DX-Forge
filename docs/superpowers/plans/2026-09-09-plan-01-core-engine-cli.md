@@ -1940,7 +1940,7 @@ export * from "./planner/index.js";
 - [ ] **Step 5: Run, inspect the snapshot, typecheck**
 
 Run: `npx vitest run packages/forge-core/test/planner.test.ts && npx tsc -p packages/forge-core --noEmit`
-Expected: 8 passed; a snapshot file `test/__snapshots__/planner.test.ts.snap` is written. Open it and confirm the plan has 17 H + 8 P + 6 D + 3 I = 34 resources.
+Expected: 8 passed; a snapshot file `test/__snapshots__/planner.test.ts.snap` is written. Open it and confirm the plan has 16 H + 8 P + 6 D + 3 I = 33 resources.
 
 - [ ] **Step 6: Commit**
 
