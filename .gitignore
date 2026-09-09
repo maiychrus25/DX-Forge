@@ -7,3 +7,7 @@ plan.yaml
 __pycache__/
 *.pyc
 artifacts/
+.next/
+playwright-report/
+test-results/
+apps/web/next-env.d.ts
