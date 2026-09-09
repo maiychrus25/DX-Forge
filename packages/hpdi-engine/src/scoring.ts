@@ -44,36 +44,44 @@ function mean(xs: number[]): number {
 }
 
 /**
- * Pillar score per tier = mean of that tier's normalised answers.
- * Merged = tier-weighted average (M0 spec §5.2); when staff has data in this pillar, executive/manager
+ * Score per tier = mean of that tier's normalised answers over `questions`.
+ * Merged = tier-weighted average (M0 spec §5.2); when staff has data in this set, executive/manager
  * means used for merging exclude `weightEvidence` questions so hands-on evidence is only counted
- * through staff. The staff-has-data check is scoped per pillar, not global: a staff response with no
- * answers in a given pillar must not strip evidence questions from executive/manager in that pillar.
+ * through staff. The staff-has-data check is scoped to `questions`: a staff response with no answers
+ * in this set must not strip evidence questions from executive/manager here.
  */
+export function mergeQuestions(
+  questions: Question[],
+  responses: Response[],
+): { byTier: Partial<Record<Tier, number>>; merged: number; discrepancy: number } {
+  const defined = (v: number | undefined): v is number => v !== undefined;
+  const staffHasData = questions.some((x) => tierMean(x, responses, "staff") !== undefined);
+  const byTier: Partial<Record<Tier, number>> = {};
+  const forMerge: Partial<Record<Tier, number>> = {};
+  for (const tier of TIERS) {
+    const all = questions.map((x) => tierMean(x, responses, tier)).filter(defined);
+    if (all.length === 0) continue;
+    byTier[tier] = mean(all);
+    const nonEvidence =
+      tier !== "staff" && staffHasData
+        ? questions.filter((x) => !x.weightEvidence).map((x) => tierMean(x, responses, tier)).filter(defined)
+        : all;
+    forMerge[tier] = nonEvidence.length > 0 ? mean(nonEvidence) : byTier[tier]!;
+  }
+  const present = Object.values(byTier);
+  return {
+    byTier,
+    merged: weightedMerge(forMerge),
+    discrepancy: present.length > 1 ? Math.max(...present) - Math.min(...present) : 0,
+  };
+}
+
+/** Pillar score per tier/merged/discrepancy, one call to `mergeQuestions` per pillar's scale questions. */
 export function scorePillars(q: Questionnaire, responses: Response[]): ResultV1["pillars"] {
   const out = {} as ResultV1["pillars"];
-  const defined = (v: number | undefined): v is number => v !== undefined;
   for (const pillar of PILLARS) {
     const questions = q.questions.filter((x) => x.pillar === pillar && x.type !== "supp");
-    const staffHasData = questions.some((x) => tierMean(x, responses, "staff") !== undefined);
-    const byTier: Partial<Record<Tier, number>> = {};
-    const forMerge: Partial<Record<Tier, number>> = {};
-    for (const tier of TIERS) {
-      const all = questions.map((x) => tierMean(x, responses, tier)).filter(defined);
-      if (all.length === 0) continue;
-      byTier[tier] = mean(all);
-      const nonEvidence =
-        tier !== "staff" && staffHasData
-          ? questions.filter((x) => !x.weightEvidence).map((x) => tierMean(x, responses, tier)).filter(defined)
-          : all;
-      forMerge[tier] = nonEvidence.length > 0 ? mean(nonEvidence) : byTier[tier]!;
-    }
-    const present = Object.values(byTier);
-    out[pillar] = {
-      byTier,
-      merged: weightedMerge(forMerge),
-      discrepancy: present.length > 1 ? Math.max(...present) - Math.min(...present) : 0,
-    };
+    out[pillar] = mergeQuestions(questions, responses);
   }
   return out;
 }

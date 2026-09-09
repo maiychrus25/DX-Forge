@@ -16,6 +16,7 @@ export const QuestionSchema = z
     max: z.number().positive(),
     supp: z.object({ axis: z.enum(["P", "D", "I"]) }).optional(),
     weightEvidence: z.boolean().optional(),
+    axis: z.enum(["P", "D", "I"]).optional(),
   })
   .superRefine((q, ctx) => {
     if (q.type !== "scale" && !q.options) ctx.addIssue({ code: "custom", message: "choice/supp needs options" });

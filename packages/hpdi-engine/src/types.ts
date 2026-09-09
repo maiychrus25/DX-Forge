@@ -20,6 +20,8 @@ export type Question = {
   max: number;
   supp?: { axis: Axis };
   weightEvidence?: boolean;
+  /** Scale question that feeds an HPDI axis directly (used for I: AI/automation questions). */
+  axis?: Axis;
 };
 
 export type Questionnaire = { version: string; questions: Question[] };

@@ -1,20 +1,25 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import type { Axis, ResultV1 } from "./types.js";
+import { mergeQuestions } from "./scoring.js";
+import type { Axis, Questionnaire, Response, ResultV1 } from "./types.js";
 
-/** Survey score per axis in 0..1, from the pillars named in M0 spec §5.3. */
-export function axisScores(pillars: ResultV1["pillars"]): Record<Axis, number> {
+/**
+ * Survey score per axis in 0..1, per M0 spec §5.3: P and D come from their pillars; I comes from the
+ * AI/automation questions tagged `axis: "I"` (not the whole technology pillar), falling back to the
+ * technology pillar when the questionnaire carries no such tag.
+ */
+export function scoreAxes(q: Questionnaire, responses: Response[], pillars: ResultV1["pillars"]): Record<Axis, number> {
+  const axisIQuestions = q.questions.filter((x) => x.axis === "I" && x.type !== "supp");
   return {
     P: (pillars.operations.merged + pillars.customer.merged) / 2,
     D: pillars.data.merged,
-    I: pillars.technology.merged,
+    I: axisIQuestions.length > 0 ? mergeQuestions(axisIQuestions, responses).merged : pillars.technology.merged,
   };
 }
 
-export function mapHpdi(pillars: ResultV1["pillars"], supp: Record<Axis, number>): ResultV1["hpdi"] {
-  const s = axisScores(pillars);
-  const P = Math.round(s.P * supp.P * 30);
-  const D = Math.round(s.D * supp.D * 30);
-  const I = Math.round(s.I * supp.I * 30);
+export function mapHpdi(axes: Record<Axis, number>, supp: Record<Axis, number>): ResultV1["hpdi"] {
+  const P = Math.round(axes.P * supp.P * 30);
+  const D = Math.round(axes.D * supp.D * 30);
+  const I = Math.round(axes.I * supp.I * 30);
   return { H: 100 - (P + D + I), P, D, I };
 }
 

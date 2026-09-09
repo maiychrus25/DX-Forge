@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { describe, expect, it } from "vitest";
-import { compute, InsufficientResponses, loadQuestionnaireV1 } from "../src/index.js";
+import { compute, InsufficientResponses, loadQuestionnaireV1, scorePillars } from "../src/index.js";
 import { classifyShape, prescribe } from "../src/shape.js";
-import { dtiLevel } from "../src/mapping.js";
-import type { Response, Tier } from "../src/types.js";
+import { dtiLevel, scoreAxes } from "../src/mapping.js";
+import type { Questionnaire, Response, Tier } from "../src/types.js";
 
 const q = loadQuestionnaireV1();
 
@@ -12,6 +12,20 @@ function respond(tier: Tier, scaleValue: number, supp: { P: number; D: number; I
   for (const x of q.questions) {
     if (!x.tiers.includes(tier)) continue;
     answers[x.id] = x.type === "supp" ? supp[x.supp!.axis] : scaleValue;
+  }
+  return { tier, answers };
+}
+
+/** Like `respond`, but `overrides` replaces the scale value for the listed question ids. */
+function respondWithOverrides(
+  tier: Tier,
+  overrides: Record<string, number>,
+  supp: { P: number; D: number; I: number },
+): Response {
+  const answers: Record<string, number> = {};
+  for (const x of q.questions) {
+    if (!x.tiers.includes(tier)) continue;
+    answers[x.id] = x.type === "supp" ? supp[x.supp!.axis] : (overrides[x.id] ?? 4);
   }
   return { tier, answers };
 }
@@ -44,6 +58,23 @@ describe("compute golden cases (M0 spec §5.5)", () => {
     const r = compute(q, [respond("executive", 4, { P: 1, D: 1, I: 1 }), respond("staff", 0, { P: 1, D: 1, I: 1 })]);
     expect(r.pillars.operations.discrepancy).toBeGreaterThan(0.3);
     expect(r.pillars.operations.merged).toBeLessThan(0.34);
+  });
+
+  it("I axis comes only from questions marked axis I", () => {
+    const overrides = { "TEC-02": 0, "TEC-04": 0 };
+    const r = compute(q, [
+      respondWithOverrides("executive", overrides, { P: 1, D: 1, I: 1 }),
+      respondWithOverrides("staff", overrides, { P: 1, D: 1, I: 1 }),
+    ]);
+    expect(r.hpdi.I).toBe(0);
+    expect(r.pillars.technology.merged).toBeGreaterThan(0.5);
+  });
+
+  it("scoreAxes falls back to the technology pillar when no question is marked", () => {
+    const qNoAxis: Questionnaire = { ...q, questions: q.questions.map((x) => ({ ...x, axis: undefined })) };
+    const responses = [respond("executive", 4, { P: 1, D: 1, I: 1 }), respond("staff", 4, { P: 1, D: 1, I: 1 })];
+    const pillars = scorePillars(qNoAxis, responses);
+    expect(scoreAxes(qNoAxis, responses, pillars).I).toBeCloseTo(1, 5);
   });
 });
 
