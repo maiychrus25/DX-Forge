@@ -1,120 +1,85 @@
-# 11. Đặc tả use case
+# 11. Đặc tả use case — DX-Forge
 
-Mỗi use case gồm Summary và Business information.
+UC-01 đến UC-05 (measure) giữ nguyên bản 1.0: Mở đợt đo, Điền khảo sát, Chốt đợt đo, Sinh câu đối chất, Sinh 5 RÕ. Dưới đây là các use case mới.
 
-## UC-01 Mở đợt đo
+## UC-10 Tạo intent bằng phỏng vấn
 | Trường | Nội dung |
 |---|---|
-| Use case ID | UC-01 |
-| Description | Quản trị viên khởi tạo một vòng đo mới, hệ thống sinh 3 link khảo sát theo tầng |
-| Actor | Quản trị viên DX, Quản lý |
-| Priority | Cao (P1) |
-| Trigger | Bấm "Mở đợt đo" trên `/pulse` |
-| Pre-condition | Đã đăng nhập vai trò dx-admin/manager; không có đợt đo Open |
-| Post-condition | Assessment ở Open, round = round cuối + 1, 3 survey_links có token và hạn |
+| Description | Kiến trúc sư trò chuyện với AI (hoặc điền form) để ra `intent.yaml` hợp lệ |
+| Actor | Kiến trúc sư DX; Lãnh đạo (sửa phần quy trình lõi) |
+| Priority | Cao (P1 form, P2 AI) |
+| Trigger | Bấm "Sang phỏng vấn" từ kê đơn hoặc mở `/interview` |
+| Pre-condition | Có ResultV1 của đợt Closed; đã cấu hình đích |
+| Post-condition | `intent.yaml` hợp lệ theo IntentV1, có `maturity` từ ResultV1, ≥ 1 quy trình lõi có đúng một A |
 
-Business rule: một thời điểm chỉ một đợt Open; round tăng liên tục, không tái dùng; hạn link mặc định 14 ngày. NFR riêng: tạo xong dưới 1 giây.
+Business rule: AI tối đa 12 lượt; không hỏi lại điều đã có từ measure; không có AI thì form; intent ≤ 80 dòng; đích và kênh chỉ architect sửa. NFR: mỗi lượt AI ≤ 10 giây.
 
-## UC-02 Điền khảo sát
+## UC-11 Sinh và phê duyệt plan
 | Trường | Nội dung |
 |---|---|
-| Use case ID | UC-02 |
-| Description | Người có token trả lời bộ câu hỏi của tầng mình, gửi ẩn danh |
-| Actor | Người trả lời |
-| Priority | Cao (P1) |
-| Trigger | Mở `/pulse/s/[token]` |
-| Pre-condition | Token còn hạn, đợt đo Open |
-| Post-condition | Một Response được lưu với answers đủ câu bắt buộc; đếm tầng tăng 1 |
+| Description | Engine sinh plan bốn lớp từ intent và gói, AI đề xuất, validator kiểm, người xem/sửa/phê duyệt |
+| Actor | Kiến trúc sư DX; Lãnh đạo (phê duyệt) |
+| Priority | Bắt buộc (P1) |
+| Trigger | Bấm "Sinh plan" hoặc `dxforge plan` |
+| Pre-condition | intent hợp lệ; gói được tham chiếu tồn tại |
+| Post-condition | `plan.yaml` không lỗi validator, mọi tài nguyên có reason và gate, `approvals` có người và giờ |
 
-Business rule: không lưu IP, user-agent hay danh tính; câu bắt buộc phải trả lời hết mới gửi; một thiết bị có thể gửi nhiều lần (không chặn, vì ẩn danh) nhưng nháp cục bộ bị xoá sau khi gửi; freeText cắt 2000 ký tự. NFR: hoàn thành ≤ 8 phút trên điện thoại 375px.
+Business rule: không AI thì plan deterministic; cổng trưởng thành không thể tắt; tài nguyên bị khoá vẫn hiện; plan có lỗi không được phê duyệt; sửa plan sau phê duyệt làm mất phê duyệt. NFR: ≤ 5 giây không AI, ≤ 60 giây có AI.
 
-## UC-03 Chốt đợt đo
+## UC-12 Cấp phát lên đích
 | Trường | Nội dung |
 |---|---|
-| Use case ID | UC-03 |
-| Description | Khoá khảo sát, tính HPDI, phân loại, kê đơn, thông báo |
-| Actor | Quản trị viên DX, Quản lý |
-| Priority | Cao (P1) |
-| Trigger | Bấm "Chốt đợt đo" và xác nhận |
-| Pre-condition | ≥ 1 phản hồi executive và ≥ 1 staff |
-| Post-condition | Assessment Closed; Result và Prescription tồn tại; sự kiện `pulse.assessment.closed` đã phát; thông báo đã gửi kênh announce |
+| Description | Apply plan đã phê duyệt lên đích, có dry-run, state, tiếp tục sau ngắt |
+| Actor | Kiến trúc sư DX; Hệ thống đích |
+| Priority | Bắt buộc (P1 oss lớp H; P2 phần còn lại, gws, proteus-manifest) |
+| Trigger | Bấm Apply sau khi xem dry-run, hoặc `dxforge apply` |
+| Pre-condition | plan phê duyệt; thông tin xác thực đích có trong biến môi trường; kết nối đích kiểm tra được |
+| Post-condition | Tài nguyên `gate.allowed` và không `skip` tồn tại trên đích; `state.json` đầy đủ; `runs` ghi kết quả |
 
-Business rule: Supp lấy min giữa tầng; P/D/I mỗi trục ≤ 30; H = 100 − tổng; kê đơn luôn theo trật tự P→D→I; AI lỗi hai lần thì dùng rule-based và gắn nhãn. NFR: toàn bộ ≤ 30 giây với AI, ≤ 2 giây không AI.
+Business rule: thứ tự topo và H→P→D→I; idempotent theo checksum; lỗi một tài nguyên dừng và giữ state; không ghi bí mật vào state; gws phần AppSheet chỉ sinh hướng dẫn. NFR: gói dx-ticket trên oss ≤ 10 phút.
 
-## UC-04 Sinh câu hỏi đối chất
+## UC-13 Kiểm chứng và huỷ
 | Trường | Nội dung |
 |---|---|
-| Use case ID | UC-04 |
-| Description | Với trụ cột có độ vênh > 0.3, AI sinh câu hỏi để lãnh đạo và nhân viên đối chiếu |
-| Actor | Quản lý |
-| Priority | Trung bình |
-| Trigger | Bấm "Sinh câu đối chất" trên trang kê đơn |
-| Pre-condition | Đợt Closed, có ít nhất một trụ cột vênh |
-| Post-condition | Prescription kind=discrepancy lưu; có thể gửi vào kênh announce |
+| Description | Chạy verify để chứng minh từng tài nguyên đúng như plan; destroy để gỡ sạch |
+| Actor | Kiến trúc sư DX; Lãnh đạo (xem báo cáo); Hệ thống đích |
+| Priority | Bắt buộc (P1) |
+| Trigger | Bấm Verify / Destroy hoặc CLI |
+| Pre-condition | Có state |
+| Post-condition | Báo cáo `reports/verify-*.md|json`; sau destroy `--prune`, verify báo không tồn tại |
 
-Business rule: mỗi trụ cột vênh ≥ 2 câu, mỗi câu ghi rõ hỏi tầng nào; không nêu tên cá nhân.
+Business rule: verify không thay đổi đích (trừ tạo và xoá dữ liệu thử có tiền tố `_forge_probe_`); destroy xác nhận hai bước.
 
-## UC-05 Sinh ma trận 5 RÕ và Poka-yoke
+## UC-14 Sinh chính sách tác tử và luồng duyệt
 | Trường | Nội dung |
 |---|---|
-| Use case ID | UC-05 |
-| Description | Từ tên quy trình lõi và kết quả đo, AI sinh bảng RACI, tiêu chuẩn, công cụ và danh sách rào chắn |
-| Actor | Quản lý, Quản trị viên DX |
-| Priority | Cao (P1) |
-| Trigger | Nhập quy trình lõi, bấm "Sinh 5 RÕ" |
-| Pre-condition | Đợt Closed; coreProcess không rỗng |
-| Post-condition | Prescription kind=fiveRo; nội dung xuất hiện trong kit (5RO_*.md, POKA_YOKE.md) |
-
-Business rule: mỗi bước đúng một A; công cụ chỉ chọn trong danh mục hệ thống có (Appsmith, n8n, Nextcloud, Telegram, Metabase); rào chắn ghi rõ lớp 1/2/3 theo chương 6.1.2.
-
-## UC-06 Cấp phát cây P.A.R.A
-| Trường | Nội dung |
-|---|---|
-| Use case ID | UC-06 |
-| Description | Tạo group folder, cây thư mục chuẩn, thư mục phòng ban, ACL trên Nextcloud |
-| Actor | Quản trị viên DX |
-| Priority | Cao (P1 cho zip, P2 cho Nextcloud) |
-| Trigger | Bấm "Cấp phát lên Nextcloud" hoặc `POST /api/workspace/provision` |
-| Pre-condition | Nextcloud và Keycloak đã cấu hình; có ≥ 1 phòng ban |
-| Post-condition | Cây tồn tại đủ nhánh; ACL đúng bảng 4.2 spec M1; README từng nhánh |
-
-Business rule: idempotent, không xoá thư mục có sẵn; RESOURCES chỉ đọc với all-staff; chia sẻ bằng link công khai bị tắt. NFR: ≤ 60 giây cho 20 phòng ban.
-
-## UC-07 Thu hồi truy cập
-| Trường | Nội dung |
-|---|---|
-| Use case ID | UC-07 |
-| Description | Vô hiệu một người dùng trên toàn hệ sinh thái trong một chuỗi 5 bước, đo thời gian |
-| Actor | Quản trị viên DX |
+| Description | Từ quy trình có A, plan sinh `intel.agent_policy`; provider dựng workflow HITL trên đích |
+| Actor | Kiến trúc sư DX; Hệ thống đích; (người dùng hệ thống sinh ra dùng sau) |
 | Priority | Cao (P2) |
-| Trigger | Bấm "Thu hồi truy cập" và xác nhận |
-| Pre-condition | Người dùng đang active; có người thay thế |
-| Post-condition | Không đăng nhập được ở mọi dịch vụ; tệp cá nhân đã chuyển sở hữu; bị gỡ khỏi kênh chat; ticket đang gán chuyển người thay thế; bản ghi offboardings ghi thời gian từng bước |
+| Trigger | plan với shape cho phép lớp I |
+| Pre-condition | Lớp P đã apply; kênh approvals cấu hình |
+| Post-condition | Workflow nhận lệnh, kiểm whitelist, gửi thẻ duyệt, thực thi khi duyệt, hết hạn 24h; verify chứng minh lệnh ngoài whitelist bị chặn |
 
-Business rule: dừng ở bước lỗi và cho chạy lại, không bỏ qua; không xoá tài khoản (chỉ vô hiệu) để giữ audit. NFR: mục tiêu < 5 phút, kỳ vọng < 30 giây.
+Business rule: Forge không chạy tác tử; lệnh ghi luôn cần duyệt; whitelist lấy từ gói.
 
-## UC-08 Kết thúc xử lý ticket
+## UC-15 Sinh sổ tay nghiệp vụ số
 | Trường | Nội dung |
 |---|---|
-| Use case ID | UC-08 |
-| Description | Nhân viên đóng ticket đang xử lý, hệ thống ép nhập hướng xử lý, tính SLA, gửi CSAT |
-| Actor | Nhân viên |
+| Description | AI viết sổ tay từ plan và state, đẩy vào Resources của đích |
+| Actor | Kiến trúc sư DX |
 | Priority | Cao (P2) |
-| Trigger | Bấm "Kết thúc xử lý" trên Appsmith |
-| Pre-condition | Ticket Đang xử lý và gán cho chính người bấm |
-| Post-condition | Ticket Đóng, Thời_Gian_Đóng, Thời_Gian_SLA; email CSAT gửi một lần; cờ Log_Email cập nhật |
+| Trigger | Bấm "Sinh sổ tay" sau verify xanh |
+| Pre-condition | state và verify gần nhất |
+| Post-condition | Mỗi quy trình lõi một trang, một trang xử lý lỗi rào chắn, `architecture.md`; tệp có trên đích |
 
-Business rule: Hướng_Xử_Lý ≥ 50 ký tự; rào chắn chạy ở giao diện và máy chủ; ticket Đóng không sửa nội dung, chỉ nhận CSAT.
+Business rule: nội dung chỉ dựa plan/state/gói (ngữ cảnh đóng); fallback template khi không AI.
 
-## UC-09 Ra lệnh AI có người duyệt
+## UC-16 Quản lý gói ngành
 | Trường | Nội dung |
 |---|---|
-| Use case ID | UC-09 |
-| Description | Quản lý ra lệnh tự nhiên; AI dịch thành DSL; lệnh ghi phải được duyệt trên kênh chat trước khi thực thi |
-| Actor | Quản lý, Tác tử AI, Hệ thống |
+| Description | Xem, thêm, kiểm gói ngành từ thư mục hoặc URL git |
+| Actor | Kiến trúc sư DX |
 | Priority | Trung bình (P2) |
-| Trigger | Gửi lệnh tại `/ai/commands` |
-| Pre-condition | LLM provider ≠ none; whitelist action đã khai; kênh approvals cấu hình |
-| Post-condition | AiCommand ở Executed/Rejected/Expired/Blocked với audit đầy đủ |
-
-Business rule: AI không bao giờ tự thực thi lệnh effect=write; lệnh tài chính cần dx-admin duyệt; hết 24 giờ tự Expired; mọi lệnh lưu prompt, DSL, người duyệt, kết quả.
+| Trigger | `/packs` hoặc `dxforge packs add` |
+| Pre-condition | Gói có `pack.yaml` |
+| Post-condition | Gói dùng được trong interview và plan; gói sai schema bị từ chối kèm lý do |

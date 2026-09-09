@@ -1,27 +1,25 @@
-# 8. Sitemap (web, tối đa cấp 2)
+# 8. Sitemap wizard DX-Forge (web, tối đa cấp 2) và CLI
 
 ```
-/                         Launchpad + Portal (bảng tin, nút tác vụ, cây Resources, dashboard nhúng)
-├── /pulse                Đo lường
-│   ├── /pulse/a/[id]             Dashboard đợt đo
-│   ├── /pulse/a/[id]/prescription  Kê đơn, đối chất, 5 RÕ, hỏi báo cáo
-│   ├── /pulse/a/[id]/kit         Bộ kỷ luật P.A.R.A
-│   └── /pulse/s/[token]          Khảo sát (công khai, không menu)
-├── /portal
-│   ├── /portal/handbook/[slug]   Sổ tay nghiệp vụ số
-│   └── /portal/admin             Người dùng, phòng ban, dự án, thu hồi truy cập (dx-admin)
-├── /apps                 Ứng dụng nghiệp vụ (Appsmith nhúng: DX-Ticket)
-├── /analytics            Dashboard nghiệp vụ (Metabase nhúng)
-├── /ai
-│   ├── /ai/ask                   Hỏi đáp trên Resources
-│   └── /ai/commands              Lệnh AI và nhật ký
+/                         Trang chủ đường ống: 6 bước, trạng thái, nút chạy, thư mục làm việc
+├── /measure              Đo lường (module DX-Pulse)
+│   ├── /measure/a/[id]           Dashboard đợt đo
+│   ├── /measure/a/[id]/prescription  Kê đơn, đối chất, 5 RÕ, hỏi báo cáo
+│   ├── /measure/a/[id]/kit       Bộ P.A.R.A kit (đường tắt)
+│   └── /measure/s/[token]        Khảo sát (công khai, không menu)
+├── /interview            Phỏng vấn AI hoặc form; xem/sửa intent
+├── /plan                 Cây plan theo lớp, lý do, cổng, sửa, kiểm, phê duyệt
+├── /apply                Dry-run, tiến trình apply, destroy
+├── /verify               Báo cáo kiểm chứng theo lớp/tài nguyên, lịch sử chạy
+├── /handbook             Sổ tay sinh ra, architecture.md
+├── /packs                Thư viện gói ngành
+│   └── /packs/[id]               Chi tiết gói
 ├── /settings
-│   ├── /settings/organization
-│   ├── /settings/notifier
 │   ├── /settings/llm
-│   └── /settings/profile
+│   ├── /settings/target
+│   └── /settings/notifier
 └── /about                Ghi công, giấy phép, phiên bản
-Ngoài menu: /public/ticket (biểu mẫu khách hàng), /public/csat/[ticketId] (đánh giá), /auth/* (Keycloak)
+Ngoài menu: /login
 ```
 
-Dịch vụ ngoài mở tab mới từ nút trên Portal: Nextcloud `/files/`, n8n `/workflow/` (dx-admin), Keycloak `/auth/admin` (dx-admin).
+CLI tương ứng: `dxforge measure | interview | plan | apply | verify | handbook | destroy | packs | explain`; mọi lệnh có `--help`, `--json`, `--workdir <dir>`.

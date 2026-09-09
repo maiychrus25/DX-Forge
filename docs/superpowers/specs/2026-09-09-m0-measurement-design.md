@@ -1,6 +1,6 @@
-# DX-Pulse — Spec M0: Đo lường DTI/HPDI
+# DX-Forge — Spec M0 (giai đoạn `measure`): Đo lường DTI/HPDI
 
-Module 0 của nền tảng DX-OS (xem `2026-09-09-dx-os-platform-design.md`). Là nội dung chính của ảnh chụp v0.1.0 nộp ICTU 30/09/2026.
+Giai đoạn đầu của đường ống DX-Forge (xem `2026-09-09-dx-forge-design.md`). ResultV1 là đầu vào bắt buộc của `interview` và `plan`, và là tham số của cổng trưởng thành. Là nội dung chính của ảnh chụp v0.1.0 nộp ICTU 30/09/2026. Tên module giữ là DX-Pulse.
 
 Ngày: 2026-09-09. Trạng thái: đã duyệt qua thảo luận, chờ người dùng rà soát văn bản.
 
@@ -8,7 +8,7 @@ Ngày: 2026-09-09. Trạng thái: đã duyệt qua thảo luận, chờ người
 
 - Cuộc thi: "Phát triển phần mềm mã nguồn mở tích hợp AI 2026" (Khoa CNTT, ICTU). Nộp kho mã 01/07–30/09/2026, chấm 01–08/10, chung kết 10/10/2026. Bảng điểm: 50 điểm PoF (chấm trước) + 50 điểm sản phẩm (nguyên gốc 10, hoàn thiện 10, thân thiện 10, tích hợp AI 10, trình diễn 10).
 - Đường dài: OLP PMNM quốc gia tháng 12/2026, chủ đề "Xây dựng Hệ điều hành Doanh nghiệp số (DX-OS) dựa trên kiến trúc Open-Core", đề chính thức ra tháng 11. M0 là module đầu tiên của nền tảng và là nội dung chính của ảnh chụp v0.1.0 nộp ICTU 30/09.
-- Đối thủ trực tiếp: ICTU_Proteus-os (Keycloak, n8n, Appsmith, Metabase, Qdrant, Mattermost + core FastAPI/Next.js; ~20 container, 16–32GB RAM). Proteus làm Phần II của sách DX-OS (4 không gian) nhưng bỏ trống hoàn toàn Phần I (đo DTI, radar HPDI, 5 RÕ) và P.A.R.A chỉ có trên giấy.
+- Sản phẩm tham chiếu: ICTU_Proteus-os là nền tảng vận hành; DX-Forge là bộ biên dịch sinh ra nền tảng. Phần đo lường này Proteus không có.
 - Góc khác biệt của DX-Pulse: số hoá Phần I của sách "Xây dựng Hệ điều hành Doanh nghiệp số: Từ Tư duy đến Hành động" (TS. Tạ Tuấn Anh, FDS, CC BY 4.0) thành công cụ "bắt mạch" tổ chức, AI kê đơn lộ trình, sinh bộ kỷ luật P.A.R.A/Poka-yoke. Nhỏ, chạy trên 1 container, cài 5 phút.
 - Ghi công: mọi nơi dùng phương pháp luận của sách phải ghi nguồn theo CC BY 4.0 (README, LICENSE_NOTICE, màn hình "Về DX-Pulse").
 
@@ -20,7 +20,7 @@ Ngày: 2026-09-09. Trạng thái: đã duyệt qua thảo luận, chờ người
 4. Bộ kỷ luật tải về: zip gồm cây thư mục P.A.R.A theo phòng ban/dự án, README mỗi nhánh, quy ước đặt tên, templates, Poka-yoke.md, 5RO.md; xem trước cây trên web.
 5. Theo dõi theo thời gian: nhiều đợt đo cho một tổ chức, biểu đồ radar/đường chồng theo vòng.
 
-Ngoài phạm vi M0 (thuộc M1–M5): cấp phát P.A.R.A lên Nextcloud (M1, M0 chỉ gọi), workflow, BI, RAG/tác tử, Launchpad. M0 chỉ phụ thuộc Keycloak (đăng nhập) và notifier.
+Ngoài phạm vi M0 (thuộc các giai đoạn interview/plan/apply): viết intent, sinh plan, cấp phát lên đích. M0 chỉ phụ thuộc đăng nhập wizard và notifier.
 
 ## 3. Kiến trúc
 
@@ -47,9 +47,9 @@ dx-pulse/
 
 - Monorepo npm workspaces theo spec tổng.
 - Engine là gói riêng, không phụ thuộc Next/DB, để nhúng vào nơi khác mà không kéo theo UI.
-- Prisma trên Postgres chung của nền tảng (schema `pulse`). Artifacts (zip) nằm trong volume `./data/artifacts`; khi M1 sẵn sàng, kit được cấp phát thẳng lên Nextcloud thay vì chỉ tải về.
-- Auth: OIDC qua Keycloak realm `dxlab` (M1). Vai trò `dx-admin`/`manager` mới được tạo và chốt đợt đo. Khảo sát không cần đăng nhập, chỉ cần token link.
-- Một bản cài = một doanh nghiệp: không có bảng organizations; hồ sơ tổ chức là bản ghi đơn `core.settings.organization` (tên, ngành, quy mô; phòng ban lấy từ nhóm Keycloak).
+- Prisma trên SQLite `.dxforge/wizard.db` (Forge nhẹ; Postgres là của đích). Artifacts (zip) nằm trong `.dxforge/artifacts`. Kit zip là đường tắt cho người chưa có đích; đường chính là `plan` + `apply`.
+- Auth: đăng nhập wizard bằng mật khẩu quản trị (`FORGE_ADMIN_PASSWORD`) hoặc OIDC nếu đích oss đã có Keycloak. Khảo sát không cần đăng nhập, chỉ cần token link.
+- Một thư mục làm việc `.dxforge/` = một tổ chức; hồ sơ tổ chức là bản ghi đơn trong wizard.db và được chép sang `intent.organization`.
 
 ## 4. Mô hình dữ liệu (Prisma)
 
@@ -218,8 +218,8 @@ DESIGN.md tạo trước khi làm UI: token màu sáng/tối, chữ, khoảng c�
 - Giám khảo so với Proteus về độ "to" → trình bày bằng bảng đối chiếu: Proteus không đo được gì, DX-Pulse là bước 0 bắt buộc trước mọi DX-Lab; M0 chạy được trên profile `core`.
 - Quỹ giờ đội sinh viên → khối 5 (lịch sử) và askReport là hai thứ cắt đầu tiên nếu trễ.
 
-## 13. Giao diện với module khác
+## 13. Giao diện với các giai đoạn khác
 
-- Cung cấp `GET /api/pulse/latest` trả ResultV1 + shape + level; Launchpad (M5) dùng để gợi ý module nên bật (spear → chỉ M1; kite → M1+M2; illusion → khoá M4 tới khi P đủ).
-- Phát sự kiện `pulse.assessment.closed`.
-- Dùng `notifier` (M1) để báo khi chốt đợt; dùng `provisioner` (M1) để cấp phát P.A.R.A thật lên Nextcloud.
+- `GET /api/pulse/latest` trả ResultV1 + shape + level; `interview` nạp vào `intent.maturity`; validator dùng để mở hoặc khoá lớp H/P/D/I trong plan.
+- Wizard chuyển thẳng từ màn kê đơn sang màn phỏng vấn với ngữ cảnh đã điền (tổ chức, phòng ban, quy trình lõi).
+- Notifier của Forge chỉ dùng để gửi link khảo sát và báo chốt đợt; kênh lấy từ `intent.channels` nếu có, hoặc cấu hình tạm trong wizard.

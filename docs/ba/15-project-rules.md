@@ -6,7 +6,7 @@
 3. Sprint 1 tuần theo lịch 13 tuần của spec tổng; sprint đang chạy không đổi nghiệp vụ, yêu cầu mới ghi vào backlog sprint sau (trừ khi đề tháng 11 buộc đổi bài mẫu, xử lý bằng một sprint điều chỉnh riêng).
 4. UAT cuối mỗi sprint theo AC trong 13-user-stories.md, chạy trên môi trường dev bằng tài khoản của từng vai trò, đi trọn hành trình bằng người khác người tạo dữ liệu; hai vòng stress desktop 1440 và mobile 375 trước mỗi release.
 5. Mã, chú thích, commit tiếng Anh; chuỗi giao diện tiếng Việt; nhánh `develop` làm việc, `main` chỉ nhận merge có tag; mọi PR cập nhật CHANGELOG.
-6. Không đưa mã hay dữ liệu của công ty AHV vào repo; không dùng VPS AHV.
+6. Không đưa mã hay dữ liệu của công ty AHV vào repo; không dùng VPS AHV. Forge không chứa dữ liệu nghiệp vụ của bất kỳ tổ chức thử nghiệm nào ngoài thư mục `.dxforge/` cục bộ (đã gitignore).
 7. Ghi công phương pháp luận DX-OS (CC BY 4.0) ở README, LICENSE_NOTICE và trang About.
 
 ## 15.2 Bộ tài liệu dự án phải duy trì
@@ -14,9 +14,11 @@
 |---|---|---|---|
 | Biên bản họp | `docs/meetings/YYYY-MM-DD.md` | Thư ký sprint (luân phiên 3 thành viên) | Sau mỗi buổi họp; ghi quyết định và việc giao |
 | URD (yêu cầu người dùng) | `docs/ba/12-scenarios.md`, `13-user-stories.md` | BA | Mỗi sprint |
-| SRS (đặc tả phần mềm) | [`docs/SRS.md`](../SRS.md) (đã có, v1.0), tham chiếu `docs/ba/*`, `docs/superpowers/specs/*`, sau này thêm `docs/api/openapi.yaml` | BA + kiến trúc | Khi đổi chức năng hoặc API |
-| BRD | [`docs/BRD.md`](../BRD.md) (đã có, v1.0) | Trưởng nhóm | Trước 30/09 và trước 12/2026 |
-| HDSD | `docs/user-guide/` (Sổ tay nghiệp vụ số cũng nằm trong Resources của bản demo) | BA + dev | Trước mỗi release |
+| SRS (đặc tả phần mềm) | [`docs/SRS.md`](../SRS.md) (v2.0, DX-Forge), tham chiếu `docs/ba/*`, `docs/superpowers/specs/*`, sau này thêm `docs/api/openapi.yaml` | BA + kiến trúc | Khi đổi chức năng hoặc API |
+| BRD | [`docs/BRD.md`](../BRD.md) (v2.0, DX-Forge) | Trưởng nhóm | Trước 30/09 và trước 12/2026 |
+| HDSD | `docs/user-guide/` cho Forge (CLI, wizard); sổ tay của hệ thống sinh ra do Forge tự sinh (`handbook`) | BA + dev | Trước mỗi release |
+| Tài liệu gói ngành | `packs/<id>/README.md`, `handbook/`, `acceptance.md` | Người đóng góp gói | Khi thêm/sửa gói |
+| Tài liệu provider | `packages/providers/<target>/README.md` (tài nguyên hỗ trợ, API dùng, giới hạn) | Dev | Khi thêm adapter |
 | Sơ đồ | `docs/ba/diagrams/*.excalidraw` (+ png xuất) | BA | Cùng lúc với tài liệu chữ |
 | Nhật ký quyết định (ADR) | `docs/adr/NNN-*.md` | Kiến trúc | Khi có quyết định kiến trúc |
 | PoF compliance | `docs/POF_COMPLIANCE.md` | Trưởng nhóm | Trước mỗi lần nộp |

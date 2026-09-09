@@ -1,21 +1,21 @@
-# 9. Sơ đồ use case
+# 9. Sơ đồ use case — DX-Forge
 
-Actor tô màu; use case cùng cấp trong một biểu đồ; ≤ 10 use case/biểu đồ. Quan hệ include/extend ghi trên cạnh.
+Actor tô cam; use case tô xanh; nét đứt = include / extend; ≤ 10 use case mỗi biểu đồ.
 
-## 9.1 Đo lường và kê đơn (M0)
+## 9.1 Đo lường và kê đơn (measure)
 
 ![usecase-01-do-luong](diagrams/usecase-01-do-luong.png)
 
 *Nguồn chỉnh sửa: [`diagrams/usecase-01-do-luong.excalidraw`](diagrams/usecase-01-do-luong.excalidraw)*
 
-## 9.2 Không gian làm việc [H] (M1)
+## 9.2 Phỏng vấn và lập kế hoạch (interview, plan)
 
-![usecase-02-khong-gian-h](diagrams/usecase-02-khong-gian-h.png)
+![usecase-02-interview-plan](diagrams/usecase-02-interview-plan.png)
 
-*Nguồn chỉnh sửa: [`diagrams/usecase-02-khong-gian-h.excalidraw`](diagrams/usecase-02-khong-gian-h.excalidraw)*
+*Nguồn chỉnh sửa: [`diagrams/usecase-02-interview-plan.excalidraw`](diagrams/usecase-02-interview-plan.excalidraw)*
 
-## 9.3 Nghiệp vụ DX-Ticket và AI (M2, M3, M4)
+## 9.3 Cấp phát, kiểm chứng, sổ tay, gói (apply, verify, handbook, packs)
 
-![usecase-03-ticket-ai](diagrams/usecase-03-ticket-ai.png)
+![usecase-03-apply-verify](diagrams/usecase-03-apply-verify.png)
 
-*Nguồn chỉnh sửa: [`diagrams/usecase-03-ticket-ai.excalidraw`](diagrams/usecase-03-ticket-ai.excalidraw)*
+*Nguồn chỉnh sửa: [`diagrams/usecase-03-apply-verify.excalidraw`](diagrams/usecase-03-apply-verify.excalidraw)*

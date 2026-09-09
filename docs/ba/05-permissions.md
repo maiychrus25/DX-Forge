@@ -1,51 +1,38 @@
-# 5. Ma trận phân quyền
+# 5. Ma trận phân quyền — DX-Forge
 
 ## Bảng 1 — Actor
 
 | STT | Actor | Description |
 |---|---|---|
-| 1 | Quản trị viên DX (`dx-admin`) | Người vận hành hệ điều hành số của doanh nghiệp: cấu hình, đo lường, cấp phát, thu hồi truy cập |
-| 2 | Quản lý (`manager`) | Trưởng bộ phận: xem kết quả đo, duyệt đề xuất AI, điều phối ticket, ra lệnh AI |
-| 3 | Nhân viên (`staff`) | Người dùng nội bộ: dùng Portal, Resources, xử lý ticket được giao |
-| 4 | Người trả lời khảo sát | Bất kỳ ai có token, ẩn danh, không đăng nhập (gồm cả ban giám đốc khi điền) |
-| 5 | Khách hàng | Người ngoài gửi yêu cầu qua biểu mẫu công khai và đánh giá CSAT |
-| 6 | Hệ thống tự động (n8n, tác tử AI) | Gọi API bằng client credentials; không có quyền duyệt |
+| 1 | Kiến trúc sư DX (`architect`) | Người chạy đường ống trên wizard/CLI: tư vấn viên, IT nội bộ, sinh viên. Chủ thư mục làm việc |
+| 2 | Lãnh đạo (`sponsor`) | Trả lời khảo sát tầng executive; xem plan và phê duyệt trên wizard (không sửa, không apply) |
+| 3 | Người trả lời khảo sát | Ẩn danh, có token, không đăng nhập |
+| 4 | Hệ thống đích | Keycloak, Nextcloud, n8n… nhận lệnh apply/verify; không phải người |
+| 5 | Người dùng hệ thống sinh ra | Ngoài Forge; quyền do plan (gói ngành) quy định trên đích |
 
 ## Bảng 2 — Ma trận
 
-| Function | dx-admin | manager | staff | Người trả lời | Khách hàng | Hệ thống |
-|---|---|---|---|---|---|---|
-| Đăng nhập / hồ sơ cá nhân (M5-01..04) | O | O | O | X | X | X |
-| Cấu hình tổ chức, notifier, LLM (M5-06..08) | O | X | X | X | X | X |
-| Mở / chốt / huỷ đợt đo (M0-01,05,15) | O | O | X | X | X | X |
-| Điền khảo sát (M0-03) | O* | O* | O* | O | X | X |
-| Xem dashboard đợt đo, lịch sử (M0-07,14) | O | O | X | X | X | X |
-| Sinh kê đơn, đối chất, 5 RÕ, hỏi báo cáo (M0-08..11) | O | O | X | X | X | X |
-| Tải kit / cấp phát P.A.R.A (M0-12,13) | O | X | X | X | X | X |
-| Xem thống kê lời gọi AI (M0-17) | O | X | X | X | X | X |
-| Quản lý người dùng, phòng ban (M1-02,03) | O | X | X | X | X | X |
-| Tạo / đóng dự án (M1-05,06) | O | O* | X | X | X | X |
-| Duyệt Resources, Portal, Handbook (M1-07,09,10) | O | O | O | X | X | X |
-| Gửi thông báo (M1-11) | O | X | X | X | X | O |
-| Thu hồi truy cập (M1-13) | O | X | X | X | X | X |
-| Gửi yêu cầu qua biểu mẫu công khai (M2-02) | O | O | O | X | O | X |
-| Tạo ticket nội bộ (M2-03) | O | O | O | X | X | X |
-| Bắt đầu / kết thúc xử lý ticket (M2-04,05) | O | O | O* | X | X | X |
-| Xem danh sách ticket (M2-06) | O | O | O* | X | X | X |
-| Đổi ưu tiên, gán lại nhân sự (M2-07) | O | O | X | X | X | X |
-| Đánh giá CSAT (M2-10) | X | X | X | X | O | X |
-| Phát / ack sự kiện (M2-11) | O | X | X | X | X | O |
-| Xem dashboard nghiệp vụ (M3-01) | O | O | O* | X | X | X |
-| Kết xuất snapshot (M3-02) | O | X | X | X | X | O |
-| Hỏi đáp RAG (M4-02) | O | O | O | X | X | X |
-| Ra lệnh AI (M4-03) | O | O | X | X | X | X |
-| Duyệt / từ chối lệnh AI (M1-12, M4-03) | O | O* | X | X | X | X |
-| Xem nhật ký lệnh AI (M4-04) | O | O | X | X | X | X |
+| Function | architect | sponsor | Người trả lời | Hệ thống đích |
+|---|---|---|---|---|
+| Đăng nhập wizard, thư mục làm việc (W-01..03) | O | O | X | X |
+| Thiết lập LLM, đích, notifier (W-04..06) | O | X | X | X |
+| Thư viện gói, thêm gói (W-09) | O | O* | X | X |
+| Mở / chốt / huỷ đợt đo (M0-01, 05, 14) | O | X | X | X |
+| Điền khảo sát (M0-03) | O* | O* | O | X |
+| Xem dashboard đợt đo, so sánh vòng (M0-07, 13) | O | O | X | X |
+| Kê đơn, đối chất, 5 RÕ, hỏi báo cáo (M0-08..11) | O | O | X | X |
+| Tải kit (M0-12) | O | O | X | X |
+| Phỏng vấn / form / sửa intent (I-01..04) | O | O* | X | X |
+| Sinh plan, kiểm plan (P-01..04, 08) | O | X | X | X |
+| Xem plan, "Vì sao" (P-05, 07) | O | O | X | X |
+| Sửa spec, đánh dấu bỏ (P-06) | O | X | X | X |
+| Phê duyệt plan trước apply | O | O | X | X |
+| Dry-run, apply, destroy (A-01, 02, 04) | O | X | X | X |
+| Verify, xem báo cáo (A-03, 11, W-08) | O | O | X | X |
+| Nhận lệnh cấp phát/kiểm chứng (A-05..10) | X | X | X | O |
+| Sinh sổ tay, architecture.md (H-01, 02) | O | X | X | X |
+| CLI (C-01) | O | X | X | X |
 
-Ghi chú `O*`:
-- Điền khảo sát: người đăng nhập vẫn điền qua token của tầng mình, phản hồi vẫn ẩn danh.
-- Tạo/đóng dự án (manager): chỉ dự án thuộc phòng ban mình.
-- Bắt đầu/kết thúc xử lý (staff): chỉ ticket Chờ xử lý hoặc ticket đang gán cho chính mình (`Nhân_Sự_Phụ_Trách = USEREMAIL()`).
-- Xem danh sách ticket (staff): lọc theo biểu thức `OR([Trạng_Thái]="Chờ xử lý", [Nhân_Sự_Phụ_Trách]=USEREMAIL())`.
-- Dashboard nghiệp vụ (staff): chỉ khung nhìn phòng ban mình, dữ liệu định danh khách hàng đã che.
-- Duyệt lệnh AI (manager): chỉ lệnh thuộc phạm vi phòng ban mình và mức rủi ro không phải tài chính; lệnh tài chính cần dx-admin.
+`O*`: sponsor chỉ xem thư viện gói; điền khảo sát qua token tầng của mình, vẫn ẩn danh; sponsor sửa intent chỉ ở phần "quy trình lõi" (tên, SLA), không đổi đích và kênh.
+
+Quyền trên hệ thống sinh ra (dx-admin, manager, staff, khách hàng) được ghi trong từng gói ngành (`packs/<id>/handbook/permissions.md`) và sinh ra thành role/ACL/security filter trên đích; ví dụ gói dx-ticket giữ ma trận của bản BA 1.0.

@@ -1,122 +1,88 @@
-# 7. Mô tả màn hình (screen spec)
+# 7. Mô tả màn hình — wizard DX-Forge
 
-Mỗi màn hình một bảng: STT | Tên trường | Kiểu dữ liệu | Bắt buộc | Giá trị khởi tạo | Mô tả ràng buộc. Tối đa 5 trường bắt buộc/màn hình. Tên trường là nhãn tiếng Việt hiển thị; mã kỹ thuật ghi trong ngoặc.
+Cột: STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc. Tối đa 5 trường bắt buộc/màn. Các màn measure (SC-M0-*) giữ nguyên bản 1.0 với đường dẫn đổi `/pulse` → `/measure`.
 
-## SC-01 Đăng nhập (Keycloak, không tự viết)
-Chuyển hướng tới trang đăng nhập realm `dxlab`. Không có trường tự thiết kế. Sau đăng nhập về `/`. Nút "Quên mật khẩu" là của Keycloak.
-
-## SC-02 Portal / Launchpad (`/`)
+## SC-01 Đăng nhập wizard (`/login`)
 | STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
 |---|---|---|---|---|---|
-| 1 | Bảng tin | Khối markdown | – | `00. Portal/news.md` | Chỉ đọc; sửa trên Nextcloud |
-| 2 | Gợi ý bước tiếp theo | Thẻ (card) | – | "Chưa đo: hãy mở đợt đo" | Đọc `pulse/latest`; spear → chỉ thẻ [H]; kite → thêm [P]; diamond → tất cả |
-| 3 | Nút tác vụ | Nhóm button | – | Theo vai trò | staff: Tạo yêu cầu, Tệp của tôi; manager: + Dashboard; dx-admin: + Đo lường, Quản trị |
-| 4 | Cây Resources | Cây 3 cấp | – | Mở `3. [R] RESOURCES` | Nhấn tệp mở tab Nextcloud; ẩn nhánh không có quyền |
-| 5 | Dashboard nhúng | iframe | – | Ẩn khi M3 chưa bật | Chỉ manager/dx-admin |
+| 1 | Mật khẩu quản trị | Password | Có | trống | So với băm của `FORGE_ADMIN_PASSWORD`; 5 lần sai khoá 15 phút |
+| 2 | Đăng nhập bằng OIDC | Button | – | ẩn nếu chưa cấu hình | Chuyển sang Keycloak của đích |
 
-## SC-03 Đo lường – danh sách đợt đo (`/pulse`)
+## SC-02 Trang chủ đường ống (`/`)
 | STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
 |---|---|---|---|---|---|
-| 1 | Radar chồng các vòng | Biểu đồ | – | Tối đa 3 vòng gần nhất | Bật/tắt từng vòng bằng chú giải |
-| 2 | Bảng đợt đo | Bảng | – | Sắp xếp round giảm dần | Cột: Vòng, Trạng thái, Phản hồi (E/M/S), H/P/D/I, Hình dạng, Ngày chốt |
-| 3 | Mở đợt đo | Button | – | – | Chỉ dx-admin/manager; mở SC-04 |
+| 1 | Thư mục làm việc | Dropdown + nút Tạo | – | thư mục gần nhất | Đổi là đổi tổ chức; hiện tên tổ chức, đích |
+| 2 | Thanh 6 bước | Stepper | – | bước đầu chưa có sản phẩm | Mỗi bước: chưa làm / đang làm / xong / lỗi; bước sau mở khi bước trước có sản phẩm; nhấn vào mở trang bước |
+| 3 | Sản phẩm mỗi bước | Thẻ | – | – | ResultV1 (vòng, hình dạng), intent.yaml (mtime), plan.yaml (số tài nguyên, số bị khoá), state (số đã apply), verify (xanh/đỏ), handbook (số trang) |
+| 4 | Chạy tiếp | Button chính | – | bước kế tiếp | Vô hiệu kèm lý do khi thiếu sản phẩm bước trước |
+| 5 | Lịch sử chạy | Bảng | – | 10 dòng gần nhất | Cột: giai đoạn, bắt đầu, thời lượng, kết quả, báo cáo |
 
-## SC-04 Mở đợt đo (popover)
+## SC-M0-01 … SC-M0-06 (đo lường)
+Giữ nguyên SC-03 đến SC-08 của bản 1.0 (danh sách đợt đo, mở đợt đo, dashboard đợt đo, khảo sát, kê đơn, kit). Thay đổi: ở SC kê đơn thêm nút "Sang phỏng vấn" mang tổ chức, phòng ban, quy trình lõi, 5 RÕ sang intent; ở kit, nút "Tải zip" là phụ, nút chính là "Sang phỏng vấn".
+
+## SC-03 Phỏng vấn (`/interview`)
 | STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
 |---|---|---|---|---|---|
-| 1 | Vòng (round) | Số, hệ thống sinh | – | round cuối + 1 | Không sửa |
-| 2 | Bộ câu hỏi | Dropdown fix cứng | Có | `v1` | Từ tệp JSON có sẵn |
-| 3 | Quy trình lõi (coreProcess) | Free text ≤ 120 ký tự | Không | trống | Dùng cho 5 RÕ; có thể nhập sau |
-| 4 | Hạn link khảo sát | Date | Có | +14 ngày | ≥ hôm nay |
-| 5 | Tạo | Button | – | – | Tạo Assessment Draft → Open, sinh 3 token, chuyển SC-05 |
+| 1 | Chế độ | Toggle AI / Form | – | AI nếu provider ≠ none | Provider none → khoá AI |
+| 2 | Khung chat | Danh sách lượt + ô nhập | – | AI mở lời với tóm tắt kết quả đo | ≤ 12 lượt; mỗi câu hỏi có 2–3 gợi ý bấm nhanh; nút "Đủ rồi, tạo intent" |
+| 3 | Form: Tổ chức | Tên, viết tắt (2–10 in hoa), ngành (dropdown 12), quy mô (dropdown 5) | Có (4) | từ measure | |
+| 4 | Form: Phòng ban | Bảng thêm/xoá (Mã 2–5 in hoa, Tên, Email trưởng) | Có ≥ 1 | từ measure | Mã duy nhất |
+| 5 | Form: Quy trình lõi | Bảng (Tên, Gói, R, A, C, I, SLA giờ, Có biểu mẫu công khai) | Có ≥ 1 | từ 5 RÕ | Đúng một A; gói từ thư viện |
+| 6 | Form: Kênh | Chat (telegram/mattermost), 3 đích thông báo | Không | telegram | |
+| 7 | Form: Đích | Dropdown oss/gws/proteus-manifest | Có | từ settings | |
+| 8 | Xem intent | Trình soạn YAML có kiểm lỗi + bản xem form | – | – | Lưu chỉ khi hợp lệ; hiện dòng lỗi |
+| 9 | Lưu và sang Plan | Button | – | – | |
 
-## SC-05 Dashboard đợt đo (`/pulse/a/[id]`)
+## SC-04 Plan (`/plan`)
 | STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
 |---|---|---|---|---|---|
-| 1 | Link khảo sát 3 tầng | 3 ô sao chép + QR | – | token | Hiện khi Open; nút Gửi qua kênh Thông báo |
-| 2 | Phản hồi theo tầng | 3 thẻ số | – | 0/0/0 | Cảnh báo vàng nếu executive hoặc staff = 0 |
-| 3 | Radar HPDI | Biểu đồ 4 trục | – | ẩn khi Open | Lớp Hợp nhất + 3 lớp tầng bật/tắt; H thang 0–100, P/D/I thang 0–30 |
-| 4 | Hình dạng, mức DTI | 2 badge | – | – | spear/kite/illusion/diamond/transitional; mức 1–5 |
-| 5 | Bảng trụ cột | Bảng 6 dòng | – | – | Cột: Trụ cột, Executive, Manager, Staff, Hợp nhất, Độ vênh (đỏ nếu > 0.3) |
-| 6 | Hệ số thực chứng | 3 chip P/D/I | – | – | Tooltip giải thích lấy min giữa tầng |
-| 7 | Chốt đợt đo | Button | – | – | Vô hiệu kèm lý do khi thiếu tầng; xác nhận 2 bước; sau chốt ẩn |
-| 8 | Huỷ đợt đo | Button phụ | – | – | Chỉ khi chưa có phản hồi |
+| 1 | Sinh plan | Button + toggle "Dùng AI đề xuất" | – | AI bật nếu có provider | Hiện thời gian sinh; lưu plan.yaml |
+| 2 | Tóm tắt | 4 thẻ H/P/D/I | – | – | Số tài nguyên, số bị khoá bởi cổng, màu trục cố định |
+| 3 | Cây tài nguyên | Cây 2 cấp (lớp → tài nguyên) | – | mở lớp H | Mỗi nút: icon type, id, reason rút gọn, badge gate (mở/khoá + why), nguồn (pack/rule/ai), nút Vì sao, nút Bỏ |
+| 4 | Chi tiết tài nguyên | Ngăn phải: form theo schema type + YAML | – | – | Sửa inline; lỗi schema chặn tại chỗ; nút Hoàn tác |
+| 5 | Lỗi validator | Danh sách | – | – | Mỗi lỗi trỏ đúng id và cách sửa; plan có lỗi không được phê duyệt |
+| 6 | Phê duyệt plan | Button | – | – | sponsor hoặc architect; ghi người và giờ vào plan.approvals |
+| 7 | Sang Apply | Button | – | vô hiệu khi chưa phê duyệt | |
 
-## SC-06 Khảo sát (`/pulse/s/[token]`, mobile-first)
+## SC-05 Apply (`/apply`)
 | STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
 |---|---|---|---|---|---|
-| 1 | Màn chào | Văn bản + button | – | – | Nêu tầng, số câu, thời gian, "ẩn danh, không lưu IP"; nút Bắt đầu |
-| 2 | Câu hỏi thang | Radio 5 mức 0–4 | Có | không chọn | Một câu mỗi màn; nhãn mức bằng câu tình huống |
-| 3 | Câu hỏi chọn một | Radio có trọng số | Có | không chọn | Câu supp: value là hệ số 0/0.33/0.5/0.66/1 |
-| 4 | Ý kiến tự do (freeText) | Textarea ≤ 2000 ký tự | Không | trống | Cuối bài; gửi cho AI đã cắt |
-| 5 | Tiến trình | Thanh + "câu x/y" | – | – | Lưu nháp localStorage theo token |
-| 6 | Gửi | Button | – | – | Token hết hạn/đợt Closed → màn "Đợt đo đã đóng"; gửi xong khoá lại, không gửi 2 lần từ cùng nháp |
+| 1 | Đích | Hiển thị + nút kiểm tra kết nối | – | từ intent.target | Không đổi ở đây |
+| 2 | Dry-run | Button → bảng | – | – | Cột: id, lớp, hành động (create/update/skip/destroy), diff; đếm theo hành động |
+| 3 | Apply | Button + checkbox "Tôi đã xem dry-run" | Có | không tích | Chạy tuần tự; tiến trình theo tài nguyên với trạng thái và log rút gọn |
+| 4 | Ngắt / Chạy tiếp | Button | – | – | Chạy tiếp từ tài nguyên dở |
+| 5 | Destroy | Button đỏ | – | – | Xác nhận 2 bước: gõ tên tổ chức; tuỳ chọn `prune` |
 
-## SC-07 Kê đơn (`/pulse/a/[id]/prescription`)
+## SC-06 Verify (`/verify`)
 | STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
 |---|---|---|---|---|---|
-| 1 | Nguồn | Badge | – | – | "AI (gemini)" hoặc "Rule-based" khi fallback |
-| 2 | Chẩn đoán + lộ trình | 3 khối P/D/I | – | – | Thứ tự cố định P→D→I; mỗi khối: hành động, KPI |
-| 3 | Câu hỏi đối chất | Danh sách | – | ẩn nếu không vênh | Nút "Gửi vào kênh Thông báo" |
-| 4 | Quy trình lõi | Free text ≤ 120 | Không | coreProcess | Sửa rồi bấm "Sinh 5 RÕ" |
-| 5 | Ma trận 5 RÕ | Bảng | – | – | Cột: Bước, R, A, C, I, Tiêu chuẩn, Công cụ |
-| 6 | Poka-yoke | Danh sách | – | – | Cột: Điểm chạm, Luật, Lớp (1/2/3) |
-| 7 | Hỏi báo cáo | Ô chat | Không | trống | Trả lời chỉ dựa JSON kết quả; ẩn khi provider `none` |
-| 8 | Sinh lại | Button | – | – | Ghi bản ghi Prescription mới, giữ bản cũ |
+| 1 | Chạy verify | Button | – | – | |
+| 2 | Tổng kết | 4 thẻ theo lớp | – | – | Xanh/đỏ, số check đạt/tổng |
+| 3 | Bảng check | Bảng | – | lọc "đỏ trước" | Cột: tài nguyên, check, kết quả, bằng chứng (đường dẫn, mã HTTP), nút Mở trên đích |
+| 4 | Tải báo cáo | Button | – | – | markdown + JSON trong `reports/` |
 
-## SC-08 Bộ kỷ luật (`/pulse/a/[id]/kit`)
+## SC-07 Handbook (`/handbook`)
 | STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
 |---|---|---|---|---|---|
-| 1 | Tên viết tắt tổ chức | Free text 2–10 ký tự in hoa | Có | từ cấu hình | Dùng cho tiền tố thư mục gốc |
-| 2 | Phòng ban | Bảng thêm/xoá dòng (Mã, Tên) | Có ≥ 1 | từ nhóm Keycloak | Mã 2–5 chữ in hoa, duy nhất |
-| 3 | Dự án đang chạy | Bảng thêm/xoá dòng (Slug, Tên) | Không | trống | Slug chữ thường, gạch nối |
-| 4 | Xem trước cây | Cây | – | – | Cập nhật tức thì |
-| 5 | Tải zip | Button | – | – | Sinh artifact, lưu lịch sử |
-| 6 | Cấp phát lên Nextcloud | Button | – | ẩn khi M1 chưa cấu hình | Chỉ dx-admin; hiện tiến trình từng bước |
+| 1 | Sinh sổ tay | Button + toggle AI | – | – | Fallback template |
+| 2 | Danh sách trang | Cây | – | – | Mỗi quy trình lõi 1 trang; trang lỗi rào chắn |
+| 3 | Xem trước | Markdown | – | – | |
+| 4 | Đẩy lên đích | Button | – | – | Vào `00. Portal/handbook/`; hiện đường dẫn |
+| 5 | architecture.md | Liên kết | – | – | |
 
-## SC-09 Quản trị người dùng (`/portal/admin/users`)
+## SC-08 Thư viện gói (`/packs`, `/packs/[id]`)
 | STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
 |---|---|---|---|---|---|
-| 1 | Danh sách | Bảng | – | từ Keycloak | Cột: Tên, Email, Vai trò, Phòng ban, Trạng thái, Lần cuối đăng nhập |
-| 2 | Thêm người dùng: Email | Email | Có | trống | Duy nhất; gửi lời mời đặt mật khẩu |
-| 3 | Họ tên | Free text | Có | trống | |
-| 4 | Vai trò | Dropdown fix cứng | Có | `staff` | dx-admin / manager / staff |
-| 5 | Phòng ban | Dropdown từ danh mục phòng ban | Có | trống | Nhiều lựa chọn |
-| 6 | Thu hồi truy cập | Button đỏ trên dòng | – | – | Mở SC-10 |
+| 1 | Danh sách | Thẻ | – | core, dx-ticket | Tên, ngành, quy trình, đích hỗ trợ, phiên bản |
+| 2 | Thêm gói | Đường dẫn thư mục hoặc URL git | Có | trống | Kiểm schema, hiện lỗi |
+| 3 | Chi tiết gói | Tab: thực thể, form, luật, workflow, dashboard, sổ tay | – | – | Chỉ đọc |
 
-## SC-10 Thu hồi truy cập (`/portal/admin/users/[sub]/offboard`)
+## SC-09 Thiết lập (`/settings/*`)
 | STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
 |---|---|---|---|---|---|
-| 1 | Người thay thế | Dropdown người dùng cùng phòng ban | Có | trống | Nhận ticket và email chuyển tiếp |
-| 2 | Xác nhận | Checkbox "Tôi hiểu thao tác không hoàn tác" | Có | không tích | Nút Bắt đầu chỉ bật khi tích |
-| 3 | Tiến trình 5 bước | Danh sách trạng thái | – | – | Mỗi bước: đang chạy/xong/lỗi + thời gian; nút Chạy lại tại bước lỗi |
-| 4 | Tổng thời gian | Đồng hồ | – | – | Hiện sau khi xong |
+| 1 | LLM provider | Dropdown | Có | none | Khoá không hiện lại; nút kiểm tra |
+| 2 | Đích | Dropdown + các `credentials_ref` (tên biến môi trường) | Có | oss | Hiện biến nào thiếu; nút kiểm tra kết nối từng dịch vụ |
+| 3 | Notifier tạm | Token + chat id | Không | trống | Chỉ dùng cho khảo sát |
 
-## SC-11 Thiết lập notifier (`/settings/notifier`)
-| STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
-|---|---|---|---|---|---|
-| 1 | Telegram bot token | Password text | Không | trống | Kiểm bằng nút "Gửi thử" |
-| 2 | Mattermost URL + token | Password text | Không | trống | Chỉ khi profile chat |
-| 3 | Bảng định tuyến kênh | Bảng 5 dòng (announce, alerts, dx-ticket, approvals, it-support) | Có | trống | Mỗi dòng: provider (dropdown), target (chat_id/thread hoặc channel id); dòng chưa cấu hình → notifier trả lỗi rõ |
-| 4 | Gửi thử | Button từng dòng | – | – | Ghi `core.notifications` |
-
-## SC-12 Thiết lập LLM (`/settings/llm`)
-| STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
-|---|---|---|---|---|---|
-| 1 | Provider | Dropdown fix cứng | Có | `none` | none / gemini / anthropic / ollama; đổi provider hiện trường tương ứng |
-| 2 | API key | Password text | Có khi gemini/anthropic | trống | Không hiển thị lại sau lưu |
-| 3 | Ollama URL, model | Free text | Có khi ollama | `http://ollama:11434`, `qwen2.5:7b` | |
-| 4 | Kiểm tra kết nối | Button | – | – | Gọi 1 prompt ngắn, hiện độ trễ |
-
-## SC-13 Biểu mẫu yêu cầu khách hàng (`/public/ticket`, Appsmith hoặc Core)
-| STT | Tên trường | Kiểu | Bắt buộc | Khởi tạo | Ràng buộc |
-|---|---|---|---|---|---|
-| 1 | Số điện thoại | Free text | Có | trống | Regex `^[0-9]{10}$`; khoá định danh khách hàng |
-| 2 | Họ và tên | Free text ≤ 100 | Có | trống | |
-| 3 | Email | Email | Có | trống | Định dạng email; nhận xác nhận và CSAT |
-| 4 | Loại yêu cầu | Dropdown fix cứng | Có | `Tư vấn` | Bảo hành / Khiếu nại / Tư vấn; Khiếu nại kích cảnh báo |
-| 5 | Nội dung | Textarea ≤ 2000 | Có | trống | |
-| 6 | Hình ảnh lỗi | Upload ≤ 5MB, jpg/png | Không | trống | Lưu Nextcloud `42. Unstructured_Data` |
-| 7 | Đồng ý chính sách dữ liệu | Checkbox | Có | không tích | Không tích sẵn (Privacy by Design); lưu timestamp + phiên bản chính sách |
-
-Màn hình cập nhật ticket (Appsmith): khác thêm mới ở chỗ Ticket_ID, Thời_Gian_Nhận, Số_Điện_Thoại, Tên, Email là chỉ đọc; `Hướng_Xử_Lý` chỉ hiện khi khác Chờ xử lý và bắt buộc khi Đóng; `Trạng_Thái` không sửa bằng tay, chỉ qua hai nút.
+## SC-10 Trang Về (`/about`)
+Ghi công sách (CC BY 4.0), AGPL, phiên bản, đường dẫn mã nguồn, danh sách đích và ghi chú "proteus-manifest là định dạng xuất tương thích".

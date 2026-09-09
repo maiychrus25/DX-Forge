@@ -1,29 +1,27 @@
-# 2. Swimlane workflow (theo đối tượng)
+# 2. Swimlane workflow — DX-Forge (theo đối tượng)
 
-Mỗi sơ đồ mô tả các thao tác của từng nhóm người dùng trên MỘT đối tượng, và trạng thái nào cho phép thao tác nào.
-
-## 2.1 Đối tượng: Đợt đo (Assessment)
+## 2.1 Đợt đo (Assessment)
 
 ![swimlane-01-dot-do](diagrams/swimlane-01-dot-do.png)
 
 *Nguồn chỉnh sửa: [`diagrams/swimlane-01-dot-do.excalidraw`](diagrams/swimlane-01-dot-do.excalidraw)*
 
-Ràng buộc: chỉ chốt khi có ≥ 1 phản hồi executive và ≥ 1 staff; sau Closed không nhận thêm phản hồi (token hết hiệu lực).
+Ràng buộc: chỉ chốt khi ≥ 1 executive và ≥ 1 staff; sau Closed token hết hiệu lực.
 
-## 2.2 Đối tượng: Ticket (DX-Ticket)
+## 2.2 Intent (intent.yaml)
 
-![swimlane-02-ticket](diagrams/swimlane-02-ticket.png)
+![swimlane-02-intent](diagrams/swimlane-02-intent.png)
 
-*Nguồn chỉnh sửa: [`diagrams/swimlane-02-ticket.excalidraw`](diagrams/swimlane-02-ticket.excalidraw)*
+*Nguồn chỉnh sửa: [`diagrams/swimlane-02-intent.excalidraw`](diagrams/swimlane-02-intent.excalidraw)*
 
-## 2.3 Đối tượng: Dự án trong P.A.R.A
+## 2.3 Plan (plan.yaml)
 
-![swimlane-03-du-an-para](diagrams/swimlane-03-du-an-para.png)
+![swimlane-03-plan](diagrams/swimlane-03-plan.png)
 
-*Nguồn chỉnh sửa: [`diagrams/swimlane-03-du-an-para.excalidraw`](diagrams/swimlane-03-du-an-para.excalidraw)*
+*Nguồn chỉnh sửa: [`diagrams/swimlane-03-plan.excalidraw`](diagrams/swimlane-03-plan.excalidraw)*
 
-## 2.4 Đối tượng: Lệnh AI (M4)
+## 2.4 Tài nguyên trên đích (state.json)
 
-![swimlane-04-lenh-ai](diagrams/swimlane-04-lenh-ai.png)
+![swimlane-04-tai-nguyen](diagrams/swimlane-04-tai-nguyen.png)
 
-*Nguồn chỉnh sửa: [`diagrams/swimlane-04-lenh-ai.excalidraw`](diagrams/swimlane-04-lenh-ai.excalidraw)*
+*Nguồn chỉnh sửa: [`diagrams/swimlane-04-tai-nguyen.excalidraw`](diagrams/swimlane-04-tai-nguyen.excalidraw)*

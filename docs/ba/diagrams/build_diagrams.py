@@ -64,7 +64,7 @@ def shape(kind, x, y, w, h, label, nid):
     t["id"] = nid + "_t"
     return [s, t]
 
-def arrow(pts, color, label=None, dashed=False, head="arrow", aid=None, sb=None, eb=None, label_left=False, label_below=False, on_back=False):
+def arrow(pts, color, label=None, dashed=False, head="arrow", aid=None, sb=None, eb=None, label_left=False, label_below=False, on_back=False, shift=(0, 0)):
     x0, y0 = pts[0]; rel = [[px - x0, py - y0] for px, py in pts]
     w = max(p[0] for p in rel) - min(p[0] for p in rel); h = max(p[1] for p in rel) - min(p[1] for p in rel)
     a = base("arrow", x0, y0, w, h, id=aid, strokeColor=color, points=rel, startArrowhead=None,
@@ -74,10 +74,11 @@ def arrow(pts, color, label=None, dashed=False, head="arrow", aid=None, sb=None,
     out = [a]
     if label:
         mid = len(pts) // 2
-        if len(pts) == 4 and not on_back: mid = 3   # elbow: label on the last (horizontal) segment near the target
+        if len(pts) >= 3 and not on_back: mid = len(pts) - 1   # elbow: label on the last (horizontal) segment near the target
         (ax, ay), (bx, by) = pts[mid - 1], pts[mid]
         mx, my = (ax + bx) / 2, (ay + by) / 2
         tw = len(label) * 7.9 + 4
+        mx += shift[0]; my += shift[1]
         if abs(ay - by) < 2:   # horizontal segment: label above, centered; lift clear of nodes when longer than the segment
             lift = 44 if tw > abs(bx - ax) - 8 else 20
             out.append(text(mx - tw / 2, my + 34 if label_below else my - lift, label, size=12, color=BODY))
@@ -121,12 +122,19 @@ def build(spec: dict) -> dict:
         s, t = nodes[e["from"]], nodes[e["to"]]
         reverse = (e["to"], e["from"]) in pairs and e["from"] > e["to"]
         twin = (e["to"], e["from"]) in pairs
-        lab_left = False; lab_below = bool(e.get("below"))
+        lab_left = bool(e.get("left")); lab_below = bool(e.get("below"))
         color = PALETTE[s["kind"]][1]
         style = e.get("style", "arrow")
         head = None if style == "line" else "arrow"
         dashed = style in ("dashed", "include")
-        if style == "line":
+        if style != "line" and e.get("back") and t["col"] != s["col"]:
+            off = e.get("offset", 26)
+            by = max(s["y"] + s["h"], t["y"] + t["h"]) + off
+            pts = [(s["cx"], s["y"] + s["h"]), (s["cx"], by), (t["cx"], by), (t["cx"], t["y"] + t["h"])]
+        elif e.get("via") == "top":  # leave from the top, turn at the target row, enter the target side
+            tx = t["x"] + t["w"] if t["cx"] < s["cx"] else t["x"]
+            pts = [(s["cx"], s["y"]), (s["cx"], t["cy"]), (tx, t["cy"])]
+        elif style == "line":
             pts = [(s["cx"], s["cy"]), (t["cx"], t["cy"])]
             # trim to boundaries (approximate ellipse as box)
             if abs(t["cx"] - s["cx"]) < 10:
@@ -144,7 +152,7 @@ def build(spec: dict) -> dict:
             pts = [(s["x"], s["cy"]), (gx, s["cy"]), (gx, t["cy"]), (t["x"], t["cy"])]
         elif t["col"] == s["col"]:
             dx = (14 if reverse else -14) if twin else 0
-            lab_left = bool(twin and reverse)
+            lab_left = lab_left or bool(twin and reverse)
             if t["cy"] > s["cy"]:
                 pts = [(s["cx"] + dx, s["y"] + s["h"]), (t["cx"] + dx, t["y"])]
             else:
@@ -159,7 +167,7 @@ def build(spec: dict) -> dict:
             off = e.get("offset", 26)
             by = max(s["y"] + s["h"], t["y"] + t["h"]) + off
             pts = [(s["cx"], s["y"] + s["h"]), (s["cx"], by), (t["cx"], by), (t["cx"], t["y"] + t["h"])]
-        els += arrow(pts, color, e.get("label"), dashed=dashed, head=head, sb=s["id"], eb=t["id"], label_left=lab_left, label_below=lab_below, on_back=bool(e.get("back")))
+        els += arrow(pts, color, e.get("label"), dashed=dashed, head=head, sb=s["id"], eb=t["id"], label_left=lab_left, label_below=lab_below, on_back=bool(e.get("back")), shift=tuple(e.get("shift", (0, 0))))
     # title
     els.insert(0, text(20, 20, spec["title"], size=22, color=TITLE))
     if spec.get("subtitle"): els.insert(1, text(20, 52, spec["subtitle"], size=13, color=BODY))
