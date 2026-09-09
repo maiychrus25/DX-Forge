@@ -1,0 +1,44 @@
+[
+ {
+  "key": "01-ziggurat",
+  "title": "Ziggurat",
+  "subtitle": "PURE GEOMETRY · FOUR LAYERS",
+  "philosophy": "Four rounded bars stacked bottom-up, each shorter than the one below: H (Infrastructure) is the widest foundation, I (Intelligence) the narrowest crown. Left-aligned so the silhouette reads as growth, not a monument. The order P → D → I of the DX-OS method is literally the shape.",
+  "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <g fill=\"currentColor\">\n    <rect x=\"22\" y=\"68\" width=\"56\" height=\"10\" rx=\"5\"/>\n    <rect x=\"22\" y=\"54\" width=\"44\" height=\"10\" rx=\"5\"/>\n    <rect x=\"22\" y=\"40\" width=\"32\" height=\"10\" rx=\"5\"/>\n    <rect x=\"22\" y=\"26\" width=\"20\" height=\"10\" rx=\"5\"/>\n  </g>\n</svg>"
+ },
+ {
+  "key": "02-cycle",
+  "title": "Cycle",
+  "subtitle": "DOT MATRIX · SIX STAGES",
+  "philosophy": "Six dots on an empty ring: measure, interview, plan, apply, verify, handbook. The first stage is heavier because everything starts with measuring; the hollow centre is the organisation the pipeline keeps circling back to (re-measure).",
+  "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <g fill=\"currentColor\">\n    <circle cx=\"50.00\" cy=\"22.00\" r=\"6\"/>\n    <circle cx=\"74.25\" cy=\"36.00\" r=\"3.5\"/>\n    <circle cx=\"74.25\" cy=\"64.00\" r=\"3.5\"/>\n    <circle cx=\"50.00\" cy=\"78.00\" r=\"3.5\"/>\n    <circle cx=\"25.75\" cy=\"64.00\" r=\"3.5\"/>\n    <circle cx=\"25.75\" cy=\"36.00\" r=\"3.5\"/>\n  </g>\n</svg>"
+ },
+ {
+  "key": "03-strike",
+  "title": "Strike",
+  "subtitle": "LINE SYSTEM · THE HAMMER",
+  "philosophy": "Four heavy horizontal strokes are the layers; a single diagonal cut of negative space runs through them like one hammer blow on the anvil. The forge does not add material, it shapes what is already there.",
+  "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <g fill=\"currentColor\">\n    <path d=\"M 28 28 L 32.68 28 L 37.30 36 L 28 36 A 4 4 0 0 1 28 28 Z\"/>\n    <path d=\"M 41.92 28 L 72 28 A 4 4 0 0 1 72 36 L 46.54 36 Z\"/>\n    <path d=\"M 28 42 L 40.76 42 L 45.38 50 L 28 50 A 4 4 0 0 1 28 42 Z\"/>\n    <path d=\"M 50.00 42 L 72 42 A 4 4 0 0 1 72 50 L 54.62 50 Z\"/>\n    <path d=\"M 28 56 L 48.85 56 L 53.46 64 L 28 64 A 4 4 0 0 1 28 56 Z\"/>\n    <path d=\"M 58.08 56 L 72 56 A 4 4 0 0 1 72 64 L 62.70 64 Z\"/>\n    <path d=\"M 28 70 L 56.93 70 L 61.55 78 L 28 78 A 4 4 0 0 1 28 70 Z\"/>\n    <path d=\"M 66.17 70 L 72 70 A 4 4 0 0 1 72 78 L 70.78 78 Z\"/>\n  </g>\n</svg>"
+ },
+ {
+  "key": "04-forge-f",
+  "title": "Forge F",
+  "subtitle": "LETTER · GATED LAYER",
+  "philosophy": "A geometric F built from three layer bars on one stem, plus a fourth bar that is not attached yet. That detached bar is the Intelligence layer: present in every plan, applied only when the organisation's maturity gate opens. The letter and the method are the same drawing.",
+  "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <g fill=\"currentColor\">\n    <rect x=\"28\" y=\"22\" width=\"10\" height=\"56\" rx=\"3\"/>\n    <rect x=\"28\" y=\"22\" width=\"44\" height=\"10\" rx=\"3\"/>\n    <rect x=\"28\" y=\"44\" width=\"32\" height=\"10\" rx=\"3\"/>\n    <rect x=\"52\" y=\"66\" width=\"20\" height=\"10\" rx=\"3\" opacity=\"0.45\"/>\n  </g>\n</svg>"
+ },
+ {
+  "key": "05-compile",
+  "title": "Compile",
+  "subtitle": "DOTS + GEOMETRY · INPUT TO OUTPUT",
+  "philosophy": "Scattered dots on the left are the organisation as it is: people, habits, spreadsheets. They pass through one solid bar, the compiler, and come out as four aligned layers. Assembly line in one glance: chaos, forge, order.",
+  "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <g fill=\"currentColor\">\n    <circle cx=\"18\" cy=\"32\" r=\"3\"/>\n    <circle cx=\"28\" cy=\"46\" r=\"3.5\"/>\n    <circle cx=\"16\" cy=\"60\" r=\"2.5\"/>\n    <circle cx=\"26\" cy=\"70\" r=\"3\"/>\n    <rect x=\"42\" y=\"24\" width=\"12\" height=\"52\" rx=\"6\"/>\n    <rect x=\"64\" y=\"31\" width=\"20\" height=\"6\" rx=\"3\"/>\n    <rect x=\"64\" y=\"43\" width=\"20\" height=\"6\" rx=\"3\"/>\n    <rect x=\"64\" y=\"55\" width=\"20\" height=\"6\" rx=\"3\"/>\n    <rect x=\"64\" y=\"67\" width=\"20\" height=\"6\" rx=\"3\"/>\n  </g>\n</svg>"
+ },
+ {
+  "key": "06-diamond-loop",
+  "title": "Diamond Loop",
+  "subtitle": "LINE + GEOMETRY · THE TARGET SHAPE",
+  "philosophy": "An open ring with an arrowhead is the measure-again loop; the solid diamond in the centre is the book's ideal radar shape, kim cương, where H is small and P, D, I are balanced. Every run of DX-Forge is one lap toward the diamond.",
+  "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <g fill=\"none\" stroke=\"currentColor\" stroke-width=\"4\" stroke-linecap=\"round\">\n    <path d=\"M 75.98 35 A 30 30 0 1 1 50 20\"/>\n  </g>\n  <g fill=\"currentColor\">\n    <circle cx=\"50\" cy=\"20\" r=\"4.5\"/>\n    <polygon points=\"50,39 61,50 50,61 39,50\"/>\n  </g>\n</svg>"
+ }
+]
