@@ -1,13 +1,13 @@
 # DX-Forge — Spec M0 (giai đoạn `measure`): Đo lường DTI/HPDI
 
-Giai đoạn đầu của đường ống DX-Forge (xem `2026-09-09-dx-forge-design.md`). ResultV1 là đầu vào bắt buộc của `interview` và `plan`, và là tham số của cổng trưởng thành. Là nội dung chính của ảnh chụp v0.1.0 nộp ICTU 30/09/2026. Tên module giữ là DX-Pulse.
+Giai đoạn đầu của đường ống DX-Forge (xem `2026-09-09-dx-forge-design.md`). ResultV1 là đầu vào bắt buộc của `interview` và `plan`, và là tham số của cổng trưởng thành. Là nội dung chính của bản v0.1.0 (30/09/2026). Tên module giữ là DX-Pulse.
 
 Ngày: 2026-09-09. Trạng thái: đã duyệt qua thảo luận, chờ người dùng rà soát văn bản.
 
 ## 1. Bối cảnh và mục tiêu
 
-- Cuộc thi: "Phát triển phần mềm mã nguồn mở tích hợp AI 2026" (Khoa CNTT, ICTU). Nộp kho mã 01/07–30/09/2026, chấm 01–08/10, chung kết 10/10/2026. Bảng điểm: 50 điểm PoF (chấm trước) + 50 điểm sản phẩm (nguyên gốc 10, hoàn thiện 10, thân thiện 10, tích hợp AI 10, trình diễn 10).
-- Đường dài: OLP PMNM quốc gia tháng 12/2026, chủ đề "Xây dựng Hệ điều hành Doanh nghiệp số (DX-OS) dựa trên kiến trúc Open-Core", đề chính thức ra tháng 11. M0 là module đầu tiên của nền tảng và là nội dung chính của ảnh chụp v0.1.0 nộp ICTU 30/09.
+- Mốc gần: bản v0.1.0 phát hành 30/09/2026, M0 là nội dung chính.
+- Đường dài: v1.0.0 tháng 12/2026 theo chủ đề "Xây dựng Hệ điều hành Doanh nghiệp số (DX-OS) dựa trên kiến trúc Open-Core". M0 là module đầu tiên của sản phẩm.
 - Sản phẩm tham chiếu: các nền tảng vận hành cài sẵn; DX-Forge là bộ biên dịch sinh ra nền tảng. Phần đo lường này các nền tảng đó không có.
 - Góc khác biệt của DX-Pulse: số hoá Phần I của sách "Xây dựng Hệ điều hành Doanh nghiệp số: Từ Tư duy đến Hành động" (TS. Tạ Tuấn Anh, FDS, CC BY 4.0) thành công cụ "bắt mạch" tổ chức, AI kê đơn lộ trình, sinh bộ kỷ luật P.A.R.A/Poka-yoke. Nhỏ, chạy trên 1 container, cài 5 phút.
 - Ghi công: mọi nơi dùng phương pháp luận của sách phải ghi nguồn theo CC BY 4.0 (README, LICENSE_NOTICE, màn hình "Về DX-Pulse").
@@ -40,7 +40,7 @@ dx-pulse/
 │   ├── src/mapping.ts        # DTI → HPDI
 │   ├── src/shape.ts          # 4 hình dạng, mức DTI, kê đơn rule-based
 │   └── test/                 # vitest, golden cases
-├── docs/                     # BRD, architecture, ADR, screenshots, PoF
+├── docs/                     # BRD, architecture, ADR, screenshots, hồ sơ nguồn mở
 ├── deploy/                   # docker-compose.yml, .env.example
 └── LICENSE, LICENSE_NOTICE.md, DEPENDENCIES.md, BUILDING.md, CHANGELOG.md, DESIGN.md
 ```
@@ -184,11 +184,11 @@ Trang (dưới `/pulse`): `/pulse` dashboard tổ chức (lịch sử radar theo
 
 DESIGN.md tạo trước khi làm UI: token màu sáng/tối, chữ, khoảng cách; radar dùng cùng bảng màu 4 trục cố định (H xám, P xanh lá, D cam, I tím) ở mọi biểu đồ.
 
-## 9. Hạ tầng và PoF
+## 9. Hạ tầng và hồ sơ nguồn mở
 
 - Giấy phép AGPL-3.0-or-later; header SPDX ở dòng đầu mọi tệp mã (ts, tsx, js, sql, sh); LICENSE toàn văn; LICENSE_NOTICE.md nêu mục đích + ma trận tương thích + ghi công sách CC BY 4.0.
 - DEPENDENCIES.md: danh mục gói, không vendor, không sửa mã bên thứ ba. BUILDING.md: Docker và bare-metal (Node 22+), cấu hình chỉ qua `.env`.
-- Hạ tầng theo spec tổng (compose profile `core` là đủ cho M0). Ảnh chụp 30/09 chạy profile `core` trên VPS riêng, không dùng VPS AHV.
+- Hạ tầng theo spec tổng (compose profile `core` là đủ cho M0). Bản 30/09 chạy profile `core` trên VPS riêng, không dùng VPS AHV.
 - CI GitHub Actions: lint, typecheck, vitest, build, Playwright smoke. Issue templates (bug, feature), PR template, CHANGELOG theo Keep a Changelog, release v1.0.0 tag + tar.gz trước 30/09.
 - Quy ước: mã, chú thích, commit tiếng Anh; chuỗi giao diện tiếng Việt. Nhánh `develop` làm việc, `main` chỉ nhận merge có tag.
 
@@ -196,27 +196,27 @@ DESIGN.md tạo trước khi làm UI: token màu sáng/tối, chữ, khoảng c�
 
 - Engine: vitest, golden cases mục 5.5, coverage ≥ 90% cho packages/hpdi-engine.
 - E2E Playwright: đăng ký → tạo tổ chức → mở đợt đo → điền 3 tầng → chốt → thấy radar đúng số kỳ vọng → sinh roadmap (provider `none`, kiểm fallback) → tải kit, kiểm zip có đủ nhánh.
-- Stress 2 vòng trước khi nộp, mỗi vòng desktop 1440 và mobile 375: không tràn ngang, sáng/tối nhất quán, khảo sát điền xong dưới 8 phút.
-- Tiêu chí xong M0: compose `core` lên từ clone sạch dưới 10 phút; 50/50 PoF tự chấm có minh chứng; demo trên VPS công khai; video 3 phút cho ICTU.
+- Stress 2 vòng trước khi phát hành, mỗi vòng desktop 1440 và mobile 375: không tràn ngang, sáng/tối nhất quán, khảo sát điền xong dưới 8 phút.
+- Tiêu chí xong M0: compose `core` lên từ clone sạch dưới 10 phút; hồ sơ nguồn mở đầy đủ có minh chứng; demo trên VPS công khai; video giới thiệu 3 phút.
 
 ## 11. Lịch (trích từ spec tổng, luồng A)
 
 | Ngày | Việc |
 |---|---|
-| 10–12/09 | Repo, PoF skeleton, workspaces, Prisma, auth, DESIGN.md; engine schema + scoring + mapping + test golden |
+| 10–12/09 | Repo, khung hồ sơ nguồn mở, workspaces, Prisma, auth, DESIGN.md; engine schema + scoring + mapping + test golden |
 | 13–16/09 | questionnaire.v1.json, trang khảo sát, chốt đợt đo, dashboard radar |
 | 17–20/09 | Lớp AI (3 adapter, zod, fallback, llm_calls), trang kê đơn, askReport |
 | 21–23/09 | P.A.R.A kit + xem trước, lịch sử theo vòng, trang about/ghi công |
-| 24–26/09 | Docs (BRD, architecture, ADR, PoF compliance), Dockerfile/compose, VPS, CI xanh |
+| 24–26/09 | Docs (BRD, architecture, ADR, tuân thủ nguồn mở), Dockerfile/compose, VPS, CI xanh |
 | 27–28/09 | Stress 2 vòng, sửa lỗi, video, release v1.0.0 |
-| 29–30/09 | Dự phòng, nộp form |
+| 29–30/09 | Dự phòng, phát hành |
 
 ## 12. Rủi ro
 
 - Không có bộ câu hỏi QĐ 1567 gốc → v1 tự soạn, ghi rõ; thay JSON khi có.
 - Tiếng Việt của Ollama 7B yếu → demo chính dùng Gemini/Anthropic, Ollama là minh chứng nguồn mở.
-- Giám khảo so với nền tảng vận hành về độ "to" → trình bày bằng bảng đối chiếu: nền tảng không đo được gì, DX-Pulse là bước 0 bắt buộc trước mọi DX-Lab; M0 chạy được trên profile `core`.
-- Quỹ giờ đội sinh viên → khối 5 (lịch sử) và askReport là hai thứ cắt đầu tiên nếu trễ.
+- Bị so với nền tảng vận hành về độ "to" → trình bày bằng bảng đối chiếu: nền tảng không đo được gì, DX-Pulse là bước 0 bắt buộc trước mọi DX-Lab; M0 chạy được trên profile `core`.
+- Quỹ giờ của nhóm → khối 5 (lịch sử) và askReport là hai thứ cắt đầu tiên nếu trễ.
 
 ## 13. Giao diện với các giai đoạn khác
 

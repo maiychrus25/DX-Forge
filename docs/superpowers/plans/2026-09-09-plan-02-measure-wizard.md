@@ -8,7 +8,7 @@
 
 **Tech Stack:** next ^16, react ^19, tailwindcss ^4 (+ @tailwindcss/postcss), recharts ^3, better-sqlite3 ^12, jszip ^3, zod ^3, @playwright/test ^1.55 (E2E), vitest (unit).
 
-**Spec:** `docs/superpowers/specs/2026-09-09-m0-measurement-design.md` (§2 scope, §3 architecture, §4 data model, §6.2 fallbacks, §7 kit, §8 pages, §9 PoF, §10 tests, §13 interfaces). SRS: FR-W-01..06, FR-M0-*. BA: SC-M0-* screens in `docs/ba/07-screens.md`.
+**Spec:** `docs/superpowers/specs/2026-09-09-m0-measurement-design.md` (§2 scope, §3 architecture, §4 data model, §6.2 fallbacks, §7 kit, §8 pages, §9 open-source compliance, §10 tests, §13 interfaces). SRS: FR-W-01..06, FR-M0-*. BA: SC-M0-* screens in `docs/ba/07-screens.md`.
 
 **Plan series:** 01 engine + CLI (done) → **02 this** → 03 AI layer + interview + handbook → 04 provider oss layer H → 05 provider oss P/D/I → 06 wizard plan/apply/verify → 07 provider gws → 08 manifest + packaging.
 
@@ -2743,7 +2743,7 @@ git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "test
 
 ## Self-review
 
-**Spec coverage (M0 spec):** §2 block 1 survey three tiers with links and discrepancy → Tasks 4–6; block 2 engine, radar, shapes, level → plan 01 + Task 6; block 3 prescriptions (rule-based fallbacks of §6.2; AI adapters are plan 03) → Task 7; block 4 kit zip + preview → Task 8; block 5 history by round (radar overlay of the last rounds) → Task 6 `PulsePage`. §3 architecture (one container, engine as a package, SQLite in `.dxforge`, admin password auth, survey token-only) → Tasks 1–3, 9. §4 data model, all eight tables and both unique constraints → Task 2; closing event + notifier → Task 5. §7 tree → Task 8 (all four RESOURCES groups with 16 leaves, NAMING_CONVENTION, POKA_YOKE, 5RO). §8 pages → Tasks 3, 6, 7, 8, 9 (`/pulse`, `/pulse/a/[id]`, `/prescription`, `/kit`, `/pulse/s/[token]`, `/about`, `/login`). §9 PoF (Docker, env-only config) → Task 9; §10 E2E and mobile → Task 10; §13 `GET /api/pulse/latest` + maturity → Task 5. Not in this plan: askReport (needs an LLM → plan 03), OIDC login via Keycloak (plan 04, once a target exists), the admin LLM stats page (data is collected via `llmStats`; the page comes with plan 03).
+**Spec coverage (M0 spec):** §2 block 1 survey three tiers with links and discrepancy → Tasks 4–6; block 2 engine, radar, shapes, level → plan 01 + Task 6; block 3 prescriptions (rule-based fallbacks of §6.2; AI adapters are plan 03) → Task 7; block 4 kit zip + preview → Task 8; block 5 history by round (radar overlay of the last rounds) → Task 6 `PulsePage`. §3 architecture (one container, engine as a package, SQLite in `.dxforge`, admin password auth, survey token-only) → Tasks 1–3, 9. §4 data model, all eight tables and both unique constraints → Task 2; closing event + notifier → Task 5. §7 tree → Task 8 (all four RESOURCES groups with 16 leaves, NAMING_CONVENTION, POKA_YOKE, 5RO). §8 pages → Tasks 3, 6, 7, 8, 9 (`/pulse`, `/pulse/a/[id]`, `/prescription`, `/kit`, `/pulse/s/[token]`, `/about`, `/login`). §9 open-source compliance (Docker, env-only config) → Task 9; §10 E2E and mobile → Task 10; §13 `GET /api/pulse/latest` + maturity → Task 5. Not in this plan: askReport (needs an LLM → plan 03), OIDC login via Keycloak (plan 04, once a target exists), the admin LLM stats page (data is collected via `llmStats`; the page comes with plan 03).
 
 **Placeholder scan:** none. The two `ponytail:` notes name their follow-up (schema.sql packaging check in Task 9; `dist` packaging in plan 08).
 

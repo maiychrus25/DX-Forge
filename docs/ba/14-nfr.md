@@ -36,5 +36,5 @@ Phân biệt hai đối tượng: **Forge** (CLI + wizard, nhẹ) và **hệ th�
 - Quốc tế hoá: giao diện tiếng Việt; mã và tài liệu kỹ thuật tiếng Anh; chuỗi UI tách tệp để thêm tiếng Anh ở giai đoạn sau; định dạng ngày `dd/MM/yyyy`, múi giờ Asia/Ho_Chi_Minh.
 - Dễ sử dụng: khảo sát ≤ 8 phút, một câu mỗi màn; ≤ 5 trường bắt buộc/màn; mọi bảng có trạng thái rỗng kèm hành động; thông điệp lỗi nói rõ cách sửa; điều hướng bàn phím và nhãn ARIA cho biểu đồ.
 - Sao lưu: cron hằng đêm dump Postgres và đồng bộ thư mục Nextcloud về volume sao lưu; snapshot CSV/JSON-LD cuối tháng vào Resources; hướng dẫn 3-2-1 với NAS trong docs/deployment; kịch bản khôi phục thử mỗi tháng, RPO 24 giờ, RTO 2 giờ.
-- Nguồn mở và PoF: AGPL-3.0-or-later, SPDX header mọi tệp, không vendor, không sửa mã bên thứ ba, build từ nguồn chỉ qua `.env`, release tar.gz có phiên bản, CHANGELOG, bug tracker.
-- Khả năng mở rộng: bài toán mẫu DX-Ticket đóng gói ở `plugins/dx-ticket`; đổi bài mẫu theo đề tháng 11 không sửa DX-Core.
+- Nguồn mở: AGPL-3.0-or-later, SPDX header mọi tệp, không vendor, không sửa mã bên thứ ba, build từ nguồn chỉ qua `.env`, release tar.gz có phiên bản, CHANGELOG, bug tracker.
+- Khả năng mở rộng: bài toán mẫu DX-Ticket đóng gói ở `plugins/dx-ticket`; đổi bài toán mẫu không sửa DX-Core.

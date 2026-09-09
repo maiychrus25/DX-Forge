@@ -85,5 +85,5 @@ Cột: Trace | Data object | Module | Function | Size | Type | Description | Pha
 | H-02 | Report | handbook | Sinh `architecture.md` cho kiến trúc sư | S | Other | | P1 |
 | K-01 | Pack | packs | Schema gói, nạp gói, thay biến | M | Advanced | | P1 |
 | K-02 | Pack | packs | Gói core: offboarding 5 bước, audit tên, snapshot | M | Workflow | | P2 |
-| K-03 | Pack | packs | Gói dx-ticket mẫu | M | Workflow | Thay được theo đề tháng 11 | P2 |
+| K-03 | Pack | packs | Gói dx-ticket mẫu | M | Workflow | Thay được khi đổi bài toán mẫu | P2 |
 | C-01 | — | CLI | `measure`, `interview`, `plan`, `apply`, `verify`, `handbook`, `destroy`, `packs`, `explain`; `--json`; mã thoát | M | Other | | P1 |
