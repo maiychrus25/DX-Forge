@@ -9,13 +9,21 @@ import { parse } from "yaml";
 import { PlanV1 } from "@dx-forge/forge-core";
 
 const ROOT = fileURLToPath(new URL("../../../", import.meta.url));
-function run(args: string[]): { code: number; out: string } {
+function run(args: string[], env: NodeJS.ProcessEnv = process.env): { code: number; out: string } {
   try {
-    return { code: 0, out: execFileSync("npx", ["tsx", "apps/cli/src/index.ts", ...args], { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }) };
+    return { code: 0, out: execFileSync("npx", ["tsx", "apps/cli/src/index.ts", ...args], { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], env }) };
   } catch (e) {
     const err = e as { status: number; stdout: string; stderr: string };
     return { code: err.status, out: `${err.stdout}${err.stderr}` };
   }
+}
+
+/** A copy of the current environment with DXFORGE_OSS_CREDENTIALS removed, for the tests that must
+ * prove a command needs no network and no credentials (or fails cleanly without them). */
+function envWithoutCredentials(): NodeJS.ProcessEnv {
+  const env = { ...process.env };
+  delete env.DXFORGE_OSS_CREDENTIALS;
+  return env;
 }
 
 describe("dxforge CLI", () => {
@@ -77,5 +85,54 @@ describe("dxforge CLI", () => {
     expect(r.out).toContain("intel.agent_policy");
     expect(r.out).toContain("Lý do");
     expect(r.out).toMatch(/gate.*false/i);
+  });
+
+  it("apply --dry-run needs no credentials, prints the change table and writes no state", () => {
+    const planOut = join(tmp, "apply-dry-run-plan.yaml");
+    run(["plan", "-f", "examples/intent.example.yaml", "-o", planOut]);
+    const stateOut = join(tmp, "apply-dry-run-state.json");
+    const r = run(["apply", planOut, "--dry-run", "--state", stateOut], envWithoutCredentials());
+    expect(r.code, r.out).toBe(0);
+    expect(r.out).toContain("create 30");
+    expect(r.out).toContain("gated 3");
+    expect(existsSync(stateOut)).toBe(false);
+  });
+
+  it("apply exits 2 with a Vietnamese message when the credentials env var is missing", () => {
+    const planOut = join(tmp, "apply-noenv-plan.yaml");
+    run(["plan", "-f", "examples/intent.example.yaml", "-o", planOut]);
+    const r = run(["apply", planOut, "--state", join(tmp, "apply-noenv-state.json")], envWithoutCredentials());
+    expect(r.code).toBe(2);
+    expect(r.out).toMatch(/biến môi trường DXFORGE_OSS_CREDENTIALS/);
+  });
+
+  it("apply --layers H --dry-run only counts the H-layer creates", () => {
+    const planOut = join(tmp, "apply-layers-plan.yaml");
+    run(["plan", "-f", "examples/intent.example.yaml", "-o", planOut]);
+    const r = run(["apply", planOut, "--layers", "H", "--dry-run", "--state", join(tmp, "apply-layers-state.json")], envWithoutCredentials());
+    expect(r.code, r.out).toBe(0);
+    expect(r.out).toContain("create 16");
+  });
+
+  it("verify with no state marks every resource notApplied and exits 1", () => {
+    const planOut = join(tmp, "verify-plan.yaml");
+    run(["plan", "-f", "examples/intent.example.yaml", "-o", planOut]);
+    const outDir = join(tmp, "verify-out");
+    const env = { ...process.env, DXFORGE_OSS_CREDENTIALS: "{}" };
+    const r = run(["verify", planOut, "--state", join(tmp, "verify-no-such-state.json"), "--out", outDir], env);
+    expect(r.code).toBe(1);
+    expect(r.out).toContain("Chưa áp dụng");
+    const report = JSON.parse(readFileSync(join(outDir, "verify-report.json"), "utf8"));
+    expect(report.ok).toBe(false);
+    expect(report.notApplied.length).toBeGreaterThan(0);
+    expect(existsSync(join(outDir, "verify-report.md"))).toBe(true);
+  });
+
+  it("destroy exits 2 with a Vietnamese message when the credentials env var is missing, without prompting", () => {
+    const planOut = join(tmp, "destroy-noenv-plan.yaml");
+    run(["plan", "-f", "examples/intent.example.yaml", "-o", planOut]);
+    const r = run(["destroy", planOut, "--yes", "--state", join(tmp, "destroy-noenv-state.json")], envWithoutCredentials());
+    expect(r.code).toBe(2);
+    expect(r.out).toMatch(/biến môi trường DXFORGE_OSS_CREDENTIALS/);
   });
 });

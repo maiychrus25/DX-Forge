@@ -6,6 +6,7 @@
   "dependencies": {
     "@dx-forge/forge-core": "0.1.0",
     "@dx-forge/hpdi-engine": "0.1.0",
+    "@dx-forge/provider-oss": "0.1.0",
     "commander": "^13.0.0",
     "yaml": "^2.6.0"
   }
