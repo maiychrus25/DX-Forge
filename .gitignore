@@ -11,3 +11,8 @@ artifacts/
 playwright-report/
 test-results/
 apps/web/next-env.d.ts
+
+# Next.js writes these agent-guidance files on `next dev`. They are generated, and a second
+# AGENTS.md inside apps/web would compete with the project's own rules at the repository root.
+apps/web/AGENTS.md
+apps/web/CLAUDE.md
