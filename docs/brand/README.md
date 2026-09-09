@@ -14,6 +14,8 @@ maturity gate opens. The letter and the method are the same drawing.
 | `logo-mono.svg` | single colour via `currentColor` (favicons, print, stamps) |
 | `wordmark.svg`, `wordmark-dark.svg` | mark + "DX-Forge" (Inter 600, falls back to system sans) |
 | `logo-{1024,512,256,128,64,32}.png`, `favicon-32.png` | raster exports |
+| `banner.svg`, `banner.png` | README banner, 1280×320 |
+| `architecture.py` → `architecture.excalidraw`, `architecture.png` | architecture overview (Excalidraw, regenerated with the BA diagram primitives) |
 | `showcase.html` | the six explorations with rationale (`variants/`) |
 
 ## Palette
