@@ -1,0 +1,894 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildPlan > matches the snapshot 1`] = `
+{
+  "generated_at": "2026-09-10T00:00:00.000Z",
+  "intent_hash": "d321ddce792765c282778f6e827516b2dd66c01a1053d0344bdc4c80be4b5c5c",
+  "notes": [],
+  "resources": [
+    {
+      "depends_on": [],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.realm",
+      "layer": "H",
+      "reason": "Một danh tính, đăng nhập một lần cho mọi công cụ của DX-Lab.",
+      "spec": {
+        "clients": [
+          "dx-forge-wizard",
+          "nextcloud",
+          "n8n",
+        ],
+        "realm": "dxlab",
+      },
+      "type": "identity.realm",
+    },
+    {
+      "depends_on": [
+        "h.realm",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.role.dx-admin",
+      "layer": "H",
+      "reason": "Vai trò dx-admin dùng trong ACL, quy trình và chính sách tác tử.",
+      "spec": {
+        "name": "dx-admin",
+      },
+      "type": "identity.role",
+    },
+    {
+      "depends_on": [
+        "h.realm",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.role.manager",
+      "layer": "H",
+      "reason": "Vai trò manager dùng trong ACL, quy trình và chính sách tác tử.",
+      "spec": {
+        "name": "manager",
+      },
+      "type": "identity.role",
+    },
+    {
+      "depends_on": [
+        "h.realm",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.role.staff",
+      "layer": "H",
+      "reason": "Vai trò staff dùng trong ACL, quy trình và chính sách tác tử.",
+      "spec": {
+        "name": "staff",
+      },
+      "type": "identity.role",
+    },
+    {
+      "depends_on": [
+        "h.realm",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.group.cskh",
+      "layer": "H",
+      "reason": "Nhóm phòng ban Chăm sóc khách hàng để cấp quyền theo AREAS và lọc dữ liệu.",
+      "spec": {
+        "attributes": {
+          "code": "cskh",
+          "name": "Chăm sóc khách hàng",
+        },
+        "path": "/departments/cskh",
+      },
+      "type": "identity.group",
+    },
+    {
+      "depends_on": [
+        "h.realm",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.group.kd",
+      "layer": "H",
+      "reason": "Nhóm phòng ban Kinh doanh để cấp quyền theo AREAS và lọc dữ liệu.",
+      "spec": {
+        "attributes": {
+          "code": "kd",
+          "name": "Kinh doanh",
+        },
+        "path": "/departments/kd",
+      },
+      "type": "identity.group",
+    },
+    {
+      "depends_on": [
+        "h.realm",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.tree",
+      "layer": "H",
+      "reason": "Cây P.A.R.A chuẩn của sách: mọi tài liệu có đúng một chỗ.",
+      "spec": {
+        "branches": [
+          "00. Portal",
+          "1. [P] PROJECTS",
+          "2. [A] AREAS",
+          "3. [R] RESOURCES/10. GOVERNANCE/11. Policies_Regulations",
+          "3. [R] RESOURCES/10. GOVERNANCE/12. SOP_Processes",
+          "3. [R] RESOURCES/10. GOVERNANCE/13. Technical_Manuals",
+          "3. [R] RESOURCES/10. GOVERNANCE/14. Templates_Forms",
+          "3. [R] RESOURCES/20. EXPERIENCE/21. Case_Studies",
+          "3. [R] RESOURCES/20. EXPERIENCE/22. Lessons_Learned",
+          "3. [R] RESOURCES/20. EXPERIENCE/23. Customer_Feedback",
+          "3. [R] RESOURCES/20. EXPERIENCE/24. Meeting_Notes",
+          "3. [R] RESOURCES/30. EDUCATION/31. Onboarding",
+          "3. [R] RESOURCES/30. EDUCATION/32. Training_Materials",
+          "3. [R] RESOURCES/30. EDUCATION/33. Industry_Knowledge",
+          "3. [R] RESOURCES/30. EDUCATION/34. Reading_List",
+          "3. [R] RESOURCES/40. ASSETS/41. Structured_Data",
+          "3. [R] RESOURCES/40. ASSETS/42. Unstructured_Data",
+          "3. [R] RESOURCES/40. ASSETS/43. Brand_Media",
+          "3. [R] RESOURCES/40. ASSETS/44. Versioned_Assets",
+          "4. [A] ARCHIVES",
+          "2. [A] AREAS/Chăm sóc khách hàng",
+          "2. [A] AREAS/Kinh doanh",
+        ],
+        "readme": true,
+        "root": "[ABC] DX-OS",
+      },
+      "type": "storage.tree",
+    },
+    {
+      "depends_on": [
+        "h.tree",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.acl.resources",
+      "layer": "H",
+      "reason": "Kho tài nguyên chỉ đọc với toàn bộ nhân sự; chỉ quản trị mới sửa.",
+      "spec": {
+        "group": "all-staff",
+        "mode": "read",
+        "path": "3. [R] RESOURCES",
+      },
+      "type": "storage.acl",
+    },
+    {
+      "depends_on": [
+        "h.tree",
+        "h.group.cskh",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.acl.areas.cskh",
+      "layer": "H",
+      "reason": "Phòng Chăm sóc khách hàng tự quản khu vực của mình.",
+      "spec": {
+        "group": "departments/cskh",
+        "mode": "write",
+        "path": "2. [A] AREAS/Chăm sóc khách hàng",
+      },
+      "type": "storage.acl",
+    },
+    {
+      "depends_on": [
+        "h.tree",
+        "h.group.kd",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.acl.areas.kd",
+      "layer": "H",
+      "reason": "Phòng Kinh doanh tự quản khu vực của mình.",
+      "spec": {
+        "group": "departments/kd",
+        "mode": "write",
+        "path": "2. [A] AREAS/Kinh doanh",
+      },
+      "type": "storage.acl",
+    },
+    {
+      "depends_on": [
+        "h.tree",
+        "h.role.dx-admin",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.acl.archives",
+      "layer": "H",
+      "reason": "Lưu trữ chỉ quản trị viên chạm vào; nhân sự không xoá lịch sử.",
+      "spec": {
+        "group": "dx-admin",
+        "mode": "admin",
+        "path": "4. [A] ARCHIVES",
+      },
+      "type": "storage.acl",
+    },
+    {
+      "depends_on": [
+        "h.tree",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.portal",
+      "layer": "H",
+      "reason": "Cổng thông tin nội bộ: tin tức và sổ tay nghiệp vụ số do Forge sinh.",
+      "spec": {
+        "files": [
+          "00. Portal/news.md",
+          "00. Portal/handbook/index.md",
+        ],
+      },
+      "type": "portal.site",
+    },
+    {
+      "depends_on": [],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.channel",
+      "layer": "H",
+      "reason": "Một kênh chung thay cho tin nhắn riêng lẻ.",
+      "spec": {
+        "kind": "telegram",
+        "name": "abc-dxlab",
+      },
+      "type": "comms.channel",
+    },
+    {
+      "depends_on": [
+        "h.channel",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.topic.announce",
+      "layer": "H",
+      "reason": "Thông báo chung.",
+      "spec": {
+        "channel": "h.channel",
+        "name": "thong-bao",
+        "purpose": "announce",
+      },
+      "type": "comms.topic",
+    },
+    {
+      "depends_on": [
+        "h.channel",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.topic.alerts",
+      "layer": "H",
+      "reason": "Cảnh báo từ quy trình.",
+      "spec": {
+        "channel": "h.channel",
+        "name": "canh-bao",
+        "purpose": "alerts",
+      },
+      "type": "comms.topic",
+    },
+    {
+      "depends_on": [
+        "h.channel",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "h.topic.approvals",
+      "layer": "H",
+      "reason": "Nơi người duyệt bấm duyệt cho tác tử và SLA.",
+      "spec": {
+        "channel": "h.channel",
+        "name": "phe-duyet",
+        "purpose": "approvals",
+      },
+      "type": "comms.topic",
+    },
+    {
+      "depends_on": [],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "core.offboardings.entity",
+      "layer": "P",
+      "reason": "Ghi lại mỗi lần thu hồi truy cập để đo thời gian và làm bằng chứng kiểm chứng.",
+      "source": {
+        "pack": "core",
+        "process": undefined,
+      },
+      "spec": {
+        "fields": [
+          {
+            "name": "employee_email",
+            "pii": true,
+            "required": true,
+            "type": "text",
+          },
+          {
+            "name": "requested_at",
+            "required": true,
+            "type": "timestamp",
+          },
+          {
+            "name": "completed_at",
+            "type": "timestamp",
+          },
+          {
+            "name": "duration_minutes",
+            "type": "int",
+          },
+          {
+            "name": "steps_done",
+            "type": "int",
+          },
+        ],
+        "table": "offboardings",
+      },
+      "type": "process.entity",
+    },
+    {
+      "depends_on": [
+        "core.offboardings.entity",
+        "h.topic.announce",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "core.offboarding.workflow",
+      "layer": "P",
+      "reason": "Thu hồi truy cập 5 bước trong một lần chạy; Forge chỉ kiểm chứng bằng tài khoản thử.",
+      "source": {
+        "pack": "core",
+        "process": undefined,
+      },
+      "spec": {
+        "entity": "core.offboardings.entity",
+        "events": [
+          {
+            "actions": [
+              {
+                "type": "identity.disable",
+              },
+              {
+                "to": "4. [A] ARCHIVES",
+                "type": "storage.transfer",
+              },
+              {
+                "type": "comms.remove",
+              },
+              {
+                "set": {
+                  "completed_at": "now",
+                },
+                "type": "update",
+              },
+              {
+                "template": "Đã thu hồi truy cập {employee_email} trong {duration_minutes} phút",
+                "topic": "h.topic.announce",
+                "type": "notify",
+              },
+            ],
+            "on": "created",
+          },
+        ],
+      },
+      "type": "process.workflow",
+    },
+    {
+      "depends_on": [],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "cskh.entity",
+      "layer": "P",
+      "reason": "Bảng dữ liệu cho quy trình Xử lý yêu cầu khách hàng; là nguồn duy nhất cho form, app, dashboard.",
+      "source": {
+        "pack": "dx-ticket",
+        "process": "cskh",
+      },
+      "spec": {
+        "fields": [
+          {
+            "name": "code",
+            "required": true,
+            "type": "text",
+          },
+          {
+            "name": "title",
+            "required": true,
+            "type": "text",
+          },
+          {
+            "name": "description",
+            "type": "text",
+          },
+          {
+            "name": "customer_name",
+            "pii": true,
+            "type": "text",
+          },
+          {
+            "name": "customer_phone",
+            "pii": true,
+            "type": "text",
+          },
+          {
+            "name": "priority",
+            "options": [
+              "low",
+              "normal",
+              "high",
+            ],
+            "type": "enum",
+          },
+          {
+            "name": "status",
+            "options": [
+              "new",
+              "assigned",
+              "in_progress",
+              "resolved",
+              "closed",
+            ],
+            "type": "enum",
+          },
+          {
+            "name": "assignee",
+            "type": "text",
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp",
+          },
+          {
+            "name": "due_at",
+            "type": "timestamp",
+          },
+        ],
+        "table": "ticket_cskh",
+      },
+      "type": "process.entity",
+    },
+    {
+      "depends_on": [
+        "cskh.entity",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "cskh.form",
+      "layer": "P",
+      "reason": "Rào chắn lớp 1: chặn dữ liệu sai ngay khi nhập; tối đa 5 trường bắt buộc.",
+      "source": {
+        "pack": "dx-ticket",
+        "process": "cskh",
+      },
+      "spec": {
+        "entity": "cskh.entity",
+        "fields": [
+          {
+            "label": "Tiêu đề yêu cầu",
+            "name": "title",
+            "required": true,
+          },
+          {
+            "label": "Mô tả",
+            "name": "description",
+          },
+          {
+            "label": "Tên khách hàng",
+            "name": "customer_name",
+            "required": true,
+          },
+          {
+            "label": "Số điện thoại",
+            "name": "customer_phone",
+            "pattern": "^0\\d{9}$",
+            "required": true,
+          },
+          {
+            "label": "Mức ưu tiên",
+            "name": "priority",
+            "options": [
+              "low",
+              "normal",
+              "high",
+            ],
+            "required": true,
+          },
+        ],
+      },
+      "type": "process.form",
+    },
+    {
+      "depends_on": [
+        "cskh.entity",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "cskh.states",
+      "layer": "P",
+      "reason": "Mỗi chuyển trạng thái có đúng một vai trò chịu trách nhiệm (A) theo 5 RÕ.",
+      "source": {
+        "pack": "dx-ticket",
+        "process": "cskh",
+      },
+      "spec": {
+        "entity": "cskh.entity",
+        "states": [
+          "new",
+          "assigned",
+          "in_progress",
+          "resolved",
+          "closed",
+        ],
+        "transitions": [
+          {
+            "A": [
+              "manager",
+            ],
+            "from": "new",
+            "to": "assigned",
+          },
+          {
+            "A": [
+              "staff",
+            ],
+            "from": "assigned",
+            "to": "in_progress",
+          },
+          {
+            "A": [
+              "staff",
+            ],
+            "from": "in_progress",
+            "to": "resolved",
+          },
+          {
+            "A": [
+              "manager",
+            ],
+            "from": "resolved",
+            "to": "closed",
+          },
+        ],
+      },
+      "type": "process.state_machine",
+    },
+    {
+      "depends_on": [
+        "cskh.entity",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "cskh.rule",
+      "layer": "P",
+      "reason": "Rào chắn lớp 2: không cho đóng yêu cầu khi chưa có người xử lý.",
+      "source": {
+        "pack": "dx-ticket",
+        "process": "cskh",
+      },
+      "spec": {
+        "entity": "cskh.entity",
+        "message": "Chưa có người xử lý, không thể đóng yêu cầu.",
+        "name": "no_resolve_without_assignee",
+        "require": "assignee IS NOT NULL",
+        "when": "status IN ('resolved','closed')",
+      },
+      "type": "process.rule",
+    },
+    {
+      "depends_on": [
+        "cskh.entity",
+        "h.topic.alerts",
+        "h.topic.approvals",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "cskh.workflow",
+      "layer": "P",
+      "reason": "Thông báo khi có yêu cầu mới và khi quá hạn SLA 24 giờ.",
+      "source": {
+        "pack": "dx-ticket",
+        "process": "cskh",
+      },
+      "spec": {
+        "entity": "cskh.entity",
+        "events": [
+          {
+            "actions": [
+              {
+                "template": "Yêu cầu mới #{code}: {title} ({priority})",
+                "topic": "h.topic.alerts",
+                "type": "notify",
+              },
+            ],
+            "on": "created",
+          },
+          {
+            "actions": [
+              {
+                "template": "Quá hạn SLA: #{code} {title}, người xử lý {assignee}",
+                "topic": "h.topic.approvals",
+                "type": "notify",
+              },
+            ],
+            "after_hours": 24,
+            "on": "sla_breach",
+          },
+        ],
+      },
+      "type": "process.workflow",
+    },
+    {
+      "depends_on": [
+        "cskh.form",
+        "cskh.states",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "cskh.app",
+      "layer": "P",
+      "reason": "Màn hình làm việc của staff và manager: danh sách, chi tiết, bảng kanban.",
+      "source": {
+        "pack": "dx-ticket",
+        "process": "cskh",
+      },
+      "spec": {
+        "entity": "cskh.entity",
+        "filters": [
+          "status",
+          "priority",
+          "assignee",
+        ],
+        "security": {
+          "roles": [
+            "staff",
+            "manager",
+          ],
+          "row_filter": "department = current_user.department",
+        },
+        "views": [
+          "list",
+          "detail",
+          "board",
+        ],
+      },
+      "type": "process.app",
+    },
+    {
+      "depends_on": [
+        "core.offboardings.entity",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "d.dashboard.core.offboardings",
+      "layer": "D",
+      "reason": "Bảng điều khiển tối thiểu cho core.offboardings: đếm theo trạng thái, quá hạn; che 1 trường PII.",
+      "spec": {
+        "cards": [
+          {
+            "kind": "count_by_state",
+            "name": "Theo trạng thái",
+          },
+          {
+            "kind": "sla_breach",
+            "name": "Quá hạn SLA",
+          },
+        ],
+        "entity": "core.offboardings.entity",
+        "masking": [
+          "employee_email",
+        ],
+      },
+      "type": "data.dashboard",
+    },
+    {
+      "depends_on": [
+        "core.offboardings.entity",
+        "h.tree",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "d.snapshot.core.offboardings",
+      "layer": "D",
+      "reason": "Chụp dữ liệu hằng tháng vào kho tài nguyên có cấu trúc để so sánh theo thời gian.",
+      "spec": {
+        "destination": "3. [R] RESOURCES/40. ASSETS/41. Structured_Data",
+        "entity": "core.offboardings.entity",
+        "formats": [
+          "csv",
+          "jsonld",
+        ],
+        "schedule": "0 2 1 * *",
+      },
+      "type": "data.snapshot",
+    },
+    {
+      "depends_on": [
+        "core.offboardings.entity",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "d.lod.core.offboardings",
+      "layer": "D",
+      "reason": "Ngữ cảnh JSON-LD để dữ liệu mở liên kết được (trục LOD).",
+      "spec": {
+        "context": {
+          "@vocab": "https://schema.org/",
+          "completed_at": "https://schema.org/completed_at",
+          "duration_minutes": "https://schema.org/duration_minutes",
+          "employee_email": "https://schema.org/employee_email",
+          "id": "@id",
+          "requested_at": "https://schema.org/requested_at",
+          "steps_done": "https://schema.org/steps_done",
+        },
+        "entity": "core.offboardings.entity",
+      },
+      "type": "data.lod_context",
+    },
+    {
+      "depends_on": [
+        "cskh.entity",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "d.dashboard.cskh",
+      "layer": "D",
+      "reason": "Bảng điều khiển tối thiểu cho cskh: đếm theo trạng thái, quá hạn; che 2 trường PII.",
+      "spec": {
+        "cards": [
+          {
+            "kind": "count_by_state",
+            "name": "Theo trạng thái",
+          },
+          {
+            "kind": "sla_breach",
+            "name": "Quá hạn SLA",
+          },
+        ],
+        "entity": "cskh.entity",
+        "masking": [
+          "customer_name",
+          "customer_phone",
+        ],
+      },
+      "type": "data.dashboard",
+    },
+    {
+      "depends_on": [
+        "cskh.entity",
+        "h.tree",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "d.snapshot.cskh",
+      "layer": "D",
+      "reason": "Chụp dữ liệu hằng tháng vào kho tài nguyên có cấu trúc để so sánh theo thời gian.",
+      "spec": {
+        "destination": "3. [R] RESOURCES/40. ASSETS/41. Structured_Data",
+        "entity": "cskh.entity",
+        "formats": [
+          "csv",
+          "jsonld",
+        ],
+        "schedule": "0 2 1 * *",
+      },
+      "type": "data.snapshot",
+    },
+    {
+      "depends_on": [
+        "cskh.entity",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "d.lod.cskh",
+      "layer": "D",
+      "reason": "Ngữ cảnh JSON-LD để dữ liệu mở liên kết được (trục LOD).",
+      "spec": {
+        "context": {
+          "@vocab": "https://schema.org/",
+          "assignee": "https://schema.org/assignee",
+          "code": "https://schema.org/code",
+          "created_at": "https://schema.org/created_at",
+          "customer_name": "https://schema.org/customer_name",
+          "customer_phone": "https://schema.org/customer_phone",
+          "description": "https://schema.org/description",
+          "due_at": "https://schema.org/due_at",
+          "id": "@id",
+          "priority": "https://schema.org/priority",
+          "status": "https://schema.org/status",
+          "title": "https://schema.org/title",
+        },
+        "entity": "cskh.entity",
+      },
+      "type": "data.lod_context",
+    },
+    {
+      "depends_on": [
+        "h.tree",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "i.rag.resources",
+      "layer": "I",
+      "reason": "Trợ lý chỉ trả lời theo tài liệu thật trong kho tài nguyên.",
+      "spec": {
+        "collection": "abc_resources",
+        "paths": [
+          "3. [R] RESOURCES",
+        ],
+      },
+      "type": "intel.rag_source",
+    },
+    {
+      "depends_on": [
+        "h.topic.approvals",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "i.policy.cskh",
+      "layer": "I",
+      "reason": "Tác tử cho Xử lý yêu cầu khách hàng chỉ được làm việc trong whitelist; hành động ghi cần manager duyệt trong 24 giờ.",
+      "spec": {
+        "actions": [
+          "cskh.read",
+          "cskh.comment",
+          "cskh.assign",
+        ],
+        "approval_channel": "h.topic.approvals",
+        "approver_role": "manager",
+        "expire_hours": 24,
+      },
+      "type": "intel.agent_policy",
+    },
+    {
+      "depends_on": [
+        "i.rag.resources",
+      ],
+      "gate": {
+        "allowed": true,
+      },
+      "id": "i.assistant",
+      "layer": "I",
+      "reason": "Prompt hệ thống theo khung 5 RÕ; mọi câu trả lời dẫn nguồn.",
+      "spec": {
+        "rag_source": "i.rag.resources",
+        "system_prompt": "Vai trò: trợ lý nội bộ của Công ty TNHH ABC. Bối cảnh: chỉ dùng tài liệu trong kho tài nguyên. Hành động: trả lời ngắn, dẫn nguồn. Định dạng: tiếng Việt, gạch đầu dòng. Ranh giới: không bịa, không thực thi hành động ghi khi chưa có duyệt.",
+      },
+      "type": "intel.assistant",
+    },
+  ],
+  "target": "oss",
+  "version": 1,
+}
+`;
