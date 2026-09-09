@@ -6,3 +6,4 @@
 - Tests first (vitest). A validator rule without a failing and a passing case is not done.
 - Never commit credentials, `.dxforge/`, or generated `plan.yaml`.
 - Commit messages: Conventional Commits (`feat(scope): ...`), one logical change per commit.
+- No commit trailers (`Co-Authored-By`, `Signed-off-by`, tool or AI attribution). Subject and body only.
