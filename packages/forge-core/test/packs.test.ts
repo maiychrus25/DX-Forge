@@ -17,6 +17,9 @@ describe("render", () => {
     expect(() => render("{{process.nope}}", { process: {} })).toThrow(TemplateError);
     expect(() => render("{{process.nope}}", { process: {} })).toThrow(/process\.nope/);
   });
+  it("escapes a substituted value for a YAML double-quoted scalar", () => {
+    expect(render('"{{process.name}}"', { process: { name: 'Xử lý "khẩn"' } })).toBe('"Xử lý \\"khẩn\\""');
+  });
 });
 
 describe("loadPacks", () => {
@@ -47,5 +50,12 @@ describe("renderPack dx-ticket", () => {
   it("core pack renders once per organisation", () => {
     const core = renderPack(packs.get("core")!, { org: intent.organization });
     expect(core.map((r) => r.id)).toEqual(["core.offboardings.entity", "core.offboarding.workflow"]);
+  });
+
+  it("escapes a quote in a substituted process name so the rendered YAML stays valid", () => {
+    const process = { ...intent.core_processes[0], name: 'Xử lý "khẩn"' };
+    const resources = renderPack(packs.get("dx-ticket")!, { org: intent.organization, process });
+    const entity = resources.find((r) => r.id === `${process.id}.entity`)!;
+    expect(entity.reason).toContain('Xử lý "khẩn"');
   });
 });
