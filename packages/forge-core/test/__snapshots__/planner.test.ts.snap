@@ -306,7 +306,7 @@ exports[`buildPlan > matches the snapshot 1`] = `
       "gate": {
         "allowed": true,
       },
-      "id": "core.offboardings.entity",
+      "id": "core.offboarding.entity",
       "layer": "P",
       "reason": "Ghi lại mỗi lần thu hồi truy cập để đo thời gian và làm bằng chứng kiểm chứng.",
       "source": {
@@ -345,7 +345,7 @@ exports[`buildPlan > matches the snapshot 1`] = `
     },
     {
       "depends_on": [
-        "core.offboardings.entity",
+        "core.offboarding.entity",
         "h.topic.announce",
       ],
       "gate": {
@@ -359,7 +359,7 @@ exports[`buildPlan > matches the snapshot 1`] = `
         "process": undefined,
       },
       "spec": {
-        "entity": "core.offboardings.entity",
+        "entity": "core.offboarding.entity",
         "events": [
           {
             "actions": [
@@ -679,14 +679,14 @@ exports[`buildPlan > matches the snapshot 1`] = `
     },
     {
       "depends_on": [
-        "core.offboardings.entity",
+        "core.offboarding.entity",
       ],
       "gate": {
         "allowed": true,
       },
-      "id": "d.dashboard.core.offboardings",
+      "id": "d.dashboard.core.offboarding",
       "layer": "D",
-      "reason": "Bảng điều khiển tối thiểu cho core.offboardings: đếm theo trạng thái, quá hạn; che 1 trường PII.",
+      "reason": "Bảng điều khiển tối thiểu cho core.offboarding: đếm theo trạng thái, quá hạn; che 1 trường PII.",
       "spec": {
         "cards": [
           {
@@ -698,7 +698,7 @@ exports[`buildPlan > matches the snapshot 1`] = `
             "name": "Quá hạn SLA",
           },
         ],
-        "entity": "core.offboardings.entity",
+        "entity": "core.offboarding.entity",
         "masking": [
           "employee_email",
         ],
@@ -707,18 +707,18 @@ exports[`buildPlan > matches the snapshot 1`] = `
     },
     {
       "depends_on": [
-        "core.offboardings.entity",
+        "core.offboarding.entity",
         "h.tree",
       ],
       "gate": {
         "allowed": true,
       },
-      "id": "d.snapshot.core.offboardings",
+      "id": "d.snapshot.core.offboarding",
       "layer": "D",
       "reason": "Chụp dữ liệu hằng tháng vào kho tài nguyên có cấu trúc để so sánh theo thời gian.",
       "spec": {
         "destination": "3. [R] RESOURCES/40. ASSETS/41. Structured_Data",
-        "entity": "core.offboardings.entity",
+        "entity": "core.offboarding.entity",
         "formats": [
           "csv",
           "jsonld",
@@ -729,12 +729,12 @@ exports[`buildPlan > matches the snapshot 1`] = `
     },
     {
       "depends_on": [
-        "core.offboardings.entity",
+        "core.offboarding.entity",
       ],
       "gate": {
         "allowed": true,
       },
-      "id": "d.lod.core.offboardings",
+      "id": "d.lod.core.offboarding",
       "layer": "D",
       "reason": "Ngữ cảnh JSON-LD để dữ liệu mở liên kết được (trục LOD).",
       "spec": {
@@ -747,7 +747,7 @@ exports[`buildPlan > matches the snapshot 1`] = `
           "requested_at": "https://schema.org/requested_at",
           "steps_done": "https://schema.org/steps_done",
         },
-        "entity": "core.offboardings.entity",
+        "entity": "core.offboarding.entity",
       },
       "type": "data.lod_context",
     },

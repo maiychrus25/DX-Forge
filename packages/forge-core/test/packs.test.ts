@@ -49,7 +49,7 @@ describe("renderPack dx-ticket", () => {
   });
   it("core pack renders once per organisation", () => {
     const core = renderPack(packs.get("core")!, { org: intent.organization });
-    expect(core.map((r) => r.id)).toEqual(["core.offboardings.entity", "core.offboarding.workflow"]);
+    expect(core.map((r) => r.id)).toEqual(["core.offboarding.entity", "core.offboarding.workflow"]);
   });
 
   it("escapes a quote in a substituted process name so the rendered YAML stays valid", () => {

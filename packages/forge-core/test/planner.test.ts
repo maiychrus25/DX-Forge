@@ -34,11 +34,11 @@ describe("buildPlan", () => {
   });
 
   it("expands the process pack and the org-scoped core pack", () => {
-    expect(ids).toEqual(expect.arrayContaining(["cskh.entity", "cskh.form", "cskh.states", "core.offboardings.entity", "core.offboarding.workflow"]));
+    expect(ids).toEqual(expect.arrayContaining(["cskh.entity", "cskh.form", "cskh.states", "core.offboarding.entity", "core.offboarding.workflow"]));
   });
 
   it("derives one dashboard, snapshot and LOD context per entity, masking PII fields", () => {
-    expect(ids).toEqual(expect.arrayContaining(["d.dashboard.cskh", "d.snapshot.cskh", "d.lod.cskh", "d.dashboard.core.offboardings"]));
+    expect(ids).toEqual(expect.arrayContaining(["d.dashboard.cskh", "d.snapshot.cskh", "d.lod.cskh", "d.dashboard.core.offboarding"]));
     const dash = plan.resources.find((r) => r.id === "d.dashboard.cskh")!;
     expect(dash.spec).toMatchObject({ entity: "cskh.entity", masking: ["customer_name", "customer_phone"] });
     expect(dash.depends_on).toContain("cskh.entity");
