@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+id: core
+name: Core
+description: Quy trình lõi mọi tổ chức đều cần; hiện gồm thu hồi truy cập (offboarding) chạy trên workflow của đích.
+version: "1.0"
+scope: org
+resources:
+  - id: core.offboardings.entity
+    layer: P
+    type: process.entity
+    reason: "Ghi lại mỗi lần thu hồi truy cập để đo thời gian và làm bằng chứng kiểm chứng."
+    spec:
+      table: offboardings
+      fields:
+        - { name: employee_email, type: text, required: true, pii: true }
+        - { name: requested_at, type: timestamp, required: true }
+        - { name: completed_at, type: timestamp }
+        - { name: duration_minutes, type: int }
+        - { name: steps_done, type: int }
+  - id: core.offboarding.workflow
+    layer: P
+    type: process.workflow
+    depends_on: [core.offboardings.entity, h.topic.announce]
+    reason: "Thu hồi truy cập 5 bước trong một lần chạy; Forge chỉ kiểm chứng bằng tài khoản thử."
+    spec:
+      entity: core.offboardings.entity
+      events:
+        - on: created
+          actions:
+            - { type: identity.disable }
+            - { type: storage.transfer, to: "4. [A] ARCHIVES" }
+            - { type: comms.remove }
+            - { type: update, set: { completed_at: now } }
+            - { type: notify, topic: h.topic.announce, template: "Đã thu hồi truy cập {employee_email} trong {duration_minutes} phút" }

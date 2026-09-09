@@ -1,0 +1,86 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+id: dx-ticket
+name: DX-Ticket
+description: Quy trình xử lý yêu cầu khách hàng theo mẫu DX-Ticket của sách DX-OS (lớp P). Biến {{process.*}} và {{org.*}} được thay khi sinh plan.
+version: "1.0"
+scope: process
+resources:
+  - id: "{{process.id}}.entity"
+    layer: P
+    type: process.entity
+    reason: "Bảng dữ liệu cho quy trình {{process.name}}; là nguồn duy nhất cho form, app, dashboard."
+    spec:
+      table: ticket_{{process.id}}
+      fields:
+        - { name: code, type: text, required: true }
+        - { name: title, type: text, required: true }
+        - { name: description, type: text }
+        - { name: customer_name, type: text, pii: true }
+        - { name: customer_phone, type: text, pii: true }
+        - { name: priority, type: enum, options: [low, normal, high] }
+        - { name: status, type: enum, options: [new, assigned, in_progress, resolved, closed] }
+        - { name: assignee, type: text }
+        - { name: created_at, type: timestamp }
+        - { name: due_at, type: timestamp }
+  - id: "{{process.id}}.form"
+    layer: P
+    type: process.form
+    depends_on: ["{{process.id}}.entity"]
+    reason: "Rào chắn lớp 1: chặn dữ liệu sai ngay khi nhập; tối đa 5 trường bắt buộc."
+    spec:
+      entity: "{{process.id}}.entity"
+      fields:
+        - { name: title, label: Tiêu đề yêu cầu, required: true }
+        - { name: description, label: Mô tả }
+        - { name: customer_name, label: Tên khách hàng, required: true }
+        - { name: customer_phone, label: Số điện thoại, required: true, pattern: '^0\d{9}$' }
+        - { name: priority, label: Mức ưu tiên, required: true, options: [low, normal, high] }
+  - id: "{{process.id}}.states"
+    layer: P
+    type: process.state_machine
+    depends_on: ["{{process.id}}.entity"]
+    reason: "Mỗi chuyển trạng thái có đúng một vai trò chịu trách nhiệm (A) theo 5 RÕ."
+    spec:
+      entity: "{{process.id}}.entity"
+      states: [new, assigned, in_progress, resolved, closed]
+      transitions:
+        - { from: new, to: assigned, A: ["{{process.actors.A}}"] }
+        - { from: assigned, to: in_progress, A: ["{{process.actors.R}}"] }
+        - { from: in_progress, to: resolved, A: ["{{process.actors.R}}"] }
+        - { from: resolved, to: closed, A: ["{{process.actors.A}}"] }
+  - id: "{{process.id}}.rule"
+    layer: P
+    type: process.rule
+    depends_on: ["{{process.id}}.entity"]
+    reason: "Rào chắn lớp 2: không cho đóng yêu cầu khi chưa có người xử lý."
+    spec:
+      entity: "{{process.id}}.entity"
+      name: no_resolve_without_assignee
+      when: "status IN ('resolved','closed')"
+      require: "assignee IS NOT NULL"
+      message: "Chưa có người xử lý, không thể đóng yêu cầu."
+  - id: "{{process.id}}.workflow"
+    layer: P
+    type: process.workflow
+    depends_on: ["{{process.id}}.entity", h.topic.alerts, h.topic.approvals]
+    reason: "Thông báo khi có yêu cầu mới và khi quá hạn SLA {{process.sla_hours}} giờ."
+    spec:
+      entity: "{{process.id}}.entity"
+      events:
+        - on: created
+          actions:
+            - { type: notify, topic: h.topic.alerts, template: "Yêu cầu mới #{code}: {title} ({priority})" }
+        - on: sla_breach
+          after_hours: {{process.sla_hours}}
+          actions:
+            - { type: notify, topic: h.topic.approvals, template: "Quá hạn SLA: #{code} {title}, người xử lý {assignee}" }
+  - id: "{{process.id}}.app"
+    layer: P
+    type: process.app
+    depends_on: ["{{process.id}}.form", "{{process.id}}.states"]
+    reason: "Màn hình làm việc của {{process.actors.R}} và {{process.actors.A}}: danh sách, chi tiết, bảng kanban."
+    spec:
+      entity: "{{process.id}}.entity"
+      views: [list, detail, board]
+      filters: [status, priority, assignee]
+      security: { row_filter: "department = current_user.department", roles: ["{{process.actors.R}}", "{{process.actors.A}}"] }

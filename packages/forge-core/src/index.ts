@@ -4,3 +4,5 @@ export * from "./schema/plan.js";
 export * from "./schema/state.js";
 export * from "./schema/specs.js";
 export * from "./hash.js";
+export * from "./packs/template.js";
+export * from "./packs/loader.js";
