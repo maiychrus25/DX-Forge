@@ -48,7 +48,10 @@ export function layerH(intent: IntentV1): Resource[] {
       reason: `Nhóm phòng ban ${d.name} để cấp quyền theo AREAS và lọc dữ liệu.`,
     })),
     {
-      id: "h.tree", layer: "H", type: "storage.tree", depends_on: ["h.realm"], gate: { allowed: true },
+      // The Nextcloud adapter reads the department codes back from the applied `identity.group`
+      // entries, so the groups must exist first. Ordering alone used to make that true by accident;
+      // declaring it keeps a hand-edited plan from silently producing a tree with no department ACLs.
+      id: "h.tree", layer: "H", type: "storage.tree", depends_on: ["h.realm", ...org.departments.map((d) => `h.group.${d.code}`)], gate: { allowed: true },
       spec: { root, branches: [...PARA_BRANCHES, ...org.departments.map((d) => `2. [A] AREAS/${d.name}`)], readme: true },
       reason: "Cây P.A.R.A chuẩn của sách: mọi tài liệu có đúng một chỗ.",
     },

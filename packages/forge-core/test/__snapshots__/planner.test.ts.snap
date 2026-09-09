@@ -110,6 +110,8 @@ exports[`buildPlan > matches the snapshot 1`] = `
     {
       "depends_on": [
         "h.realm",
+        "h.group.cskh",
+        "h.group.kd",
       ],
       "gate": {
         "allowed": true,
