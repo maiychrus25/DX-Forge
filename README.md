@@ -209,7 +209,7 @@ Thông tin đăng nhập đích lấy từ biến môi trường nêu trong `tar
 | Yêu cầu | [BRD](docs/BRD.md) · [SRS](docs/SRS.md) |
 | Phân tích nghiệp vụ | [Bộ BA 15 mục](docs/ba/00-README.md): BPMN, swimlane, trạng thái, use case, activity, màn hình, phân quyền, NFR |
 | Thiết kế | [Spec tổng](docs/superpowers/specs/2026-09-09-dx-forge-design.md) · [Spec forge-core + provider oss](docs/superpowers/specs/2026-09-09-forge-core-oss-provider-design.md) · [Spec đo lường](docs/superpowers/specs/2026-09-09-m0-measurement-design.md) |
-| Kế hoạch | [Plan 01](docs/superpowers/plans/2026-09-09-plan-01-core-engine-cli.md) |
+| Kế hoạch | [01 engine + CLI](docs/superpowers/plans/2026-09-09-plan-01-core-engine-cli.md) · [02 wizard đo lường](docs/superpowers/plans/2026-09-09-plan-02-measure-wizard.md) · [03 lớp AI](docs/superpowers/plans/2026-09-09-plan-03-ai-layer.md) · [04 oss lớp H](docs/superpowers/plans/2026-09-09-plan-04-provider-oss-h.md) · [05 oss P/D/I](docs/superpowers/plans/2026-09-09-plan-05-provider-oss-pdi.md) · [06 wizard plan/apply](docs/superpowers/plans/2026-09-09-plan-06-wizard-plan-apply.md) · [07 gws](docs/superpowers/plans/2026-09-09-plan-07-provider-gws.md) · [08 manifest + phát hành](docs/superpowers/plans/2026-09-09-plan-08-manifest-packaging.md) |
 | Thương hiệu | [Logo, bảng màu, quy tắc](docs/brand/README.md) |
 
 <p align="center">
