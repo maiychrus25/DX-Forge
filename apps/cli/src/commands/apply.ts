@@ -68,9 +68,15 @@ export async function runApply(planPath: string, opts: ApplyOpts): Promise<numbe
     const provider = providerFor(target, {});
 
     if (opts.dryRun) {
+      // One code path with a real apply, so the table an operator reviews is the one apply will act
+      // on. `applyPlan` no longer refuses a dry run over resource types this provider cannot serve;
+      // it reports them instead, which is precisely what the operator needs to see before running.
       const state = readState(statePath, target);
-      const changes = diffPlan(filtered, state, { prune: opts.prune });
-      console.log(renderDryRun(changes));
+      const result = await applyPlan(filtered, provider, {} as Credentials, state, { dryRun: true, prune: opts.prune });
+      console.log(renderDryRun(result.changes));
+      if (result.missingAdapters.length > 0) {
+        console.log(`\nĐích ${target} chưa có adapter cho: ${result.missingAdapters.join(", ")}. Dùng --layers H để áp dụng phần đã hỗ trợ.`);
+      }
       return 0;
     }
 

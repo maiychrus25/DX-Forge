@@ -9,7 +9,10 @@ import { entryFor } from "./state.js";
 
 export type ProgressEvent = { id: string; action: ChangeAction; status: "start" | "done" | "failed" | "skipped"; message?: string };
 export type ApplyOptions = { dryRun?: boolean; prune?: boolean; onProgress?: (e: ProgressEvent) => void; now?: () => Date; log?: (line: string) => void };
-export type ApplyResult = { state: StateV1; changes: Change[]; applied: string[]; skipped: string[]; destroyed: string[]; gated: string[] };
+/** `missingAdapters` is only populated by a dry run: it lists resource types the provider cannot
+ * serve yet, so a caller can warn instead of pretending the plan is fully applicable. A real apply
+ * throws `NoAdapter` for the same condition. */
+export type ApplyResult = { state: StateV1; changes: Change[]; applied: string[]; skipped: string[]; destroyed: string[]; gated: string[]; missingAdapters: string[] };
 
 export class NoAdapter extends Error { constructor(type: string) { super(`Provider không có adapter cho loại tài nguyên ${type}.`); this.name = "NoAdapter"; } }
 export class ApplyError extends Error {
@@ -26,9 +29,13 @@ export async function applyPlan(plan: PlanV1, provider: Provider, credentials: C
   const ctx: ApplyContext = { target: provider.name, credentials, state, log: opts.log ?? (() => {}), now };
   const byId = new Map(plan.resources.map((r) => [r.id, r] as [string, Resource]));
   const changes = diffPlan(plan, state, { prune: opts.prune });
-  for (const c of changes) if ((c.action === "create" || c.action === "update") && !provider.adapters[c.type!]) throw new NoAdapter(c.type!);
-  const result: ApplyResult = { state, changes, applied: [], skipped: [], destroyed: [], gated: [] };
+  const needsAdapter = changes.filter((c) => c.action === "create" || c.action === "update");
+  const missingAdapters = [...new Set(needsAdapter.filter((c) => !provider.adapters[c.type!]).map((c) => c.type!))];
+  const result: ApplyResult = { state, changes, applied: [], skipped: [], destroyed: [], gated: [], missingAdapters };
+  // A dry run describes the plan, so a provider that cannot serve every type must not abort it —
+  // that is exactly the situation an operator runs `--dry-run` to discover. A real apply still refuses.
   if (opts.dryRun) { result.gated = changes.filter((c) => c.action === "gated").map((c) => c.id); return result; }
+  if (missingAdapters.length > 0) throw new NoAdapter(missingAdapters[0]!);
 
   for (const c of changes) {
     if (c.action === "gated") { result.gated.push(c.id); progress({ id: c.id, action: c.action, status: "skipped", message: c.why }); continue; }
