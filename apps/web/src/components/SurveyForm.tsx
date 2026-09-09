@@ -18,7 +18,9 @@ export function SurveyForm({ token }: { token: string }) {
 
   useEffect(() => {
     fetch(`/api/pulse/survey/${token}`).then(async (r) => {
-      if (r.status === 410) return setPhase("expired");
+      // 404 (token never issued) and 410 (expired or round closed) are the same thing to a
+      // respondent, and telling them apart would say whether a token ever existed.
+      if (r.status === 410 || r.status === 404) return setPhase("expired");
       if (!r.ok) return setPhase("error");
       const data = await r.json();
       setQuestions(data.questions); setTier(data.tier);
@@ -42,7 +44,7 @@ export function SurveyForm({ token }: { token: string }) {
   async function submit() {
     const r = await fetch(`/api/pulse/survey/${token}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ answers, freeText }) });
     if (r.status === 201) { try { localStorage.removeItem(draftKey); } catch { /* ignore */ } setPhase("done"); }
-    else if (r.status === 410) setPhase("expired");
+    else if (r.status === 410 || r.status === 404) setPhase("expired");
     else setPhase("error");
   }
 
