@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ApplyError } from "./apply.js";
 import type { Credentials } from "./credentials.js";
-import { LAYER_ORDER } from "./order.js";
+import { destroyOrder } from "./order.js";
 import type { ApplyContext, Provider } from "./provider.js";
 import type { PlanV1, Resource } from "./schema/plan.js";
 import type { StateV1 } from "./schema/state.js";
@@ -10,21 +10,6 @@ export type DestroyProgressEvent = { id: string; status: "start" | "done" | "fai
 export type DestroyOptions = { prune?: boolean; onProgress?: (e: DestroyProgressEvent) => void; now?: () => Date };
 export type DestroyResult = { state: StateV1; destroyed: string[] };
 
-/**
- * Reverse-of-apply order for a set of state entry ids: layers come out in the reverse of
- * `LAYER_ORDER` (I, D, P, then H last, so the realm and everything else H depends on is the last
- * thing torn down), and within one layer, ids come out in the reverse of `ids`' own order (which the
- * caller passes in `state.entries` insertion order, i.e. apply order) so the most recently applied
- * resource of a layer is destroyed first. This is the same comparator `applyPlan`'s `--prune` step
- * uses; it is kept here rather than imported from `apply.ts` because Task 3's file list does not
- * include `apply.ts` — see the task report for the discrepancy this leaves with the plan text.
- */
-export function destroyOrder(state: StateV1, ids: string[]): string[] {
-  const position = new Map(ids.map((id, i) => [id, i]));
-  return [...ids].sort(
-    (a, b) => LAYER_ORDER.indexOf(state.entries[b].layer) - LAYER_ORDER.indexOf(state.entries[a].layer) || position.get(b)! - position.get(a)!,
-  );
-}
 
 /** `entryFor` (state.ts) stores `__type` inside `spec` so a stale entry — one no longer in the plan —
  * can still find its adapter here. */

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type { Layer } from "./schema/intent.js";
 import type { Resource } from "./schema/plan.js";
+import type { StateV1 } from "./schema/state.js";
 
 export const LAYER_ORDER: Layer[] = ["H", "P", "D", "I"];
 
@@ -35,4 +36,16 @@ export function topoSort(resources: Resource[]): Resource[] {
   };
   for (const r of ranked) visit(r);
   return out;
+}
+
+/**
+ * Reverse of apply order: later layers first, and within a layer the most recently applied first, so
+ * infrastructure is torn down after everything that sits on top of it. Shared by `applyPlan`'s
+ * `--prune` pass and by `destroyPlan`, which must agree — two copies would be free to drift.
+ */
+export function destroyOrder(state: StateV1, ids: string[]): string[] {
+  const position = new Map(ids.map((id, i) => [id, i]));
+  return [...ids].sort(
+    (a, b) => LAYER_ORDER.indexOf(state.entries[b]!.layer) - LAYER_ORDER.indexOf(state.entries[a]!.layer) || position.get(b)! - position.get(a)!,
+  );
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type { Credentials } from "./credentials.js";
 import { diffPlan, type Change, type ChangeAction } from "./differ.js";
-import { LAYER_ORDER } from "./order.js";
+import { destroyOrder } from "./order.js";
 import type { ApplyContext, Provider } from "./provider.js";
 import type { PlanV1, Resource } from "./schema/plan.js";
 import type { StateV1 } from "./schema/state.js";
@@ -49,8 +49,7 @@ export async function applyPlan(plan: PlanV1, provider: Provider, credentials: C
 
   if (opts.prune) {
     const stale = changes.filter((c) => c.action === "destroy").map((c) => c.id);
-    const order = Object.keys(state.entries).filter((id) => stale.includes(id));
-    order.sort((a, b) => LAYER_ORDER.indexOf(state.entries[b].layer) - LAYER_ORDER.indexOf(state.entries[a].layer) || order.indexOf(b) - order.indexOf(a));
+    const order = destroyOrder(state, Object.keys(state.entries).filter((id) => stale.includes(id)));
     for (const id of order) {
       const entry = state.entries[id];
       const ghost: Resource = { id, layer: entry.layer, type: "unknown.unknown", spec: entry.spec, reason: "stale", depends_on: [], gate: { allowed: true } };
