@@ -22,7 +22,7 @@ export function allowedLayers(maturity: IntentV1["maturity"]): Gate {
       layers.add("P");
       if (hpdi.P >= 20) layers.add("D");
       else why.D = `${shape}: P=${hpdi.P} < 20, dữ liệu chưa đủ sạch để dựng lớp D.`;
-      why.I = `${shape}: lớp I mở khi P và D đạt ≥ 20 (đúng trật tự P → D → I).`;
+      why.I = `${shape}: lớp I mở khi hình dạng đạt diamond (H ≤ 25 và P, D, I ≥ 20), đúng trật tự P → D → I.`;
       break;
     case "illusion":
       layers.add("P");
