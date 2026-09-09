@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { z } from "zod";
-import { TargetKind } from "./intent.js";
+import { Layer, TargetKind } from "./intent.js";
 
 export const Check = z.object({ name: z.string(), ok: z.boolean(), evidence: z.string() });
 export type Check = z.infer<typeof Check>;
@@ -10,6 +10,8 @@ export const StateEntry = z.object({
   checksum: z.string().regex(/^[0-9a-f]{64}$/),
   appliedAt: z.string().datetime(),
   verify: z.object({ ok: z.boolean(), checks: z.array(Check) }).optional(),
+  layer: Layer.default("H"),
+  spec: z.record(z.string(), z.unknown()).default({}),
 });
 export type StateEntry = z.infer<typeof StateEntry>;
 

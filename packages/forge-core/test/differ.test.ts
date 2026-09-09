@@ -6,17 +6,19 @@ import { loadPacks } from "../src/packs/loader.js";
 import { compile } from "../src/compile.js";
 import { emptyState, type StateV1 } from "../src/schema/state.js";
 import { diffPlan, resourceChecksum } from "../src/differ.js";
+import { entryFor } from "../src/state.js";
 
 const ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const intent = loadIntentFile(`${ROOT}examples/intent.example.yaml`);
 const packs = loadPacks(`${ROOT}packs`);
 const { plan } = compile(intent, packs, new Date("2026-09-10T00:00:00Z"));
+const NOW = new Date("2026-09-10T00:00:00Z");
 
 function stateFor(ids: string[]): StateV1 {
   const s = emptyState("oss");
   for (const id of ids) {
     const r = plan.resources.find((x) => x.id === id)!;
-    s.entries[id] = { externalId: `ext-${id}`, checksum: resourceChecksum(r), appliedAt: "2026-09-10T00:00:00.000Z" };
+    s.entries[id] = entryFor(r, `ext-${id}`, NOW);
   }
   return s;
 }
@@ -36,7 +38,7 @@ describe("diffPlan", () => {
     const byId = Object.fromEntries(diffPlan(plan, state).map((c) => [c.id, c]));
     expect(byId["h.realm"].action).toBe("skip");
     expect(byId["h.role.staff"]).toMatchObject({ action: "update", after: { name: "staff" } });
-    expect(byId["h.role.staff"].before).toBeUndefined(); // state holds only a checksum, not the old spec
+    expect(byId["h.role.staff"].before).toEqual({ name: "staff" }); // state now carries the previous spec
   });
   it("entries in state but not in plan are destroyed only with prune, after everything else, in reverse order", () => {
     const state = stateFor(["h.realm"]);

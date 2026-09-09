@@ -24,13 +24,12 @@ export function diffPlan(plan: PlanV1, state: StateV1, opts: { prune?: boolean }
     const entry = state.entries[r.id];
     if (!entry) changes.push({ ...base, action: "create", after: r.spec });
     else if (entry.checksum === resourceChecksum(r)) changes.push({ ...base, action: "skip" });
-    else changes.push({ ...base, action: "update", after: r.spec });
+    else changes.push({ ...base, action: "update", before: entry.spec, after: r.spec });
   }
   if (opts.prune) {
     const planIds = new Set(plan.resources.map((r) => r.id));
-    // ponytail: no layer info survives in state, so stale ids are destroyed in the reverse of
-    // their order in state.entries. Store `layer` in StateEntry in plan 04 when real destroys
-    // need H last.
+    // Stale ids are destroyed in the reverse of their order in state.entries. `layer` now lives
+    // on each StateEntry, so a real destroy pass can additionally order by layer (P/D/I before H).
     const stale = Object.keys(state.entries).filter((id) => !planIds.has(id)).reverse();
     for (const id of stale) changes.push({ id, action: "destroy" });
   }
