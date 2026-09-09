@@ -80,7 +80,7 @@ def arrow(pts, color, label=None, dashed=False, head="arrow", aid=None, sb=None,
         tw = len(label) * 7.9 + 4
         if abs(ay - by) < 2:   # horizontal segment: label above, centered; lift clear of nodes when longer than the segment
             lift = 44 if tw > abs(bx - ax) - 8 else 20
-            out.append(text(mx - tw / 2, my + 8 if label_below else my - lift, label, size=12, color=BODY))
+            out.append(text(mx - tw / 2, my + 34 if label_below else my - lift, label, size=12, color=BODY))
         else:                  # vertical segment: label beside, centered vertically
             x = mx - tw - 12 if label_left else mx + 12
             out.append(text(x, my - 20, label, size=12, color=BODY))
