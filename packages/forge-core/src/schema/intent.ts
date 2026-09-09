@@ -41,6 +41,7 @@ export const Maturity = z.object({
   dti_level: z.number().int().min(1).max(5),
   discrepancies: z.record(z.string(), z.number()).default({}),
 });
+export type Maturity = z.infer<typeof Maturity>;
 
 export const IntentV1 = z.object({
   version: z.literal(1),
