@@ -31,7 +31,7 @@ Business rule: không AI thì plan deterministic; cổng trưởng thành không
 |---|---|
 | Description | Apply plan đã phê duyệt lên đích, có dry-run, state, tiếp tục sau ngắt |
 | Actor | Kiến trúc sư DX; Hệ thống đích |
-| Priority | Bắt buộc (P1 oss lớp H; P2 phần còn lại, gws, proteus-manifest) |
+| Priority | Bắt buộc (P1 oss lớp H; P2 phần còn lại, gws, manifest) |
 | Trigger | Bấm Apply sau khi xem dry-run, hoặc `dxforge apply` |
 | Pre-condition | plan phê duyệt; thông tin xác thực đích có trong biến môi trường; kết nối đích kiểm tra được |
 | Post-condition | Tài nguyên `gate.allowed` và không `skip` tồn tại trên đích; `state.json` đầy đủ; `runs` ghi kết quả |

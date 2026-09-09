@@ -29,7 +29,7 @@ Giữ nguyên SC-03 đến SC-08 của bản 1.0 (danh sách đợt đo, mở đ
 | 4 | Form: Phòng ban | Bảng thêm/xoá (Mã 2–5 in hoa, Tên, Email trưởng) | Có ≥ 1 | từ measure | Mã duy nhất |
 | 5 | Form: Quy trình lõi | Bảng (Tên, Gói, R, A, C, I, SLA giờ, Có biểu mẫu công khai) | Có ≥ 1 | từ 5 RÕ | Đúng một A; gói từ thư viện |
 | 6 | Form: Kênh | Chat (telegram/mattermost), 3 đích thông báo | Không | telegram | |
-| 7 | Form: Đích | Dropdown oss/gws/proteus-manifest | Có | từ settings | |
+| 7 | Form: Đích | Dropdown oss/gws/manifest | Có | từ settings | |
 | 8 | Xem intent | Trình soạn YAML có kiểm lỗi + bản xem form | – | – | Lưu chỉ khi hợp lệ; hiện dòng lỗi |
 | 9 | Lưu và sang Plan | Button | – | – | |
 
@@ -85,4 +85,4 @@ Giữ nguyên SC-03 đến SC-08 của bản 1.0 (danh sách đợt đo, mở đ
 | 3 | Notifier tạm | Token + chat id | Không | trống | Chỉ dùng cho khảo sát |
 
 ## SC-10 Trang Về (`/about`)
-Ghi công sách (CC BY 4.0), AGPL, phiên bản, đường dẫn mã nguồn, danh sách đích và ghi chú "proteus-manifest là định dạng xuất tương thích".
+Ghi công sách (CC BY 4.0), AGPL, phiên bản, đường dẫn mã nguồn, danh sách đích và ghi chú "manifest là định dạng xuất tương thích".

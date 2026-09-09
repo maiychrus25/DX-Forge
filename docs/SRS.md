@@ -8,7 +8,7 @@ Phiên bản 2.0, 09/09/2026 (thay bản 1.0). Nguồn: [BRD.md](BRD.md), [ba/](
 Đặc tả những gì DX-Forge phải làm để đội (người và AI agent) xây dựng, người duyệt kiểm thử, giám khảo đối chiếu.
 
 ### 1.2 Phạm vi
-DX-Forge gồm: thư viện lõi `forge-core` (schema, planner, validator, state, diff), engine đo `hpdi-engine`, các provider đích (`oss`, `gws`, `proteus-manifest`), lớp AI, gói ngành, CLI `dxforge`, wizard web. Forge không chứa dữ liệu nghiệp vụ và không vận hành nghiệp vụ.
+DX-Forge gồm: thư viện lõi `forge-core` (schema, planner, validator, state, diff), engine đo `hpdi-engine`, các provider đích (`oss`, `gws`, `manifest`), lớp AI, gói ngành, CLI `dxforge`, wizard web. Forge không chứa dữ liệu nghiệp vụ và không vận hành nghiệp vụ.
 
 ### 1.3 Định nghĩa
 | Thuật ngữ | Nghĩa |
@@ -18,20 +18,20 @@ DX-Forge gồm: thư viện lõi `forge-core` (schema, planner, validator, state
 | plan | Danh sách tài nguyên bốn lớp H/P/D/I có lý do, phụ thuộc, cổng (`plan.yaml`) |
 | state | Ánh xạ tài nguyên plan sang id thật trên đích (`.dxforge/state.json`) |
 | provider / adapter | Bộ mã cấp phát và kiểm chứng một loại tài nguyên trên một đích |
-| đích (target) | oss, gws, proteus-manifest |
+| đích (target) | oss, gws, manifest |
 | gói ngành (pack) | Thư mục template thực thể, form, luật, workflow, dashboard theo lĩnh vực |
 | cổng trưởng thành | Luật cho phép hoặc khoá lớp theo shape/mức HPDI |
 | HPDI, DTI, Supp, tầng, P.A.R.A, Poka-yoke, HITL, LOD, ResultV1 | như bản 1.0 |
 
 ### 1.4 Tài liệu tham chiếu
-Sách DX-OS (CC BY 4.0); thể lệ OLP 2026, ICTU 2026; API: Keycloak Admin REST, Nextcloud WebDAV/OCS/groupfolders, n8n REST (import workflow), Appsmith REST (import application), Metabase API, Qdrant, Telegram Bot API, Mattermost API v4, Google Drive v3, Sheets v4, Forms v1, Apps Script API, Looker Studio Linking API; đặc tả plugin manifest của Proteus (`docs/plugin-manifest-spec.md` trong repo Proteus).
+Sách DX-OS (CC BY 4.0); thể lệ OLP 2026, ICTU 2026; API: Keycloak Admin REST, Nextcloud WebDAV/OCS/groupfolders, n8n REST (import workflow), Appsmith REST (import application), Metabase API, Qdrant, Telegram Bot API, Mattermost API v4, Google Drive v3, Sheets v4, Forms v1, Apps Script API, Looker Studio Linking API; đặc tả manifest plugin của nền tảng đích.
 
 ## 2. Mô tả tổng thể
 
 ### 2.1 Bối cảnh
 ```
 Người dùng ──► CLI dxforge ──┐
-             ──► Wizard web ─┤──► forge-core ──► providers ──► Đích: oss | gws | proteus-manifest
+             ──► Wizard web ─┤──► forge-core ──► providers ──► Đích: oss | gws | manifest
                              │        │
                              │        └─► ai (gemini | anthropic | ollama | none)
                              └─► hpdi-engine (measure), SQLite .dxforge/wizard.db
@@ -89,7 +89,7 @@ Truy vết: BR-03, UC-11, US-26..29.
 - **FR-A-07 Provider oss lớp D**: dashboard → Metabase; snapshot → n8n cron xuất CSV + JSON-LD vào Resources; lod_context → tệp `context.jsonld`. AC: dashboard có thẻ và biểu đồ theo spec; snapshot đúng lịch (kiểm bằng chạy tay).
 - **FR-A-08 Provider oss lớp I**: rag_source → Qdrant collection + workflow ingest; agent_policy → workflow HITL n8n (nhận lệnh, kiểm whitelist, gửi thẻ duyệt tới approval_channel, thực thi khi duyệt, hết hạn 24h). AC: lệnh ngoài whitelist bị chặn; lệnh ghi không thực thi khi chưa bấm duyệt. Truy vết BR-10.
 - **FR-A-09 Provider gws**: tree/acl → Drive; entity → Sheets (bảng có tên, data validation, protected header); form → Forms (validation regex, bắt buộc); workflow → Apps Script (sinh Code.gs từ template, tạo project, deploy, trigger); dashboard → Looker Studio Linking URL; app → `appsheet-config.json` + hướng dẫn markdown; channel → Telegram. AC: với tài khoản thử, apply tạo được thư mục, sheet, form, script; verify đọc lại được. Truy vết BR-06.
-- **FR-A-10 Đích proteus-manifest**: xuất thư mục `out/proteus/<pack>/` gồm `manifest.yaml`, `db/seed_data.sql`, `workflows/*.json`, `dashboards/*.json` đúng schema manifest của Proteus; verify = validate schema. Truy vết BR-07.
+- **FR-A-10 Đích manifest**: xuất thư mục `out/manifest/<pack>/` gồm `manifest.yaml`, `db/seed_data.sql`, `workflows/*.json`, `dashboards/*.json` đúng schema manifest của nền tảng đích; verify = validate schema. Truy vết BR-07.
 Truy vết chung: BR-05, UC-12..14, US-30..36.
 
 ### 3.6 handbook (FR-H)

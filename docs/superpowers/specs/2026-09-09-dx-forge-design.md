@@ -7,7 +7,7 @@ Tài liệu con: `2026-09-09-m0-measurement-design.md` (giai đoạn measure), `
 
 DX-Forge là **bộ biên dịch hệ điều hành doanh nghiệp số**: đo tổ chức, phỏng vấn ra đặc tả, sinh kế hoạch chi tiết theo 4 lớp H-P-D-I, cấp phát lên đích đã chọn, kiểm chứng, viết sổ tay, rồi đo lại. Forge **không phải nền tảng vận hành**: không có runtime, không có marketplace plugin, không có tác tử thường trực. Thứ Forge sinh ra mới là DX-Lab chạy thật, trên đích **nguồn mở** (Keycloak, Nextcloud, Postgres, n8n, Appsmith, Metabase, Qdrant, Telegram/Mattermost) hoặc **Google Workspace** (Drive, Sheets, Forms, Apps Script, Looker Studio, AppSheet theo hướng dẫn, Telegram) như sách DX-OS hướng dẫn.
 
-So với ICTU_Proteus-os (nền tảng ghép nguồn mở có marketplace và AI orchestrator): Proteus là thứ bạn cài; Forge là thứ sinh ra thứ bạn cài. Forge còn có đích phụ xuất `manifest.yaml` theo chuẩn plugin của Proteus, tức Forge nằm phía trên, không nằm cạnh.
+So với các nền tảng ghép nguồn mở có marketplace và AI orchestrator: nền tảng là thứ bạn cài; Forge là thứ sinh ra thứ bạn cài. Forge còn có đích phụ xuất `manifest.yaml` theo chuẩn plugin của nền tảng đích, tức Forge nằm phía trên, không nằm cạnh.
 
 Ba trục OLP kế thừa: low-code (Forge sinh form/app Appsmith và Sheets/Forms), LOD (mọi tài nguyên trong plan có URI và JSON-LD context; Forge sinh endpoint LOD cho đích), LLM + RAG (AI phỏng vấn, sinh plan, giải thích, viết sổ tay; hệ sinh ra có RAG trên Resources).
 
@@ -45,7 +45,7 @@ core_processes:
     sla_hours: 24
     external_entry: true       # có biểu mẫu công khai
 channels: { chat: telegram | mattermost, notify_targets: {announce, alerts, approvals} }
-target: { kind: oss | gws | proteus-manifest, endpoint, credentials_ref }
+target: { kind: oss | gws | manifest, endpoint, credentials_ref }
 constraints: { language: vi, pii_masking: true }
 ```
 
@@ -67,7 +67,7 @@ dx-forge/
 ├── packages/providers/
 │   ├── oss/                    # keycloak, nextcloud, postgres, n8n, appsmith, metabase, qdrant, telegram, mattermost
 │   ├── gws/                    # drive, sheets, forms, apps-script, looker, appsheet-guide, telegram
-│   └── proteus-manifest/       # xuất manifest.yaml + SQL + n8n json theo chuẩn Proteus
+│   └── manifest/       # xuất manifest.yaml + SQL + n8n json theo chuẩn plugin của nền tảng đích
 ├── packages/ai/                # LlmProvider (gemini | anthropic | ollama | none), prompt 5 RÕ, zod, fallback
 ├── packs/                      # gói ngành: dx-ticket (mẫu), sau thêm truong-hoc, ban-le
 ├── apps/cli/                   # dxforge measure|interview|plan|apply|verify|handbook|destroy
@@ -87,7 +87,7 @@ dx-forge/
 |---|---|---|---|
 | oss | Keycloak realm/role/group; Nextcloud group folder + ACL + README; Postgres DDL + trigger; n8n import workflow; Appsmith import app; Metabase card/dashboard; Qdrant collection + ingest; Telegram topic (bot tạo topic), Mattermost channel | — | Demo chính tháng 12 |
 | gws | Drive thư mục + quyền; Sheets bảng + data validation + protected range; Forms + validation; Apps Script tạo/deploy Code.gs sinh từ workflow; Looker Studio Linking API; Telegram | AppSheet: sinh `appsheet-config.json` + hướng dẫn từng bước + kiểm chứng bằng cách đọc lại Sheets | Đúng "0 đồng" của sách |
-| proteus-manifest | Xuất `manifest.yaml`, `db/seed.sql`, `workflows/*.json`, `dashboards/*.json` theo `docs/plugin-manifest-spec.md` của Proteus | — | Chứng minh vị trí "phía trên" |
+| manifest | Xuất `manifest.yaml`, `db/seed.sql`, `workflows/*.json`, `dashboards/*.json` theo đặc tả manifest của nền tảng đích | — | Chứng minh vị trí "phía trên" |
 
 ## 6. Giao diện người dùng
 
@@ -96,7 +96,7 @@ dx-forge/
 
 ## 7. PoF, quy ước, kiểm thử
 
-- AGPL-3.0-or-later, SPDX header, LICENSE_NOTICE ghi công sách CC BY 4.0 và nêu rõ Proteus là đích tương thích, DEPENDENCIES.md, BUILDING.md (CLI cài bằng `npm i -g` hoặc `npx`; wizard bằng compose một container), CHANGELOG, Issue template, CI.
+- AGPL-3.0-or-later, SPDX header, LICENSE_NOTICE ghi công sách CC BY 4.0 và nêu các đích tương thích, DEPENDENCIES.md, BUILDING.md (CLI cài bằng `npm i -g` hoặc `npx`; wizard bằng compose một container), CHANGELOG, Issue template, CI.
 - Mã, chú thích, commit tiếng Anh; chuỗi UI tiếng Việt; `develop` → `main` có tag.
 - Kiểm thử: vitest cho forge-core (validator: 20 ca cổng trưởng thành và luật), hpdi-engine (golden), providers với HTTP mock; tích hợp trong CI với compose đích oss `core` (Keycloak + Nextcloud + Postgres + n8n): apply plan mẫu rồi verify phải xanh; E2E Playwright cho wizard: đo → phỏng vấn (provider none) → plan → apply dry-run → verify report; stress 2 vòng desktop/mobile.
 - Tiêu chí xong v1.0.0: từ clone sạch, `dxforge plan` + `apply --target oss` dựng được DX-Lab gói dx-ticket trong ≤ 10 phút và `verify` 100 % xanh; `apply --target gws` dựng được Drive/Sheets/Forms/Apps Script với tài khoản thử; wizard chạy trọn đường ống.
@@ -111,7 +111,7 @@ dx-forge/
 | T4–T5 01–14/10 | chung kết ICTU 10/10; sửa phản hồi | provider oss: postgres DDL + trigger, n8n, appsmith, metabase | gói dx-ticket hoàn chỉnh trên đích oss, E2E |
 | T6–T7 15–28/10 | xem/sửa plan dạng cây, diff | qdrant + rag_source, lod_context, snapshot | agent_policy sinh workflow HITL trên n8n |
 | T8–T9 29/10–11/11 | thư viện gói, thiết lập | provider gws: drive, sheets, forms, apps-script, looker | appsheet-guide; gói ngành thứ hai |
-| T10 12–18/11 | **đề chính thức**: điều chỉnh gói và wizard | proteus-manifest target | AI giải thích tài nguyên |
+| T10 12–18/11 | **đề chính thức**: điều chỉnh gói và wizard | manifest target | AI giải thích tài nguyên |
 | T11–T12 19/11–02/12 | stress 2 vòng, video | verify tự động 2 đích, PoF | v1.0.0 |
 | T13 03–06/12 | dự phòng, nộp | | |
 

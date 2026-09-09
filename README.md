@@ -22,7 +22,8 @@
 
 Most "digital transformation platforms" are something you install. DX-Forge is the thing that **generates what you install**.
 
-It takes the methodology of the open book *Xây dựng Hệ điều hành Doanh nghiệp số: Từ Tư duy đến Hành động* (Tạ Tuấn Anh, CC BY 4.0) and turns it into a pipeline:
+It takes the methodology of the open book *Xây dựng Hệ điều hành Doanh nghiệp số: Từ Tư duy đến Hành động* (Tạ Tuấn Anh, CC BY 4.0)
+and turns it into a pipeline:
 
 ```
 measure ──► interview ──► plan ──► apply ──► verify ──► handbook ──► (measure again)
@@ -38,14 +39,28 @@ ResultV1    intent.yaml   plan.yaml  state.json  report     Resources/00. Portal
 | **verify** | Every resource is checked against the live target: can staff log in, is RESOURCES read-only, does the form reject bad data, does the workflow notify. | report |
 | **handbook** | The digital operating handbook is written from the plan and pushed into the target's portal. | markdown |
 
-Targets: **oss** (Keycloak, Nextcloud, PostgreSQL, n8n, Appsmith, Metabase, Qdrant, Telegram/Mattermost), **gws** (Drive, Sheets, Forms, Apps Script, Looker Studio, AppSheet guide), and **proteus-manifest** (a plugin manifest for [ICTU_Proteus-os](https://github.com/CuongKenn/ICTU_Proteus-os), so Forge sits above that platform rather than beside it).
+Targets:
+
+- **oss**: Keycloak, Nextcloud, PostgreSQL, n8n, Appsmith, Metabase, Qdrant, Telegram or Mattermost
+- **gws**: Google Drive, Sheets, Forms, Apps Script, Looker Studio, AppSheet (guided)
+- **manifest**: a plugin manifest for platforms that consume one, so Forge sits above them rather than beside them
 
 ## Why a compiler and not a platform
 
-- **The order is enforced, not suggested.** The maturity gate reads the measured shape and locks layers: a "spear" organisation (all infrastructure, no digital process) gets H only; an "illusion" organisation (tech and dashboards but no process) is forbidden the I layer with the reason *GIGO*. P → D → I is the shape of the plan.
-- **Every resource explains itself.** `dxforge explain <id>` prints why a resource exists, what it depends on, and whether its gate is open.
-- **Guardrails are code.** Exactly one accountable role per state transition, at most five required fields per form, RESOURCES read-only for all staff, PII masked on every dashboard, every AI agent policy with an approval channel and a ≤ 24 h expiry, acyclic dependencies. AI can propose; it cannot bypass the validator.
-- **The output runs without Forge.** What Forge produces is a real DX-Lab on real open-source software. Forge itself is a CLI and a small wizard.
+- **The order is enforced, not suggested.**
+  The maturity gate reads the measured shape and locks layers.
+  A "spear" organisation (infrastructure only) gets H alone.
+  An "illusion" organisation (dashboards without process) is denied the I layer, reason: *GIGO*.
+- **Every resource explains itself.**
+  `dxforge explain <id>` prints why it exists, what it depends on, and whether its gate is open.
+- **Guardrails are code.**
+  One accountable role per transition. At most five required fields per form.
+  RESOURCES read-only for all staff. PII masked on every dashboard.
+  Every agent policy has an approval channel and a 24-hour expiry. No dependency cycles.
+  AI can propose; it cannot bypass the validator.
+- **The output runs without Forge.**
+  What Forge produces is a real DX-Lab on real open-source software.
+  Forge itself is a CLI and a small wizard.
 
 ## Quick start
 
@@ -60,7 +75,9 @@ npm run dxforge -- explain i.policy.cskh -p plan.yaml
 npm run dxforge -- packs list
 ```
 
-The example intent describes a small retail company with one core process (customer requests, pack `dx-ticket`) measured as *transitional* with P = 25. The compiled plan holds 33 resources; the three Intelligence resources are present but gated:
+The example intent describes a small retail company with one core process: customer requests, pack `dx-ticket`.
+It was measured as *transitional* with P = 25.
+The compiled plan holds 33 resources. The three Intelligence resources are present but gated:
 
 ```
 [H] Hạ tầng (16)
@@ -84,7 +101,9 @@ examples/               intent.example.yaml
 docs/                   BRD, SRS, BA set with Excalidraw diagrams, specs, plans, brand
 ```
 
-The engine has no dependency on the web or a database; forge-core has no dependency on any provider. Providers, the AI layer, and the wizard are separate packages added by the roadmap below.
+The engine depends on neither the web nor a database.
+forge-core depends on no provider.
+Providers, the AI layer, and the wizard are separate packages, added by the roadmap below.
 
 ## Roadmap
 
@@ -97,9 +116,7 @@ The engine has no dependency on the web or a database; forge-core has no depende
 | 05 | provider `oss`, layers P/D/I: PostgreSQL, n8n, Appsmith, Metabase, Qdrant | |
 | 06 | wizard: plan tree, diff, apply progress, verify report | |
 | 07 | provider `gws` | |
-| 08 | `proteus-manifest` export, packaging (`npx dxforge`), v1.0.0 | |
-
-Built for the ICTU "Phát triển phần mềm mã nguồn mở tích hợp AI 2026" contest (submission 30 Sept 2026) and the national OLP PMNM 2026 (theme: a DX-OS on an open-core architecture, finals December 2026).
+| 08 | manifest export, packaging (`npx dxforge`), v1.0.0 | |
 
 ## Documents
 
@@ -110,8 +127,18 @@ Built for the ICTU "Phát triển phần mềm mã nguồn mở tích hợp AI 2
 
 ## Giới thiệu ngắn (tiếng Việt)
 
-DX-Forge là **bộ biên dịch Hệ điều hành Doanh nghiệp số**: đo tổ chức bằng khảo sát ba tầng, chuyển kết quả thành đặc tả `intent.yaml` qua phỏng vấn có AI hỗ trợ, sinh kế hoạch bốn lớp H-P-D-I với lý do cho từng tài nguyên và cổng trưởng thành, cấp phát lên đích nguồn mở (Keycloak, Nextcloud, PostgreSQL, n8n, Appsmith, Metabase, Qdrant, Telegram) hoặc Google Workspace, kiểm chứng trên hệ thống thật, rồi viết sổ tay nghiệp vụ số. Forge không phải nền tảng vận hành; thứ Forge sinh ra mới là DX-Lab chạy thật. Phương pháp luận lấy từ sách DX-OS (CC BY 4.0), mã nguồn theo giấy phép AGPL-3.0-or-later.
+DX-Forge là **bộ biên dịch Hệ điều hành Doanh nghiệp số**.
+
+- Đo tổ chức bằng khảo sát ba tầng, sáu trụ cột.
+- Chuyển kết quả thành đặc tả `intent.yaml` qua phỏng vấn có AI hỗ trợ.
+- Sinh kế hoạch bốn lớp H-P-D-I, mỗi tài nguyên có lý do và cổng trưởng thành.
+- Cấp phát lên đích nguồn mở (Keycloak, Nextcloud, PostgreSQL, n8n, Appsmith, Metabase, Qdrant, Telegram) hoặc Google Workspace.
+- Kiểm chứng trên hệ thống thật, rồi viết sổ tay nghiệp vụ số.
+
+Forge không phải nền tảng vận hành. Thứ Forge sinh ra mới là DX-Lab chạy thật.
 
 ## License and attribution
 
-Code: [AGPL-3.0-or-later](LICENSE). Methodology: *Xây dựng Hệ điều hành Doanh nghiệp số* by Tạ Tuấn Anh, [CC BY 4.0](https://opendigitransform.gitbook.io/dx-os); see [LICENSE_NOTICE.md](LICENSE_NOTICE.md). Third-party systems that Forge targets are neither vendored nor modified; see [DEPENDENCIES.md](DEPENDENCIES.md).
+- **Code:** [AGPL-3.0-or-later](LICENSE)
+- **Methodology:** *Xây dựng Hệ điều hành Doanh nghiệp số* by Tạ Tuấn Anh, [CC BY 4.0](https://opendigitransform.gitbook.io/dx-os). Details in [LICENSE_NOTICE.md](LICENSE_NOTICE.md).
+- **Third-party systems** that Forge targets are neither vendored nor modified. See [DEPENDENCIES.md](DEPENDENCIES.md).
