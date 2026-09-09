@@ -1,0 +1,70 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Target "core": the minimum stack the layer-H adapters in packages/providers/oss talk to
+# (packages/providers/oss/src/keycloak.ts, nextcloud.ts). This is not part of Forge — it is what
+# `dxforge apply --target oss --layers H` provisions against.
+#
+# Kept as small as the adapters allow: Keycloak runs in dev mode with its own embedded database,
+# so the one Postgres instance here backs Nextcloud only — no second database, no init script to
+# create one. See packages/providers/oss/contract/README.md for memory estimates per service and
+# how to bring them up one at a time on a machine with little free RAM.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: dxlab
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?set PG_PASSWORD in deploy/.env.core}
+      POSTGRES_DB: nextcloud
+    volumes: ["pg:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dxlab -d nextcloud"]
+      interval: 5s
+      retries: 20
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    # Dev mode, embedded database: the contract suite only needs a realm that survives one
+    # apply -> verify -> destroy run, not a restart, so there is no reason to spend a second
+    # Postgres database keeping Keycloak's state around. `--health-enabled=true` turns on the
+    # management-interface health checks the healthcheck below reads.
+    command: ["start-dev", "--http-port=8080", "--health-enabled=true"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_PASSWORD:?set KC_PASSWORD in deploy/.env.core}
+    ports: ["${KC_PORT:-8080}:8080"]
+    healthcheck:
+      # Keycloak's management interface (health/metrics) listens on 9000 by default and is not
+      # published outside the container; the probe below runs inside it. Not exercised locally by
+      # the authoring agent (see contract/README.md, "known risks") — if it never turns healthy,
+      # check `docker compose logs keycloak` first.
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && echo -e 'GET /health/ready HTTP/1.1\\r\\nhost: localhost\\r\\n\\r\\n' >&3 && grep -q '\"status\": \"UP\"' <&3"]
+      interval: 10s
+      retries: 30
+
+  nextcloud:
+    image: nextcloud:31-apache
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: dxlab
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?set PG_PASSWORD in deploy/.env.core}
+      NEXTCLOUD_ADMIN_USER: ${NC_ADMIN:-admin}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NC_PASSWORD:?set NC_PASSWORD in deploy/.env.core}
+      NEXTCLOUD_TRUSTED_DOMAINS: "localhost nextcloud"
+      # Read by nextcloud-init.sh (docker-entrypoint-hooks.d/post-installation), not by Nextcloud
+      # itself, to create the non-admin "staff.test" account the contract suite uses to probe ACLs.
+      NC_STAFF_PASSWORD: ${NC_STAFF_PASSWORD:?set NC_STAFF_PASSWORD in deploy/.env.core}
+    ports: ["${NC_PORT:-8081}:80"]
+    volumes:
+      - "nc:/var/www/html"
+      - "./nextcloud-init.sh:/docker-entrypoint-hooks.d/post-installation/dxforge-init.sh:ro"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/status.php | grep -q '\"installed\":true'"]
+      interval: 10s
+      retries: 60
+
+volumes:
+  pg: {}
+  nc: {}

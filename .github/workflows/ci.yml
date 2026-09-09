@@ -31,3 +31,17 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: failure()
         with: { name: playwright-report, path: apps/web/playwright-report }
+  contract:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: cp deploy/target-core.env.example deploy/.env.core && docker compose --env-file deploy/.env.core -f deploy/target-core.yml up -d --wait
+      - run: DXFORGE_CONTRACT=1 KC_URL=http://localhost:8080 NC_URL=http://localhost:8081 npm run contract
+        env: { KC_ADMIN: admin, KC_PASSWORD: admin-ci, NC_ADMIN: admin, NC_PASSWORD: admin-ci, NC_STAFF_PASSWORD: staff-ci }
+      - run: docker compose -f deploy/target-core.yml down -v
+        if: always()

@@ -21,6 +21,7 @@
     "web:build": "npm run build -w @dx-forge/web",
     "web:start": "npm run start -w @dx-forge/web",
     "e2e": "npm run e2e -w @dx-forge/web",
+    "contract": "DXFORGE_CONTRACT=1 vitest run packages/providers/oss/contract",
     "prepare": "tsc -b packages/hpdi-engine packages/forge-core packages/providers/oss"
   },
   "devDependencies": {
