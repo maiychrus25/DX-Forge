@@ -41,7 +41,9 @@ export async function request(url: string, init: RequestInit & { expect?: number
   if (!expect.includes(res.status)) {
     const body = await res.text().catch(() => "");
     const snippet = redact(body, secrets).slice(0, BODY_SNIPPET_LENGTH);
-    throw new HttpError(res.status, url, snippet);
+    // The URL is redacted too, not just the body: Telegram carries the bot token in the path, so an
+    // unredacted URL puts the secret straight into the error message and into `HttpError.url`.
+    throw new HttpError(res.status, redact(url, secrets), snippet);
   }
   return res;
 }
