@@ -1,0 +1,12 @@
+{
+  "name": "@dx-forge/provider-oss",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@dx-forge/forge-core": "0.1.0",
+    "zod": "^3.24.0"
+  }
+}

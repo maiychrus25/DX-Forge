@@ -15,13 +15,13 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -b packages/hpdi-engine packages/forge-core apps/cli && tsc -p apps/web --noEmit",
+    "typecheck": "tsc -b packages/hpdi-engine packages/forge-core packages/providers/oss apps/cli && tsc -p apps/web --noEmit",
     "dxforge": "tsx apps/cli/src/index.ts",
     "web:dev": "npm run dev -w @dx-forge/web",
     "web:build": "npm run build -w @dx-forge/web",
     "web:start": "npm run start -w @dx-forge/web",
     "e2e": "npm run e2e -w @dx-forge/web",
-    "prepare": "tsc -b packages/hpdi-engine packages/forge-core"
+    "prepare": "tsc -b packages/hpdi-engine packages/forge-core packages/providers/oss"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
