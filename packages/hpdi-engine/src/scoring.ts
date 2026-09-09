@@ -45,15 +45,17 @@ function mean(xs: number[]): number {
 
 /**
  * Pillar score per tier = mean of that tier's normalised answers.
- * Merged = tier-weighted average (M0 spec §5.2); when staff data exists, executive/manager means used for
- * merging exclude `weightEvidence` questions so hands-on evidence is only counted through staff.
+ * Merged = tier-weighted average (M0 spec §5.2); when staff has data in this pillar, executive/manager
+ * means used for merging exclude `weightEvidence` questions so hands-on evidence is only counted
+ * through staff. The staff-has-data check is scoped per pillar, not global: a staff response with no
+ * answers in a given pillar must not strip evidence questions from executive/manager in that pillar.
  */
 export function scorePillars(q: Questionnaire, responses: Response[]): ResultV1["pillars"] {
   const out = {} as ResultV1["pillars"];
-  const staffHasData = responses.some((r) => r.tier === "staff");
   const defined = (v: number | undefined): v is number => v !== undefined;
   for (const pillar of PILLARS) {
     const questions = q.questions.filter((x) => x.pillar === pillar && x.type !== "supp");
+    const staffHasData = questions.some((x) => tierMean(x, responses, "staff") !== undefined);
     const byTier: Partial<Record<Tier, number>> = {};
     const forMerge: Partial<Record<Tier, number>> = {};
     for (const tier of TIERS) {

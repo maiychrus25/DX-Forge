@@ -53,6 +53,18 @@ describe("scorePillars", () => {
     expect(p.strategy.byTier.manager).toBeUndefined();
     expect(p.strategy.merged).toBeCloseTo(1, 5);
   });
+
+  it("scopes the evidence exclusion per pillar: staff without answers in a pillar does not strip manager evidence questions", () => {
+    const responses: Response[] = [
+      { tier: "executive", answers: { "OPS-01": 0, "OPS-05": 0 } },
+      { tier: "manager", answers: { "OPS-02": 4, "OPS-03": 0, "OPS-04": 4 } },
+      { tier: "staff", answers: { "DAT-01": 0 } },
+    ];
+    const p = scorePillars(q, responses);
+    // executive 0 (weight 0.25), manager mean 2/3 over all three questions (weight 0.25), staff absent in operations
+    expect(p.operations.merged).toBeCloseTo(1 / 3, 5);
+    expect(p.operations.byTier.staff).toBeUndefined();
+  });
 });
 
 describe("scoreSupp", () => {
