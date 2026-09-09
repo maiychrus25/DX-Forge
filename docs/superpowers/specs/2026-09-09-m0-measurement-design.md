@@ -99,7 +99,7 @@ type Question = {
 
 - Nguồn: P ← operations, customer; D ← data; I ← technology (câu AI/ML) + câu supp I. H không có nguồn, là phần dư.
 - `P% = (scoreP/maxP) × P_supp × 30`; tương tự D, I. `H% = 100 − (P+D+I)`.
-- Mức DTI: tính điểm DTI tổng 0–100 (trung bình 6 trụ cột × 100) rồi tra bảng 0–10, 10–30, 30–70, 70–90, 90–100.
+- Mức DTI: `dtiScore = 100 − H` (điểm "thực chất", tránh mâu thuẫn với hai ca golden), tra bảng: ≤10 → 1; ≤30 → 2; ≤70 → 3; <90 → 4; ≥90 → 5.
 
 ### 5.4 Hình dạng và kê đơn rule-based
 

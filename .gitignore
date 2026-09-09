@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.dxforge/
+*.tsbuildinfo
+coverage/
+plan.yaml
+__pycache__/
+*.pyc

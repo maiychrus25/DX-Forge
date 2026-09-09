@@ -1,0 +1,12 @@
+{
+  "name": "@dx-forge/cli",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "dependencies": {
+    "@dx-forge/forge-core": "0.1.0",
+    "@dx-forge/hpdi-engine": "0.1.0",
+    "commander": "^13.0.0",
+    "yaml": "^2.6.0"
+  }
+}

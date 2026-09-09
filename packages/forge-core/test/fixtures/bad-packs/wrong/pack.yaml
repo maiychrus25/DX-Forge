@@ -1,0 +1,6 @@
+id: other
+name: Wrong
+description: id does not match folder
+version: "1.0"
+scope: org
+resources: []
