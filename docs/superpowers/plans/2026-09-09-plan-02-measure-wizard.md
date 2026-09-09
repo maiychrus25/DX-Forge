@@ -1736,7 +1736,7 @@ export function ShapeBadge({ result }: { result: ResultV1 }) {
     <div className="flex flex-wrap gap-3 items-center">
       <span className="chip bg-ink text-paper text-sm px-3 py-1">{ICON[result.shape]} {vi.round.shape[result.shape]}</span>
       <span className="chip border border-border text-sm px-3 py-1">{vi.round.level} {result.dtiLevel}/5</span>
-      {(["H", "P", "D", "I"] as const).map((a) => <span key={a} className="chip text-paper" style={{ background: { H: "#64748b", P: "#16a34a", D: "#f59e0b", I: "#7c3aed" }[a] }}>{a} {result.hpdi[a]}</span>)}
+      {(["H", "P", "D", "I"] as const).map((a) => <span key={a} className="chip text-paper" style={{ background: `var(--color-axis-${a.toLowerCase()})` }}>{a} {result.hpdi[a]}</span>)}
     </div>
   );
 }
