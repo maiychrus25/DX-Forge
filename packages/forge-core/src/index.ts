@@ -10,3 +10,5 @@ export * from "./planner/rules.js";
 export * from "./planner/index.js";
 export * from "./validator/index.js";
 export * from "./compile.js";
+export * from "./order.js";
+export * from "./differ.js";
