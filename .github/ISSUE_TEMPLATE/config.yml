@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+blank_issues_enabled: false
+contact_links:
+  - name: Hỏi đáp và thảo luận
+    url: https://github.com/maiychrus25/DX-Forge/discussions
+    about: Câu hỏi về cách dùng, ý tưởng gói ngành mới, góp ý phương pháp. Không dùng issue cho việc này.
+  - name: Tài liệu
+    url: https://github.com/maiychrus25/DX-Forge/tree/main/docs
+    about: BRD, SRS, bộ tài liệu BA, spec thiết kế và kế hoạch triển khai.
+  - name: Báo lỗ hổng bảo mật
+    url: https://github.com/maiychrus25/DX-Forge/security/advisories/new
+    about: Báo riêng qua GitHub Security Advisory, không mở issue công khai.

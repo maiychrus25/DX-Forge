@@ -1,6 +1,8 @@
 ---
-name: Feature request
-about: A pack, adapter, rule or screen you need
+name: Đề xuất tính năng
+about: Gói ngành, adapter, luật validator hoặc màn hình bạn cần
+title: "[feat] "
+labels: ["type:feature"]
 ---
 **Which stage** (measure / interview / plan / apply / verify / handbook):
 **What should happen**:

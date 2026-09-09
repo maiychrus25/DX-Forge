@@ -1,6 +1,8 @@
 ---
-name: Bug report
-about: Something in DX-Forge misbehaves
+name: Báo lỗi
+about: Một lệnh, màn hình hoặc adapter của DX-Forge chạy sai
+title: "[bug] "
+labels: ["type:bug"]
 ---
 **Command / screen**:
 **Intent or plan excerpt** (no credentials):
