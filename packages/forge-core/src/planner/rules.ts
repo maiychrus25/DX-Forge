@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type { IntentV1 } from "../schema/intent.js";
 import type { Resource } from "../schema/plan.js";
+import { EntitySpec } from "../schema/specs.js";
 
 /** P.A.R.A tree from the book (M0 spec §7). Department and project branches are added per organisation. */
 export const PARA_BRANCHES = [
@@ -90,7 +91,9 @@ const entityKey = (e: Resource) => e.source?.process ?? e.id.replace(/\.entity$/
 export function layerD(_intent: IntentV1, entities: Resource[]): Resource[] {
   return entities.flatMap<Resource>((e) => {
     const key = entityKey(e);
-    const fields = (e.spec as { fields: { name: string; pii?: boolean }[] }).fields;
+    const parsed = EntitySpec.safeParse(e.spec);
+    if (!parsed.success) return [];
+    const fields = parsed.data.fields;
     const masking = fields.filter((f) => f.pii).map((f) => f.name);
     return [
       {

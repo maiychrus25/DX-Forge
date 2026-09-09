@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { describe, expect, it } from "vitest";
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadIntentFile } from "../src/schema/intent.js";
 import { loadPacks } from "../src/packs/loader.js";
 import { DuplicateResourceId, buildPlan } from "../src/planner/index.js";
 import { PlanV1 } from "../src/schema/plan.js";
+import { validatePlan } from "../src/validator/index.js";
 
 const ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const intent = loadIntentFile(`${ROOT}examples/intent.example.yaml`);
@@ -57,5 +61,42 @@ describe("buildPlan", () => {
 
   it("matches the snapshot", () => {
     expect(plan).toMatchSnapshot();
+  });
+});
+
+describe("layerD with a malformed entity spec", () => {
+  it("does not throw building the plan, and the validator reports a spec_schema error for it", () => {
+    const tmp = mkdtempSync(join(tmpdir(), "dxforge-badpack-"));
+    const packDir = join(tmp, "badspec");
+    mkdirSync(packDir);
+    writeFileSync(
+      join(packDir, "pack.yaml"),
+      [
+        "id: badspec",
+        "name: Bad Spec Pack",
+        "description: Org pack with an entity missing fields, for the layerD crash test.",
+        'version: "1.0.0"',
+        "scope: org",
+        "resources:",
+        "  - id: bad.entity",
+        "    layer: P",
+        "    type: process.entity",
+        "    depends_on: []",
+        '    reason: "test fixture"',
+        "    spec:",
+        "      table: x",
+        "",
+      ].join("\n"),
+    );
+    const badPacks = loadPacks(tmp);
+    const merged = new Map([...packs, ...badPacks]);
+
+    let badPlan: PlanV1 | undefined;
+    expect(() => {
+      badPlan = buildPlan(intent, merged, NOW);
+    }).not.toThrow();
+
+    const { errors } = validatePlan(badPlan!, intent);
+    expect(errors).toContainEqual(expect.objectContaining({ rule: "spec_schema", resourceId: "bad.entity" }));
   });
 });
