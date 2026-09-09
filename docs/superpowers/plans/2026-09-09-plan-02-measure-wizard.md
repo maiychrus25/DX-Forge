@@ -796,7 +796,7 @@ export function saveArtifact(db: Database.Database, a: ArtifactRow): void {
 }
 
 export function getArtifact(db: Database.Database, assessmentId: string, kind: string): (ArtifactRow & { createdAt: string }) | null {
-  const r = db.prepare("SELECT * FROM artifacts WHERE assessment_id = ? AND kind = ? ORDER BY created_at DESC LIMIT 1").get(assessmentId, kind) as Row | undefined;
+  const r = db.prepare("SELECT * FROM artifacts WHERE assessment_id = ? AND kind = ? ORDER BY created_at DESC, rowid DESC LIMIT 1").get(assessmentId, kind) as Row | undefined;
   return r ? { assessmentId, kind, path: r.path as string, sizeBytes: r.size_bytes as number, createdAt: r.created_at as string } : null;
 }
 
