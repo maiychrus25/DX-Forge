@@ -25,6 +25,10 @@
 
 ---
 
+<p align="center">
+  <img src="docs/brand/banner.png" alt="DX-Forge: measure → interview → plan → apply → verify → handbook" width="100%">
+</p>
+
 ## 🌟 Tầm nhìn
 
 Hầu hết "nền tảng chuyển đổi số" là thứ bạn **cài**. DX-Forge là thứ **sinh ra cái bạn cài**.
@@ -43,7 +47,7 @@ Forge lấy phương pháp luận của cuốn sách mở *Xây dựng Hệ đi�
 ## ⚙️ Đường ống
 
 <p align="center">
-  <img src="docs/brand/banner.png" alt="DX-Forge: measure → interview → plan → apply → verify → handbook" width="100%">
+  <img src="docs/brand/pipeline-flow.svg" alt="Chu trình DX-Forge: measure → interview → plan → apply → verify → handbook" width="100%">
 </p>
 
 ```
