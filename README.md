@@ -7,7 +7,9 @@ Status: plan 01 (engine + core + CLI `plan`). See `docs/superpowers/specs/` and 
 ```bash
 npm install
 npm test
-npx dxforge plan -f examples/intent.example.yaml -o plan.yaml
+npm run dxforge -- plan -f examples/intent.example.yaml -o plan.yaml
+npm run dxforge -- explain i.policy.cskh -p plan.yaml
+npm run dxforge -- packs list
 ```
 
 License: AGPL-3.0-or-later. Methodology © Tạ Tuấn Anh, CC BY 4.0 (see `LICENSE_NOTICE.md`).
