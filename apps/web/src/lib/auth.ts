@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
 export const SESSION_COOKIE = "forge_session";
 const TTL_MS = 12 * 3600 * 1000;
@@ -22,10 +22,12 @@ export function verifySession(secret: string, cookie: string | undefined, now: n
   return now >= issued && now - issued < TTL_MS;
 }
 
+/** Compares SHA-256 digests, not the raw strings: digests are always 32 bytes, so a wrong password
+ * costs the same time whatever its length. Returning early on a length mismatch would leak the
+ * length of the admin password through response timing. */
 export function checkPassword(expected: string, given: string): boolean {
-  const a = Buffer.from(expected);
-  const b = Buffer.from(given);
-  if (a.length !== b.length) return false;
+  const a = createHash("sha256").update(expected, "utf8").digest();
+  const b = createHash("sha256").update(given, "utf8").digest();
   return timingSafeEqual(a, b);
 }
 
