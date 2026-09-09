@@ -9,7 +9,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -b packages/hpdi-engine"
+    "typecheck": "tsc -b packages/hpdi-engine packages/forge-core"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

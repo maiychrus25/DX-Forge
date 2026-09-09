@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Canonical sample intent: a small retail company digitising its customer-request process with the dx-ticket pack.
+version: 1
+organization:
+  name: Công ty TNHH ABC
+  short_code: abc
+  sector: retail
+  size_band: "10-50"
+  departments:
+    - { code: cskh, name: Chăm sóc khách hàng }
+    - { code: kd, name: Kinh doanh }
+maturity:
+  assessment_id: demo-round-1
+  hpdi: { H: 55, P: 25, D: 12, I: 8 }
+  shape: transitional
+  dti_level: 3
+  discrepancies: { operations: 0.35 }
+core_processes:
+  - id: cskh
+    pack: dx-ticket
+    name: Xử lý yêu cầu khách hàng
+    actors: { R: staff, A: manager, C: [], I: [dx-admin] }
+    sla_hours: 24
+    external_entry: true
+channels:
+  chat: telegram
+  notify_targets: { announce: thong-bao, alerts: canh-bao, approvals: phe-duyet }
+target:
+  kind: oss
+  endpoint: https://dxlab.example.org
+  credentials_ref: DXFORGE_OSS_CREDENTIALS
+constraints: { language: vi, pii_masking: true }
