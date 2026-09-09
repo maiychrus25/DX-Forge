@@ -16,4 +16,7 @@ describe("topoSort", () => {
   it("throws on a cycle", () => {
     expect(() => topoSort([r("a", "H", ["b"]), r("b", "H", ["a"])])).toThrow(CyclicDependency);
   });
+  it("emits a dependency before its dependent even when the dependency is in a later layer", () => {
+    expect(topoSort([r("h1", "H", ["p1"]), r("p1", "P")]).map((x) => x.id)).toEqual(["p1", "h1"]);
+  });
 });

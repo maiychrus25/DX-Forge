@@ -11,7 +11,11 @@ export class CyclicDependency extends Error {
   }
 }
 
-/** Stable topological order: layer rank first, then depends_on, then input order. */
+/**
+ * Stable topological order for apply. Resources are grouped by layer (H → P → D → I) and by input
+ * order, but a dependency is always emitted before its dependent, even when the dependency lives in a
+ * later layer than the dependent. Generated plans never do that; a hand-edited plan may.
+ */
 export function topoSort(resources: Resource[]): Resource[] {
   const byId = new Map(resources.map((r) => [r.id, r]));
   const ranked = [...resources].sort((a, b) => LAYER_ORDER.indexOf(a.layer) - LAYER_ORDER.indexOf(b.layer));
