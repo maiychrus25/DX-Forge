@@ -27,6 +27,10 @@ export function writeState(path: string, state: StateV1): void {
   renameSync(tmp, path);
 }
 
+/** `__type` rides along inside `spec` so `--prune` can find the adapter for a resource that is no
+ * longer in the plan; without it prune deletes the state entry and orphans the real object on the
+ * target. The checksum is unaffected because `resourceChecksum` hashes the resource, not the entry,
+ * and `diffPlan` strips the key back out before showing a diff. */
 export function entryFor(resource: Resource, externalId: string, now: Date): StateEntry {
-  return { externalId, checksum: resourceChecksum(resource), appliedAt: now.toISOString(), layer: resource.layer, spec: structuredClone(resource.spec) };
+  return { externalId, checksum: resourceChecksum(resource), appliedAt: now.toISOString(), layer: resource.layer, spec: { ...structuredClone(resource.spec), __type: resource.type } };
 }

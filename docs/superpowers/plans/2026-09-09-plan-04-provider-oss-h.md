@@ -305,7 +305,7 @@ function fakeProvider(failOn?: string) {
   return { provider, calls };
 }
 
-async function plan() { return (await compile(intent, packs, { now: NOW() })).plan; }
+async function plan() { return (await compile(intent, packs, NOW())).plan; }
 
 describe("applyPlan", () => {
   it("dry-run lists creates and gated resources and calls no adapter", async () => {
@@ -467,7 +467,7 @@ function diffKeys(before: Record<string, unknown> | undefined, after: Record<str
   return out.join(" ");
 }
 ```
-Ruling in this task: `entryFor` also stores `__type: resource.type` inside `spec` so prune can find the adapter for stale entries (the checksum ignores it because `resourceChecksum` hashes the resource, not the entry). Adjust Task 1's `entryFor`: `spec: { ...structuredClone(resource.spec), __type: resource.type }` and make `differ.before` strip `__type`. Update `state.test.ts` expectation to `toMatchObject` (already tolerant).
+Ruling (applied by the orchestrator after Task 2, because it needs `state.ts` and `differ.ts`, which are outside Task 2's Files list): `entryFor` also stores `__type: resource.type` inside `spec` so prune can find the adapter for stale entries (the checksum ignores it because `resourceChecksum` hashes the resource, not the entry). Adjust Task 1's `entryFor`: `spec: { ...structuredClone(resource.spec), __type: resource.type }` and make `differ.before` strip `__type`. Update `state.test.ts` expectation to `toMatchObject` (already tolerant).
 
 - [ ] **Step 4: Run, commit**
 

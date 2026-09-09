@@ -13,6 +13,13 @@ export function resourceChecksum(r: Resource): string {
   return checksum({ type: r.type, spec: r.spec });
 }
 
+/** `entryFor` stores `__type` inside `spec` so prune can resolve an adapter; it is bookkeeping, not
+ * part of the resource, so it never appears in a diff shown to an operator. */
+function withoutType(spec: Record<string, unknown>): Record<string, unknown> {
+  const { __type: _ignored, ...rest } = spec;
+  return rest;
+}
+
 export function diffPlan(plan: PlanV1, state: StateV1, opts: { prune?: boolean } = {}): Change[] {
   const changes: Change[] = [];
   for (const r of topoSort(plan.resources)) {
@@ -24,7 +31,7 @@ export function diffPlan(plan: PlanV1, state: StateV1, opts: { prune?: boolean }
     const entry = state.entries[r.id];
     if (!entry) changes.push({ ...base, action: "create", after: r.spec });
     else if (entry.checksum === resourceChecksum(r)) changes.push({ ...base, action: "skip" });
-    else changes.push({ ...base, action: "update", before: entry.spec, after: r.spec });
+    else changes.push({ ...base, action: "update", before: withoutType(entry.spec), after: r.spec });
   }
   if (opts.prune) {
     const planIds = new Set(plan.resources.map((r) => r.id));
