@@ -4,14 +4,13 @@
 |---|---|
 | Tên dự án | DX-Forge — Bộ biên dịch Hệ điều hành Doanh nghiệp số (DX-OS) |
 | Phiên bản tài liệu | 2.0, ngày 09/09/2026 (thay bản 1.0 sau khi đổi ý tưởng lõi) |
-| Đơn vị | Đội sinh viên ICTU (3 thành viên đứng tên) |
-| Cuộc thi | Vòng ICTU "Phát triển PMNM tích hợp AI 2026" (nộp 30/09/2026); OLP PMNM 2026 chủ đề DX-OS (chấm 07–09/12/2026) |
+| Đơn vị | Nhóm phát triển 3 thành viên |
 | Giấy phép | GNU AGPL-3.0-or-later; phương pháp luận DX-OS của TS. Tạ Tuấn Anh (FDS) theo CC BY 4.0 |
 | Tài liệu liên quan | [SRS.md](SRS.md), [ba/](ba/00-README.md), [superpowers/specs/](superpowers/specs/) |
 
 ## 1. Bối cảnh
 
-Hơn 900.000 SME Việt Nam chịu áp lực chuyển đổi số nhưng phần lớn đi sai thứ tự: mua phần mềm trước, kỷ luật vận hành sau. Sách "Xây dựng Hệ điều hành Doanh nghiệp số" đưa ra mô hình HPDI và một "Trạm thực hành DX-Lab" mà doanh nghiệp tự lắp ráp bằng công cụ phổ thông: cây thư mục P.A.R.A, biểu mẫu có rào chắn, bảng tính phẳng, kịch bản tự động, dashboard, trợ lý AI. Sách hướng dẫn từng bước bằng tay; ban tổ chức OLP 2026 yêu cầu sinh viên dựng DX-Lab bằng phần mềm nguồn mở.
+Hơn 900.000 SME Việt Nam chịu áp lực chuyển đổi số nhưng phần lớn đi sai thứ tự: mua phần mềm trước, kỷ luật vận hành sau. Sách "Xây dựng Hệ điều hành Doanh nghiệp số" đưa ra mô hình HPDI và một "Trạm thực hành DX-Lab" mà doanh nghiệp tự lắp ráp bằng công cụ phổ thông: cây thư mục P.A.R.A, biểu mẫu có rào chắn, bảng tính phẳng, kịch bản tự động, dashboard, trợ lý AI. Sách hướng dẫn từng bước bằng tay; dựng DX-Lab bằng phần mềm nguồn mở vẫn là việc lắp ráp thủ công từ đầu.
 
 Cả hai đường đều gặp một nút thắt: **lắp ráp thủ công**. Doanh nghiệp phải tự tạo hàng chục thư mục, phân quyền, biểu mẫu, quy tắc, workflow; làm sai thứ tự (bật AI khi chưa có quy trình) không ai chặn; đổi công cụ là làm lại từ đầu. Các nền tảng nguồn mở tích hợp giải quyết bằng cách cho doanh nghiệp một nền tảng cài sẵn, nhưng vẫn là "cài rồi tự cấu hình", không đo trước, không sinh theo tổ chức.
 
@@ -39,7 +38,7 @@ DX-Forge là bộ biên dịch: **đo → phỏng vấn → lập kế hoạch �
 | G4. Không bao giờ sinh sai thứ tự | Số plan có lớp I được bật khi shape là spear/illusion | 0, có kiểm thử |
 | G5. Mọi tài nguyên có lý do và sổ tay | Tỷ lệ tài nguyên trong plan có `reason`; sổ tay sinh tự động | 100 %; sổ tay có mặt trong Resources của đích |
 | G6. Có thể tái lập và huỷ sạch | `apply` lần 2 không đổi gì; `destroy --prune` để lại 0 tài nguyên | Kiểm thử tích hợp |
-| G7. Điểm cuộc thi | PoF; nguyên gốc; hoàn thiện; tích hợp AI | 50/50 PoF tự chấm; demo đăng nhập vào hệ thống vừa sinh |
+| G7. Hồ sơ nguồn mở đầy đủ | Giấy phép, SPDX, ghi công, tài liệu dựng, CHANGELOG, bug tracker | Đủ hồ sơ; demo đăng nhập được vào hệ thống vừa sinh |
 
 ## 5. Phạm vi
 
@@ -63,13 +62,12 @@ DX-Forge là bộ biên dịch: **đo → phỏng vấn → lập kế hoạch �
 
 | Bên | Vai trò | Mối quan tâm |
 |---|---|---|
-| Giám khảo ICTU / OLP | Chấm | Nguyên gốc, chạy thật, PoF, AI có kiểm soát |
 | Tư vấn viên chuyển đổi số | Người dùng chính của CLI/wizard | Làm cho nhiều khách nhanh, lặp lại được, giải thích được |
 | Lãnh đạo SME | Người trả lời khảo sát, người duyệt plan | Hiểu vì sao, không bị bán thứ chưa cần |
 | Nhân viên SME | Người dùng hệ thống sinh ra | Hệ thống sinh ra dễ dùng, có sổ tay |
 | Sinh viên, giảng viên | Học bằng cách đọc plan và sổ tay | Minh bạch từng bước |
 | Cộng đồng nguồn mở | Đóng góp gói ngành, adapter đích | Giao diện gói và provider ổn định |
-| Tác giả sách / FDS / VFOSSA | Chủ phương pháp | Ghi công đúng; sinh đúng trật tự P → D → I |
+| Tác giả sách / FDS | Chủ phương pháp | Ghi công đúng; sinh đúng trật tự P → D → I |
 
 ## 7. Yêu cầu nghiệp vụ cấp cao
 
@@ -85,13 +83,13 @@ DX-Forge là bộ biên dịch: **đo → phỏng vấn → lập kế hoạch �
 | BR-08 | Sổ tay nghiệp vụ số sinh tự động cho hệ thống vừa cấp phát, nằm trong Resources của đích | P5 | Cao |
 | BR-09 | AI chỉ đề xuất và giải thích; bộ kiểm tra luật đứng sau AI; không có AI vẫn chạy trọn đường ống | P3 | Bắt buộc |
 | BR-10 | Hệ thống sinh ra có chính sách tác tử: hành động trong whitelist, lệnh ghi phải có người duyệt trên kênh chat | P3 | Cao |
-| BR-11 | Gói ngành là đơn vị mở rộng: thêm ngành không sửa engine; DX-Ticket là gói mẫu, thay được theo đề tháng 11 | Bền vững | Cao |
-| BR-12 | Phần mềm nguồn mở đúng PoF; CLI cài bằng npm, wizard bằng một lệnh compose; cấu hình qua biến môi trường | G7 | Bắt buộc |
+| BR-11 | Gói ngành là đơn vị mở rộng: thêm ngành không sửa engine; DX-Ticket là gói mẫu, thay được khi đổi bài toán mẫu | Bền vững | Cao |
+| BR-12 | Phần mềm nguồn mở đúng chuẩn (giấy phép, SPDX, ghi công, dựng từ nguồn); CLI cài bằng npm, wizard bằng một lệnh compose; cấu hình qua biến môi trường | G7 | Bắt buộc |
 | BR-13 | Ghi công phương pháp luận DX-OS (CC BY 4.0) và nêu rõ quan hệ với các đích | Đạo đức | Bắt buộc |
 
 ## 8. Ràng buộc
-- Thời gian: v0.1.0 nộp 30/09/2026 (measure + plan bằng luật + apply oss lớp H + verify + wizard tối thiểu); v1.0.0 trước 06/12/2026; đề chính thức OLP có từ tháng 11.
-- Nhân lực: 3 sinh viên đứng tên, 6 AI coding agent; mọi PR do người thật duyệt và giải thích được.
+- Thời gian: v0.1.0 phát hành 30/09/2026 (measure + plan bằng luật + apply oss lớp H + verify + wizard tối thiểu); v1.0.0 trước 06/12/2026.
+- Nhân lực: 3 thành viên, 6 AI coding agent; mọi PR do người thật duyệt và giải thích được.
 - Hạ tầng demo: VPS riêng 8 vCPU/16 GB cho **đích** oss; Forge tự thân chạy trên laptop. Không dùng hạ tầng hay mã nguồn của công ty AHV.
 - Công nghệ: Node/TypeScript; Next.js cho wizard; SQLite cho phiên wizard; không sửa mã bên thứ ba.
 - Ngôn ngữ: giao diện tiếng Việt; mã, chú thích, commit tiếng Anh.
@@ -105,22 +103,20 @@ DX-Forge là bộ biên dịch: **đo → phỏng vấn → lập kế hoạch �
 ## 10. Rủi ro nghiệp vụ
 | Rủi ro | Ảnh hưởng | Giảm thiểu |
 |---|---|---|
-| Giám khảo hỏi "sản phẩm chạy gì ngoài sinh cấu hình" | Điểm hoàn thiện | Demo luôn đăng nhập vào hệ thống vừa sinh, chạy quy trình mẫu, bấm duyệt AI, xem verify |
+| Bị hỏi "sản phẩm chạy gì ngoài sinh cấu hình" | Bị đánh giá là chưa hoàn thiện | Demo luôn đăng nhập vào hệ thống vừa sinh, chạy quy trình mẫu, bấm duyệt AI, xem verify |
 | Provider quá rộng | Trễ | oss đủ trước; gws tối thiểu Drive/Sheets/Forms/Apps Script; AppSheet chỉ hướng dẫn |
 | AI sinh plan sai | Cấp phát sai | Validator luật không tắt được; dry-run diff; người duyệt plan |
-| Đề tháng 11 đổi bài | Làm lại gói | Gói ngành tách khỏi engine |
-| Trùng công cụ với sản phẩm cùng trường | Điểm nguyên gốc | Sản phẩm khác loại: Forge sinh ra nền tảng, có đích xuất manifest cho chính nền tảng kia |
+| Đổi bài toán mẫu | Làm lại gói | Gói ngành tách khỏi engine |
+| Trùng hướng với nền tảng nguồn mở ghép sẵn | Khó nêu khác biệt | Sản phẩm khác loại: Forge sinh ra nền tảng, có đích xuất manifest cho chính nền tảng kia |
 
 ## 11. Lộ trình cấp cao
 | Mốc | Nội dung |
 |---|---|
-| 30/09/2026 | v0.1.0: measure, plan (luật), apply oss lớp H (Keycloak, Nextcloud P.A.R.A, Telegram), verify, wizard 4 màn; nộp ICTU |
-| 10/10/2026 | Chung kết ICTU |
+| 30/09/2026 | v0.1.0: measure, plan (luật), apply oss lớp H (Keycloak, Nextcloud P.A.R.A, Telegram), verify, wizard 4 màn |
 | 14/10/2026 | provider oss lớp P + D với gói dx-ticket; AI interview/plan; handbook |
 | 11/11/2026 | provider gws; lớp I (RAG, agent_policy); đích manifest |
-| 25/11/2026 | Điều chỉnh theo đề chính thức; gói ngành thứ hai; wizard hoàn thiện |
-| 02/12/2026 | v1.0.0, PoF, video, demo công khai |
-| 07–10/12/2026 | Chấm kho mã và chung kết OLP |
+| 25/11/2026 | Điều chỉnh theo phản hồi người dùng; gói ngành thứ hai; wizard hoàn thiện |
+| 02/12/2026 | v1.0.0, hồ sơ nguồn mở đầy đủ, video, demo công khai |
 
 ## 12. Phê duyệt
 | Vai trò | Họ tên | Ngày | Ký |

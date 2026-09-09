@@ -1,6 +1,6 @@
 # Bộ tài liệu phân tích nghiệp vụ (BA) — DX-Forge
 
-Dự án: DX-Forge, bộ biên dịch sinh Hệ điều hành Doanh nghiệp số (DX-OS) từ đặc tả, dự thi OLP PMNM 2026 và vòng ICTU 30/09/2026. Bản này thay bộ BA 1.0 (DX-Pulse nền tảng) sau khi đổi ý tưởng lõi ngày 09/09/2026; module đo lường vẫn tên DX-Pulse.
+Dự án: DX-Forge, bộ biên dịch sinh Hệ điều hành Doanh nghiệp số (DX-OS) từ đặc tả. Bản này thay bộ BA 1.0 (DX-Pulse nền tảng) sau khi đổi ý tưởng lõi ngày 09/09/2026; module đo lường vẫn tên DX-Pulse.
 Nguồn thiết kế: `docs/superpowers/specs/` (spec tổng DX-Forge, M0 measure, forge-core + provider oss). Tài liệu cấp trên: [BRD](../BRD.md) (yêu cầu nghiệp vụ) và [SRS](../SRS.md) (đặc tả phần mềm, có ma trận truy vết BR → FR → UC → US). Phương pháp luận: sách "DX-OS in Action" (TS. Tạ Tuấn Anh, CC BY 4.0).
 
 | # | Sản phẩm | Tệp | Phạm vi chi tiết |

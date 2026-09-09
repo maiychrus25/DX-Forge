@@ -12,7 +12,7 @@ Nghiệp vụ cần lưu ý: Forge không vận hành nghiệp vụ, mọi thứ
 
 ## 1.2 Quy trình mẫu mà Forge sinh ra: gói dx-ticket trên đích
 
-Đây là quy trình nghiệp vụ của **hệ thống sinh ra**, dùng để kiểm chứng gói mẫu; thay đổi theo đề chính thức tháng 11 chỉ ảnh hưởng gói, không ảnh hưởng Forge.
+Đây là quy trình nghiệp vụ của **hệ thống sinh ra**, dùng để kiểm chứng gói mẫu; đổi bài toán mẫu chỉ ảnh hưởng gói, không ảnh hưởng Forge.
 
 ![bpmn-02-dx-ticket](diagrams/bpmn-02-dx-ticket.png)
 

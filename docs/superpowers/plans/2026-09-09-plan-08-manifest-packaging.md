@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Three things that make DX-Forge a finished product: (1) a `manifest` target that exports a plan as a plugin package (`manifest.yaml`, `db/seed.sql`, `workflows/*.json`, `dashboards/*.json`) for platforms that consume one, with a published JSON schema; (2) real packaging — built `dist/` for every package, a `dxforge` binary usable via `npx dxforge` and `npm i -g`, one Docker image for the wizard, a tagged GitHub release with tarballs and a changelog; (3) a second industry pack (`truong-hoc`, school) proving the engine is unchanged when the domain changes, plus the release checklist (stress rounds, acceptance timing, PoF documents complete).
+**Goal:** Three things that make DX-Forge a finished product: (1) a `manifest` target that exports a plan as a plugin package (`manifest.yaml`, `db/seed.sql`, `workflows/*.json`, `dashboards/*.json`) for platforms that consume one, with a published JSON schema; (2) real packaging — built `dist/` for every package, a `dxforge` binary usable via `npx dxforge` and `npm i -g`, one Docker image for the wizard, a tagged GitHub release with tarballs and a changelog; (3) a second industry pack (`truong-hoc`, school) proving the engine is unchanged when the domain changes, plus the release checklist (stress rounds, acceptance timing, open-source compliance documents complete).
 
 **Architecture:** `packages/providers/manifest` is a provider whose adapters write files instead of calling APIs; it reuses the oss generators (DDL, n8n builders, Metabase card SQL) so exports stay consistent with what `oss` deploys. Packaging switches each workspace package from `main: src/index.ts` to `exports` pointing at `dist/` with `tsc -b`, adds `bin` to the CLI, and a release workflow.
 
 **Tech Stack:** TypeScript, `tsc -b`, npm workspaces, GitHub Actions (release on tag), Docker, Playwright for the stress rounds.
 
-**Spec:** master spec §5 manifest row, §7 PoF and acceptance criteria for v1.0.0 (from a clean clone: `plan` + `apply --target oss` ≤ 10 min and verify 100 % green; `apply --target gws` with a test account; wizard runs the whole pipeline; CLI installable with `npm i -g` or `npx`; wizard via one-container compose), §4 `packs/` "sau thêm truong-hoc, ban-le"; SRS FR-A-10, FR-K-01..03, FR-C; BA `15-project-rules.md`.
+**Spec:** master spec §5 manifest row, §7 open-source compliance and acceptance criteria for v1.0.0 (from a clean clone: `plan` + `apply --target oss` ≤ 10 min and verify 100 % green; `apply --target gws` with a test account; wizard runs the whole pipeline; CLI installable with `npm i -g` or `npx`; wizard via one-container compose), §4 `packs/` "sau thêm truong-hoc, ban-le"; SRS FR-A-10, FR-K-01..03, FR-C; BA `15-project-rules.md`.
 
 **Plan series:** 01–07 → **08 this**.
 
@@ -92,12 +92,12 @@ docs/release-checklist.md, docs/demo-script.md, docs/stress-rounds.md
 - `deploy/docker-compose.wizard.yml` uses the published image by default (`image: ghcr.io/…:${TAG:-latest}`) with `build` as an override file `deploy/docker-compose.wizard.build.yml`.
 - Commit `ci: release workflow with tarball, checksums and wizard image`.
 
-### Task 7: PoF completeness and documents
+### Task 7: Open-source compliance completeness and documents
 - `LICENSE_NOTICE.md`: compatibility matrix (AGPL with each target's licence, the CC BY 4.0 methodology, MIT/Apache deps); `DEPENDENCIES.md` regenerated from `npm ls --omit=dev --all --json` by `scripts/deps-table.mjs` (name, version, licence, purpose); `BUILDING.md` bare-metal + Docker + `npx`; `CONTRIBUTING.md` + `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1, Vietnamese translation appended); `SECURITY.md` (reporting, credential handling); `CHANGELOG.md` `[1.0.0]`.
 - `docs/release-checklist.md`: acceptance timing (`scripts/acceptance.sh` output), contract runs (core, full, gws manual), E2E desktop + mobile, stress rounds ×2 (see below), `npm audit` result, SPDX check, screenshots current, README commands executed.
 - `docs/stress-rounds.md`: two rounds, each on desktop 1440 and mobile 375, light and dark: survey end-to-end under 8 minutes, plan tree with 60+ resources (two processes) scrolls without overflow, apply log with a forced failure and resume, verify report with 5 reds readable, handbook editor with a 300-line document; evidence = Playwright screenshots + timings.
 - `docs/demo-script.md`: 10-minute narrative from measure to a logged-in DX-Lab, ending with the verify report and the manifest export (no mention of contests or other products).
-- Commit `docs: PoF documents, release checklist, stress rounds and demo script`.
+- Commit `docs: open-source compliance documents, release checklist, stress rounds and demo script`.
 
 ### Task 8: Release 1.0.0
 - Bump versions (`npm version 1.0.0 --workspaces --no-git-tag-version` + root), CHANGELOG date, run `scripts/release-check.sh` (= every checklist line automated where possible), merge `develop` → `main` (no fast-forward), tag `v1.0.0`, push; verify the release workflow output and the published image runs (`docker run … /api/health`).
@@ -107,7 +107,7 @@ docs/release-checklist.md, docs/demo-script.md, docs/stress-rounds.md
 
 ## Self-review
 
-**Spec coverage:** §5 manifest row → Tasks 1–3 (schema, export with seed SQL, workflows, dashboards; verify by schema); §4 second pack → Task 4 (engine untouched); §7 PoF list (AGPL, SPDX, LICENSE_NOTICE with compatibility, DEPENDENCIES, BUILDING with `npm i -g`/`npx` and one-container wizard, CHANGELOG, issue templates, CI) → Tasks 5–7; §7 acceptance for v1.0.0 → `scripts/acceptance.sh` (plan 05) run in the checklist, gws manual run (plan 07), wizard pipeline E2E (plan 06), all recorded in Task 7's checklist and executed in Task 8; stress 2 rounds desktop/mobile → Task 7.
+**Spec coverage:** §5 manifest row → Tasks 1–3 (schema, export with seed SQL, workflows, dashboards; verify by schema); §4 second pack → Task 4 (engine untouched); §7 open-source compliance list (AGPL, SPDX, LICENSE_NOTICE with compatibility, DEPENDENCIES, BUILDING with `npm i -g`/`npx` and one-container wizard, CHANGELOG, issue templates, CI) → Tasks 5–7; §7 acceptance for v1.0.0 → `scripts/acceptance.sh` (plan 05) run in the checklist, gws manual run (plan 07), wizard pipeline E2E (plan 06), all recorded in Task 7's checklist and executed in Task 8; stress 2 rounds desktop/mobile → Task 7.
 
 **Placeholder scan:** the manifest format is fully specified; writers reuse named generators; release steps are concrete commands; the one human action (merge + tag after checklist) is stated as such.
 

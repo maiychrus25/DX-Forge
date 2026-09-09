@@ -5,7 +5,7 @@ Phiên bản 2.0, 09/09/2026 (thay bản 1.0). Nguồn: [BRD.md](BRD.md), [ba/](
 ## 1. Giới thiệu
 
 ### 1.1 Mục đích
-Đặc tả những gì DX-Forge phải làm để đội (người và AI agent) xây dựng, người duyệt kiểm thử, giám khảo đối chiếu.
+Đặc tả những gì DX-Forge phải làm để đội (người và AI agent) xây dựng, người duyệt kiểm thử, người đánh giá đối chiếu.
 
 ### 1.2 Phạm vi
 DX-Forge gồm: thư viện lõi `forge-core` (schema, planner, validator, state, diff), engine đo `hpdi-engine`, các provider đích (`oss`, `gws`, `manifest`), lớp AI, gói ngành, CLI `dxforge`, wizard web. Forge không chứa dữ liệu nghiệp vụ và không vận hành nghiệp vụ.
@@ -24,7 +24,7 @@ DX-Forge gồm: thư viện lõi `forge-core` (schema, planner, validator, state
 | HPDI, DTI, Supp, tầng, P.A.R.A, Poka-yoke, HITL, LOD, ResultV1 | như bản 1.0 |
 
 ### 1.4 Tài liệu tham chiếu
-Sách DX-OS (CC BY 4.0); thể lệ OLP 2026, ICTU 2026; API: Keycloak Admin REST, Nextcloud WebDAV/OCS/groupfolders, n8n REST (import workflow), Appsmith REST (import application), Metabase API, Qdrant, Telegram Bot API, Mattermost API v4, Google Drive v3, Sheets v4, Forms v1, Apps Script API, Looker Studio Linking API; đặc tả manifest plugin của nền tảng đích.
+Sách DX-OS (CC BY 4.0); API: Keycloak Admin REST, Nextcloud WebDAV/OCS/groupfolders, n8n REST (import workflow), Appsmith REST (import application), Metabase API, Qdrant, Telegram Bot API, Mattermost API v4, Google Drive v3, Sheets v4, Forms v1, Apps Script API, Looker Studio Linking API; đặc tả manifest plugin của nền tảng đích.
 
 ## 2. Mô tả tổng thể
 
@@ -99,7 +99,7 @@ Truy vết chung: BR-05, UC-12..14, US-30..36.
 ### 3.7 Gói ngành (FR-K)
 - **FR-K-01 Cấu trúc gói**: `packs/<id>/pack.yaml` (metadata, sector, targets), `entities/*.yaml`, `forms/*.yaml`, `rules/*.yaml`, `workflows/*.yaml`, `dashboards/*.yaml`, `handbook/*.md`; biến `{{ }}`. AC: schema zod; gói dx-ticket và core là ví dụ chuẩn.
 - **FR-K-02 Gói core**: offboarding 5 bước (workflow n8n hoặc Apps Script), audit tên hằng đêm, snapshot tháng. Truy vết BR-11.
-- **FR-K-03 Gói dx-ticket**: khách hàng, ticket 17 trường, biểu mẫu công khai, hai rào chắn, ba workflow, dashboard, CSAT. Thay được theo đề tháng 11.
+- **FR-K-03 Gói dx-ticket**: khách hàng, ticket 17 trường, biểu mẫu công khai, hai rào chắn, ba workflow, dashboard, CSAT. Thay được khi đổi bài toán mẫu.
 
 ### 3.8 CLI (FR-C)
 `dxforge measure [--open]`, `interview [-o]`, `plan -f intent.yaml [-o] [--no-ai] [--check]`, `apply plan.yaml --target <t> [--dry-run] [--prune]`, `verify [--naming]`, `handbook`, `destroy [--prune]`, `packs list|add <path|url>`, `explain <resourceId>`. Mã thoát: 0 thành công, 2 lỗi validate, 3 lỗi đích. Đầu ra `--json`. AC: `--help` cho mọi lệnh; kiểm thử snapshot đầu ra.

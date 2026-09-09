@@ -3,7 +3,7 @@
 ## 15.1 Quy tắc triển khai
 1. Phân tích trước khi làm: mỗi module có spec (docs/superpowers/specs) và bộ BA này được rà trước khi lập kế hoạch; không viết mã khi chưa có use case và AC.
 2. Kế hoạch từng khâu: mỗi module phân rã thành task có độ phức tạp (S/M/L), khối lượng giờ, người review; task do AI agent thực hiện phải có người thật review trước khi vào `develop`.
-3. Sprint 1 tuần theo lịch 13 tuần của spec tổng; sprint đang chạy không đổi nghiệp vụ, yêu cầu mới ghi vào backlog sprint sau (trừ khi đề tháng 11 buộc đổi bài mẫu, xử lý bằng một sprint điều chỉnh riêng).
+3. Sprint 1 tuần theo lịch 13 tuần của spec tổng; sprint đang chạy không đổi nghiệp vụ, yêu cầu mới ghi vào backlog sprint sau (trừ khi phải đổi bài toán mẫu, xử lý bằng một sprint điều chỉnh riêng).
 4. UAT cuối mỗi sprint theo AC trong 13-user-stories.md, chạy trên môi trường dev bằng tài khoản của từng vai trò, đi trọn hành trình bằng người khác người tạo dữ liệu; hai vòng stress desktop 1440 và mobile 375 trước mỗi release.
 5. Mã, chú thích, commit tiếng Anh; chuỗi giao diện tiếng Việt; nhánh `develop` làm việc, `main` chỉ nhận merge có tag; mọi PR cập nhật CHANGELOG.
 6. Không đưa mã hay dữ liệu của công ty AHV vào repo; không dùng VPS AHV. Forge không chứa dữ liệu nghiệp vụ của bất kỳ tổ chức thử nghiệm nào ngoài thư mục `.dxforge/` cục bộ (đã gitignore).
@@ -21,4 +21,4 @@
 | Tài liệu provider | `packages/providers/<target>/README.md` (tài nguyên hỗ trợ, API dùng, giới hạn) | Dev | Khi thêm adapter |
 | Sơ đồ | `docs/ba/diagrams/*.excalidraw` (+ png xuất) | BA | Cùng lúc với tài liệu chữ |
 | Nhật ký quyết định (ADR) | `docs/adr/NNN-*.md` | Kiến trúc | Khi có quyết định kiến trúc |
-| PoF compliance | `docs/POF_COMPLIANCE.md` | Trưởng nhóm | Trước mỗi lần nộp |
+| Tuân thủ nguồn mở | `docs/OSS_COMPLIANCE.md` | Trưởng nhóm | Trước mỗi lần phát hành |

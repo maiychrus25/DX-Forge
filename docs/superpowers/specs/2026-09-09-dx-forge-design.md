@@ -1,4 +1,4 @@
-# DX-Forge — Spec tổng (OLP PMNM 12/2026)
+# DX-Forge — Spec tổng
 
 Ngày: 2026-09-09 (thay thế spec nền tảng cũ sau khi đổi ý tưởng lõi). Trạng thái: đã duyệt qua thảo luận, chờ rà soát văn bản.
 Tài liệu con: `2026-09-09-m0-measurement-design.md` (giai đoạn measure), `2026-09-09-forge-core-oss-provider-design.md` (engine + provider oss lớp [H]).
@@ -9,7 +9,7 @@ DX-Forge là **bộ biên dịch hệ điều hành doanh nghiệp số**: đo t
 
 So với các nền tảng ghép nguồn mở có marketplace và AI orchestrator: nền tảng là thứ bạn cài; Forge là thứ sinh ra thứ bạn cài. Forge còn có đích phụ xuất `manifest.yaml` theo chuẩn plugin của nền tảng đích, tức Forge nằm phía trên, không nằm cạnh.
 
-Ba trục OLP kế thừa: low-code (Forge sinh form/app Appsmith và Sheets/Forms), LOD (mọi tài nguyên trong plan có URI và JSON-LD context; Forge sinh endpoint LOD cho đích), LLM + RAG (AI phỏng vấn, sinh plan, giải thích, viết sổ tay; hệ sinh ra có RAG trên Resources).
+Ba trục kỹ thuật của sản phẩm: low-code (Forge sinh form/app Appsmith và Sheets/Forms), LOD (mọi tài nguyên trong plan có URI và JSON-LD context; Forge sinh endpoint LOD cho đích), LLM + RAG (AI phỏng vấn, sinh plan, giải thích, viết sổ tay; hệ sinh ra có RAG trên Resources).
 
 ## 2. Đường ống
 
@@ -94,7 +94,7 @@ dx-forge/
 - CLI: `dxforge measure --open` (mở wizard đo), `dxforge interview [-o intent.yaml]`, `dxforge plan -f intent.yaml [-o plan.yaml] [--no-ai]`, `dxforge apply plan.yaml --target oss --dry-run`, `dxforge verify`, `dxforge handbook`, `dxforge destroy`, `dxforge packs list|add`.
 - Wizard: 7 màn theo đường ống + thư viện gói + thiết lập (LLM, đích, notifier). Xem plan dạng cây theo lớp, mỗi tài nguyên có lý do, sửa inline, diff trước apply, tiến trình apply theo tài nguyên, báo cáo verify xanh/đỏ.
 
-## 7. PoF, quy ước, kiểm thử
+## 7. Hồ sơ nguồn mở, quy ước, kiểm thử
 
 - AGPL-3.0-or-later, SPDX header, LICENSE_NOTICE ghi công sách CC BY 4.0 và nêu các đích tương thích, DEPENDENCIES.md, BUILDING.md (CLI cài bằng `npm i -g` hoặc `npx`; wizard bằng compose một container), CHANGELOG, Issue template, CI.
 - Mã, chú thích, commit tiếng Anh; chuỗi UI tiếng Việt; `develop` → `main` có tag.
@@ -105,19 +105,19 @@ dx-forge/
 
 | Tuần | Luồng A (measure + wizard) | Luồng B (forge-core + provider oss) | Luồng C (packs, provider gws, AI) |
 |---|---|---|---|
-| T1 10–16/09 | repo, PoF skeleton, hpdi-engine + test, khảo sát UI | schema intent/plan/state, validator + cổng trưởng thành, CLI skeleton | gói dx-ticket (entity, form, rule, workflow) dạng template |
+| T1 10–16/09 | repo, khung hồ sơ nguồn mở, hpdi-engine + test, khảo sát UI | schema intent/plan/state, validator + cổng trưởng thành, CLI skeleton | gói dx-ticket (entity, form, rule, workflow) dạng template |
 | T2 17–23/09 | radar, chốt đợt, kê đơn (AI + fallback) | provider oss: keycloak, nextcloud, telegram; apply/verify/state | prompt interview + plan, zod, fallback |
-| T3 24–30/09 | wizard: đo → plan → apply → verify; **v0.1.0 nộp ICTU** | dry-run diff, destroy, docs CLI | handbook sinh từ plan |
-| T4–T5 01–14/10 | chung kết ICTU 10/10; sửa phản hồi | provider oss: postgres DDL + trigger, n8n, appsmith, metabase | gói dx-ticket hoàn chỉnh trên đích oss, E2E |
+| T3 24–30/09 | wizard: đo → plan → apply → verify; **v0.1.0** | dry-run diff, destroy, docs CLI | handbook sinh từ plan |
+| T4–T5 01–14/10 | sửa theo phản hồi người dùng | provider oss: postgres DDL + trigger, n8n, appsmith, metabase | gói dx-ticket hoàn chỉnh trên đích oss, E2E |
 | T6–T7 15–28/10 | xem/sửa plan dạng cây, diff | qdrant + rag_source, lod_context, snapshot | agent_policy sinh workflow HITL trên n8n |
 | T8–T9 29/10–11/11 | thư viện gói, thiết lập | provider gws: drive, sheets, forms, apps-script, looker | appsheet-guide; gói ngành thứ hai |
-| T10 12–18/11 | **đề chính thức**: điều chỉnh gói và wizard | manifest target | AI giải thích tài nguyên |
-| T11–T12 19/11–02/12 | stress 2 vòng, video | verify tự động 2 đích, PoF | v1.0.0 |
-| T13 03–06/12 | dự phòng, nộp | | |
+| T10 12–18/11 | điều chỉnh gói và wizard theo bài toán mẫu | manifest target | AI giải thích tài nguyên |
+| T11–T12 19/11–02/12 | stress 2 vòng, video | verify tự động 2 đích, hồ sơ nguồn mở | v1.0.0 |
+| T13 03–06/12 | dự phòng, phát hành | | |
 
 ## 9. Rủi ro
 
 - Phạm vi provider rộng → ưu tiên oss đầy đủ trước; gws tối thiểu Drive + Sheets + Forms + Apps Script; AppSheet chỉ hướng dẫn.
 - AI sinh plan sai → validator luật là chốt chặn; mọi tài nguyên có `reason` để người duyệt.
-- Đề tháng 11 đổi bài mẫu → chỉ thêm gói ngành, không đổi engine.
-- Giám khảo hỏi "có chạy thật không" → demo luôn kết bằng verify report và đăng nhập vào hệ thống vừa sinh.
+- Đổi bài toán mẫu → chỉ thêm gói ngành, không đổi engine.
+- Bị hỏi "có chạy thật không" → demo luôn kết bằng verify report và đăng nhập vào hệ thống vừa sinh.
