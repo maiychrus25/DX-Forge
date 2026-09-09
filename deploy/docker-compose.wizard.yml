@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# The DX-Forge wizard itself. Targets (Keycloak, Nextcloud, ...) are separate stacks added in plan 04.
+services:
+  wizard:
+    build: { context: .., dockerfile: apps/web/Dockerfile }
+    image: dx-forge/wizard:${TAG:-dev}
+    env_file: .env
+    ports: ["${WIZARD_PORT:-3000}:3000"]
+    volumes: ["wizard-data:/data"]
+    restart: unless-stopped
+volumes:
+  wizard-data: {}

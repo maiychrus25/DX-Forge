@@ -12,3 +12,4 @@ export * from "./validator/index.js";
 export * from "./compile.js";
 export * from "./order.js";
 export * from "./differ.js";
+export * from "./maturity.js";

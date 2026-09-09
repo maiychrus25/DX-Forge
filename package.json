@@ -4,13 +4,24 @@
   "version": "0.1.0",
   "license": "AGPL-3.0-or-later",
   "type": "module",
-  "workspaces": ["packages/*", "packages/providers/*", "apps/*"],
-  "engines": { "node": ">=22" },
+  "workspaces": [
+    "packages/*",
+    "packages/providers/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -b packages/hpdi-engine packages/forge-core apps/cli",
-    "dxforge": "tsx apps/cli/src/index.ts"
+    "typecheck": "tsc -b packages/hpdi-engine packages/forge-core apps/cli && tsc -p apps/web --noEmit",
+    "dxforge": "tsx apps/cli/src/index.ts",
+    "web:dev": "npm run dev -w @dx-forge/web",
+    "web:build": "npm run build -w @dx-forge/web",
+    "web:start": "npm run start -w @dx-forge/web",
+    "e2e": "npm run e2e -w @dx-forge/web",
+    "prepare": "tsc -b packages/hpdi-engine packages/forge-core"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

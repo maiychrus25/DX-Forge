@@ -17,7 +17,7 @@
 - Everything in plan 01's Global Constraints still applies (AGPL, SPDX first line on every `.ts`/`.tsx`, English code and comments, Vietnamese UI strings, commit identity, **no commit trailers**, no credentials on disk).
 - **Ruling (spec deviation):** persistence is `better-sqlite3` with `apps/web/src/lib/schema.sql`, not Prisma. Tables, columns and unique constraints are exactly the spec §4 set: `organizations`, `assessments`, `survey_links`, `responses`, `results`, `prescriptions`, `artifacts`, `llm_calls`; `UNIQUE(assessment_id, tier)` on survey links, `UNIQUE(round)` on assessments. Task 2 patches the one spec line.
 - Database file `.dxforge/wizard.db` (env `FORGE_DATA_DIR`, default `.dxforge` under the working directory); artifacts under `.dxforge/artifacts/<assessmentId>/`. Both are git-ignored already.
-- Survey responses are anonymous: no IP, no user agent, no cookie is stored. A link token is 32 hex chars from `crypto.randomBytes(16)`; links expire (`expires_at`, default 14 days); a closed assessment rejects new responses with 409.
+- Survey responses are anonymous: no IP, no user agent, no cookie is stored. A link token is 32 hex chars from `crypto.randomBytes(16)`; links expire (`expires_at`, default 14 days); a closed or expired link rejects new responses with **410 Gone** (Task 4's route handlers and its client both branch on 410). 409 is a different endpoint: closing a round that cannot be closed (`already_closed`, or `insufficient` responses).
 - Closing a round calls `compute(questionnaire, responses)` from `@dx-forge/hpdi-engine`; `InsufficientResponses` becomes HTTP 409 with the Vietnamese message `Chưa đủ phản hồi: cần ít nhất một lãnh đạo và một nhân viên.` and the round stays open.
 - Admin auth: `FORGE_ADMIN_PASSWORD` (required) and `FORGE_SESSION_SECRET` (required, ≥ 16 chars). Cookie `forge_session` = `<issuedAt>.<hmacSha256(issuedAt, secret)>`, `HttpOnly; SameSite=Lax; Path=/`, valid 12 hours. Middleware protects `/pulse/**` and `/api/pulse/**` except `/pulse/s/**` and `/api/pulse/survey/**`.
 - Radar and every chart use the fixed axis colours H `#64748B`, P `#16A34A`, D `#F59E0B`, I `#7C3AED`; ink `#0F172A`, paper `#F8FAFC`, forge accent `#EA580C` (see `docs/brand/README.md`). `DESIGN.md` is written in Task 1 before any UI.
@@ -187,8 +187,6 @@ scale cards are radio buttons under the hood; the radar has a table twin for scr
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist",
     "noEmit": true,
     "composite": false,
     "declaration": false,
@@ -205,7 +203,7 @@ scale cards are radio buttons under the hood; the radar has a table twin for scr
   "references": [{ "path": "../../packages/forge-core" }, { "path": "../../packages/hpdi-engine" }]
 }
 ```
-(`noEmit`/`composite:false` because Next owns the build; the root `typecheck` runs `tsc -p apps/web --noEmit`, see Step 5.)
+(`noEmit`/`composite:false` because Next owns the build; the root `typecheck` runs `tsc -p apps/web --noEmit`, see Step 5. No `rootDir`/`outDir`: they are meaningless under `noEmit`, and a `rootDir` of `src` makes `tsc` reject the generated `.next/types/validator.ts` that the `include` list requires — TS6059 on every `next build` from Next 16.3.)
 
 `apps/web/next.config.ts`:
 ```ts
@@ -754,9 +752,16 @@ export function countResponses(db: Database.Database, assessmentId: string): Rec
   return counts;
 }
 
-export function listResponses(db: Database.Database, assessmentId: string): { tier: Tier; answers: Record<string, number>; freeText?: string }[] {
-  const rows = db.prepare("SELECT l.tier AS tier, r.answers AS answers, r.free_text AS free_text FROM responses r JOIN survey_links l ON l.id = r.survey_link_id WHERE l.assessment_id = ? ORDER BY r.submitted_at, r.id").all(assessmentId) as { tier: Tier; answers: string; free_text: string | null }[];
-  return rows.map((r) => ({ tier: r.tier, answers: JSON.parse(r.answers), ...(r.free_text ? { freeText: r.free_text } : {}) }));
+/** Scoring input only: free text is deliberately NOT returned here (see the Interfaces contract and
+ * `closeRound`). It stays in the `responses` row; a later reader that genuinely needs it adds its own
+ * accessor, so the most PII-sensitive field is never carried around by default.
+ * Tiebreak on `rowid`, not `id`: `submitted_at` has millisecond precision, so two responses from
+ * one tier routinely share a timestamp, and `id` is a random UUID — ordering by it returns
+ * insertion order only by chance (measured: wrong in 157 of 300 runs). `rowid` is monotonic on
+ * insert. */
+export function listResponses(db: Database.Database, assessmentId: string): { tier: Tier; answers: Record<string, number> }[] {
+  const rows = db.prepare("SELECT l.tier AS tier, r.answers AS answers FROM responses r JOIN survey_links l ON l.id = r.survey_link_id WHERE l.assessment_id = ? ORDER BY r.submitted_at, r.rowid").all(assessmentId) as { tier: Tier; answers: string }[];
+  return rows.map((r) => ({ tier: r.tier, answers: JSON.parse(r.answers) }));
 }
 
 export function closeAssessment(db: Database.Database, id: string, payload: unknown, engineVersion: string): void {
@@ -791,7 +796,7 @@ export function saveArtifact(db: Database.Database, a: ArtifactRow): void {
 }
 
 export function getArtifact(db: Database.Database, assessmentId: string, kind: string): (ArtifactRow & { createdAt: string }) | null {
-  const r = db.prepare("SELECT * FROM artifacts WHERE assessment_id = ? AND kind = ? ORDER BY created_at DESC LIMIT 1").get(assessmentId, kind) as Row | undefined;
+  const r = db.prepare("SELECT * FROM artifacts WHERE assessment_id = ? AND kind = ? ORDER BY created_at DESC, rowid DESC LIMIT 1").get(assessmentId, kind) as Row | undefined;
   return r ? { assessmentId, kind, path: r.path as string, sizeBytes: r.size_bytes as number, createdAt: r.created_at as string } : null;
 }
 
@@ -872,7 +877,7 @@ describe("isPublicPath", () => {
 `apps/web/src/lib/auth.ts`:
 ```ts
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
 export const SESSION_COOKIE = "forge_session";
 const TTL_MS = 12 * 3600 * 1000;
@@ -895,10 +900,12 @@ export function verifySession(secret: string, cookie: string | undefined, now: n
   return now >= issued && now - issued < TTL_MS;
 }
 
+/** Compares SHA-256 digests, not the raw strings: digests are always 32 bytes, so a wrong password
+ * costs the same time whatever its length. Returning early on a length mismatch would leak the
+ * length of the admin password through response timing. */
 export function checkPassword(expected: string, given: string): boolean {
-  const a = Buffer.from(expected);
-  const b = Buffer.from(given);
-  if (a.length !== b.length) return false;
+  const a = createHash("sha256").update(expected, "utf8").digest();
+  const b = createHash("sha256").update(given, "utf8").digest();
   return timingSafeEqual(a, b);
 }
 
@@ -1260,7 +1267,7 @@ export function SurveyForm({ token }: { token: string }) {
 
 - [ ] **Step 6: Run, typecheck, commit**
 
-`npx vitest run apps/web/test/survey.test.ts` (6 passed); `npm run typecheck`.
+`npx vitest run apps/web/test/survey.test.ts` (5 passed); `npm run typecheck`.
 
 ```bash
 git add apps/web && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail.com commit -m "feat(web): anonymous survey API and one-question-per-screen survey page"
@@ -1272,7 +1279,7 @@ git add apps/web && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail
 
 **Files:**
 - Create: `apps/web/src/lib/assess.ts`, `apps/web/src/lib/notify.ts`, `apps/web/src/app/api/pulse/organization/route.ts`, `apps/web/src/app/api/pulse/assessments/route.ts`, `apps/web/src/app/api/pulse/assessments/[id]/route.ts`, `apps/web/src/app/api/pulse/assessments/[id]/close/route.ts`, `apps/web/src/app/api/pulse/latest/route.ts`
-- Create: `packages/forge-core/src/maturity.ts`; modify `packages/forge-core/src/index.ts`
+- Create: `packages/forge-core/src/maturity.ts`; modify `packages/forge-core/src/index.ts` and `packages/forge-core/src/schema/intent.ts` (add `export type Maturity = z.infer<typeof Maturity>;` beside the const, matching the convention the file already uses for `Layer`, `TargetKind` and `ShapeName`; without it `maturity.ts` declaring its own `Maturity` type collides with the star re-export and `tsc -b` fails with TS2308)
 - Test: `apps/web/test/assess.test.ts`, `packages/forge-core/test/maturity.test.ts`
 
 **Interfaces:**
@@ -1309,8 +1316,10 @@ import * as repo from "../src/lib/repo.js";
 import { closeRound, openRound, surveyUrl } from "../src/lib/assess.js";
 
 const Q = loadQuestionnaireV1();
-function answersFor(tier: Tier, scale: number, supp: number) {
-  return Object.fromEntries(Q.questions.filter((q) => q.tiers.includes(tier)).map((q) => [q.id, q.type === "supp" ? supp : scale]));
+/** Supp questions feed different axes (OPS-06 -> P, DAT-06 -> D, TEC-06 -> I), so a single scalar
+ * cannot express the book example. Take one coefficient per axis. */
+function answersFor(tier: Tier, scale: number, supp: Record<"P" | "D" | "I", number>) {
+  return Object.fromEntries(Q.questions.filter((q) => q.tiers.includes(tier)).map((q) => [q.id, q.type === "supp" ? supp[q.supp!.axis] : scale]));
 }
 let db: Database.Database;
 beforeEach(() => { db = openDb(":memory:"); });
@@ -1327,15 +1336,15 @@ describe("openRound", () => {
 describe("closeRound", () => {
   it("refuses without an executive and a staff response and keeps the round open", () => {
     const { assessment, links } = openRound(db, {});
-    repo.addResponse(db, links.find((l) => l.tier === "executive")!.id, answersFor("executive", 4, 1));
+    repo.addResponse(db, links.find((l) => l.tier === "executive")!.id, answersFor("executive", 4, { P: 1, D: 1, I: 1 }));
     const r = closeRound(db, assessment.id);
     expect(r).toMatchObject({ ok: false, reason: "insufficient", counts: { executive: 1, staff: 0 } });
     expect(repo.getAssessment(db, assessment.id)?.status).toBe("open");
   });
   it("computes and stores ResultV1, then refuses a second close", () => {
     const { assessment, links } = openRound(db, {});
-    repo.addResponse(db, links.find((l) => l.tier === "executive")!.id, answersFor("executive", 4, 0.33));
-    repo.addResponse(db, links.find((l) => l.tier === "staff")!.id, answersFor("staff", 4, 0.33));
+    repo.addResponse(db, links.find((l) => l.tier === "executive")!.id, answersFor("executive", 4, { P: 0.33, D: 0, I: 0 }));
+    repo.addResponse(db, links.find((l) => l.tier === "staff")!.id, answersFor("staff", 4, { P: 0.33, D: 0, I: 0 }));
     const r = closeRound(db, assessment.id);
     expect(r.ok && r.result.hpdi).toEqual({ H: 90, P: 10, D: 0, I: 0 });
     expect(repo.getResult(db, assessment.id)?.engineVersion).toBe("1.0");
@@ -1353,9 +1362,8 @@ describe("closeRound", () => {
 ```ts
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { z } from "zod";
-import { Maturity as MaturitySchema, type ShapeName } from "./schema/intent.js";
+import { Maturity as MaturitySchema, type Maturity, type ShapeName } from "./schema/intent.js";
 
-export type Maturity = z.infer<typeof MaturitySchema>;
 
 export type ResultLike = {
   hpdi: { H: number; P: number; D: number; I: number };
@@ -1728,7 +1736,7 @@ export function ShapeBadge({ result }: { result: ResultV1 }) {
     <div className="flex flex-wrap gap-3 items-center">
       <span className="chip bg-ink text-paper text-sm px-3 py-1">{ICON[result.shape]} {vi.round.shape[result.shape]}</span>
       <span className="chip border border-border text-sm px-3 py-1">{vi.round.level} {result.dtiLevel}/5</span>
-      {(["H", "P", "D", "I"] as const).map((a) => <span key={a} className="chip text-paper" style={{ background: { H: "#64748b", P: "#16a34a", D: "#f59e0b", I: "#7c3aed" }[a] }}>{a} {result.hpdi[a]}</span>)}
+      {(["H", "P", "D", "I"] as const).map((a) => <span key={a} className="chip text-paper" style={{ background: `var(--color-axis-${a.toLowerCase()})` }}>{a} {result.hpdi[a]}</span>)}
     </div>
   );
 }
