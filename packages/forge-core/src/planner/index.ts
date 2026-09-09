@@ -21,7 +21,8 @@ export function buildPlan(intent: IntentV1, packs: Map<string, LoadedPack>, now:
   for (const process of intent.core_processes) {
     if (!process.pack) continue;
     const loaded = packs.get(process.pack);
-    if (!loaded || loaded.pack.scope !== "process") throw new PackNotFound(process.pack);
+    if (!loaded) throw new PackNotFound(process.pack);
+    if (loaded.pack.scope !== "process") throw new Error(`Pack ${process.pack} is org-scoped and cannot be attached to process ${process.id}`);
     resources.push(...renderPack(loaded, { org: intent.organization, process }));
   }
   const entities = resources.filter((r) => r.type === "process.entity");

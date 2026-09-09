@@ -28,7 +28,7 @@ export class PackNotFound extends Error {
 export function loadPacks(dir: string): Map<string, LoadedPack> {
   const out = new Map<string, LoadedPack>();
   if (!existsSync(dir)) return out;
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     if (!entry.isDirectory()) continue;
     const file = join(dir, entry.name, "pack.yaml");
     if (!existsSync(file)) continue;
