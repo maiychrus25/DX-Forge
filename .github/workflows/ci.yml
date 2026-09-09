@@ -16,5 +16,5 @@ jobs:
       - run: npm test
       - name: SPDX headers present
         run: |
-          missing=$(grep -rL "SPDX-License-Identifier: AGPL-3.0-or-later" --include='*.ts' packages apps || true)
+          missing=$(grep -rL "SPDX-License-Identifier: AGPL-3.0-or-later" --include='*.ts' --exclude-dir=dist --exclude-dir=node_modules packages apps || true)
           if [ -n "$missing" ]; then echo "$missing"; exit 1; fi
