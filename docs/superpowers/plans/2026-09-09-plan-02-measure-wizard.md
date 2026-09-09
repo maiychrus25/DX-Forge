@@ -187,8 +187,6 @@ scale cards are radio buttons under the hood; the radar has a table twin for scr
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist",
     "noEmit": true,
     "composite": false,
     "declaration": false,
@@ -205,7 +203,7 @@ scale cards are radio buttons under the hood; the radar has a table twin for scr
   "references": [{ "path": "../../packages/forge-core" }, { "path": "../../packages/hpdi-engine" }]
 }
 ```
-(`noEmit`/`composite:false` because Next owns the build; the root `typecheck` runs `tsc -p apps/web --noEmit`, see Step 5.)
+(`noEmit`/`composite:false` because Next owns the build; the root `typecheck` runs `tsc -p apps/web --noEmit`, see Step 5. No `rootDir`/`outDir`: they are meaningless under `noEmit`, and a `rootDir` of `src` makes `tsc` reject the generated `.next/types/validator.ts` that the `include` list requires — TS6059 on every `next build` from Next 16.3.)
 
 `apps/web/next.config.ts`:
 ```ts
