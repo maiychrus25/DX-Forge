@@ -752,9 +752,16 @@ export function countResponses(db: Database.Database, assessmentId: string): Rec
   return counts;
 }
 
-export function listResponses(db: Database.Database, assessmentId: string): { tier: Tier; answers: Record<string, number>; freeText?: string }[] {
-  const rows = db.prepare("SELECT l.tier AS tier, r.answers AS answers, r.free_text AS free_text FROM responses r JOIN survey_links l ON l.id = r.survey_link_id WHERE l.assessment_id = ? ORDER BY r.submitted_at, r.id").all(assessmentId) as { tier: Tier; answers: string; free_text: string | null }[];
-  return rows.map((r) => ({ tier: r.tier, answers: JSON.parse(r.answers), ...(r.free_text ? { freeText: r.free_text } : {}) }));
+/** Scoring input only: free text is deliberately NOT returned here (see the Interfaces contract and
+ * `closeRound`). It stays in the `responses` row; a later reader that genuinely needs it adds its own
+ * accessor, so the most PII-sensitive field is never carried around by default.
+ * Tiebreak on `rowid`, not `id`: `submitted_at` has millisecond precision, so two responses from
+ * one tier routinely share a timestamp, and `id` is a random UUID — ordering by it returns
+ * insertion order only by chance (measured: wrong in 157 of 300 runs). `rowid` is monotonic on
+ * insert. */
+export function listResponses(db: Database.Database, assessmentId: string): { tier: Tier; answers: Record<string, number> }[] {
+  const rows = db.prepare("SELECT l.tier AS tier, r.answers AS answers FROM responses r JOIN survey_links l ON l.id = r.survey_link_id WHERE l.assessment_id = ? ORDER BY r.submitted_at, r.rowid").all(assessmentId) as { tier: Tier; answers: string }[];
+  return rows.map((r) => ({ tier: r.tier, answers: JSON.parse(r.answers) }));
 }
 
 export function closeAssessment(db: Database.Database, id: string, payload: unknown, engineVersion: string): void {

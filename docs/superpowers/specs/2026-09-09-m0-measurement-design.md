@@ -32,7 +32,7 @@ dx-pulse/
 │   ├── src/app/              # pages + API routes
 │   ├── src/lib/ai/           # LlmProvider + adapters (gemini, anthropic, ollama)
 │   ├── src/lib/kit/          # P.A.R.A zip generator
-│   ├── src/lib/db/           # Prisma client
+│   ├── src/lib/db.ts         # better-sqlite3 + schema.sql
 │   └── prisma/schema.prisma
 ├── packages/hpdi-engine/     # TypeScript thuần, không phụ thuộc Next/DB
 │   ├── src/questionnaire/    # schema + questionnaire.v1.json
@@ -203,7 +203,7 @@ DESIGN.md tạo trước khi làm UI: token màu sáng/tối, chữ, khoảng c�
 
 | Ngày | Việc |
 |---|---|
-| 10–12/09 | Repo, khung hồ sơ nguồn mở, workspaces, Prisma, auth, DESIGN.md; engine schema + scoring + mapping + test golden |
+| 10–12/09 | Repo, khung hồ sơ nguồn mở, workspaces, SQLite, auth, DESIGN.md; engine schema + scoring + mapping + test golden |
 | 13–16/09 | questionnaire.v1.json, trang khảo sát, chốt đợt đo, dashboard radar |
 | 17–20/09 | Lớp AI (3 adapter, zod, fallback, llm_calls), trang kê đơn, askReport |
 | 21–23/09 | P.A.R.A kit + xem trước, lịch sử theo vòng, trang about/ghi công |
