@@ -14,8 +14,8 @@
 |---|---|---|---|
 | Biên bản họp | `docs/meetings/YYYY-MM-DD.md` | Thư ký sprint (luân phiên 3 thành viên) | Sau mỗi buổi họp; ghi quyết định và việc giao |
 | URD (yêu cầu người dùng) | `docs/ba/12-scenarios.md`, `13-user-stories.md` | BA | Mỗi sprint |
-| SRS (đặc tả phần mềm) | `docs/ba/04..11, 14` + `docs/superpowers/specs/*` + `docs/api/openapi.yaml` | BA + kiến trúc | Khi đổi chức năng hoặc API |
-| BRD (tuỳ chọn) | `docs/BRD.md` | Trưởng nhóm | Trước 30/09 và trước 12/2026 |
+| SRS (đặc tả phần mềm) | [`docs/SRS.md`](../SRS.md) (đã có, v1.0), tham chiếu `docs/ba/*`, `docs/superpowers/specs/*`, sau này thêm `docs/api/openapi.yaml` | BA + kiến trúc | Khi đổi chức năng hoặc API |
+| BRD | [`docs/BRD.md`](../BRD.md) (đã có, v1.0) | Trưởng nhóm | Trước 30/09 và trước 12/2026 |
 | HDSD | `docs/user-guide/` (Sổ tay nghiệp vụ số cũng nằm trong Resources của bản demo) | BA + dev | Trước mỗi release |
 | Sơ đồ | `docs/ba/diagrams/*.excalidraw` (+ png xuất) | BA | Cùng lúc với tài liệu chữ |
 | Nhật ký quyết định (ADR) | `docs/adr/NNN-*.md` | Kiến trúc | Khi có quyết định kiến trúc |

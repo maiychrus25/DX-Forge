@@ -1,7 +1,7 @@
 # Bộ tài liệu phân tích nghiệp vụ (BA) — DX-Pulse
 
 Dự án: DX-Pulse, nền tảng Hệ điều hành Doanh nghiệp số (DX-OS) dự thi OLP PMNM 2026 và vòng ICTU 30/09/2026.
-Nguồn thiết kế: `docs/superpowers/specs/` (spec tổng, M0 Đo lường, M1 Không gian làm việc). Phương pháp luận: sách "DX-OS in Action" (TS. Tạ Tuấn Anh, CC BY 4.0).
+Nguồn thiết kế: `docs/superpowers/specs/` (spec tổng, M0 Đo lường, M1 Không gian làm việc). Tài liệu cấp trên: [BRD](../BRD.md) (yêu cầu nghiệp vụ) và [SRS](../SRS.md) (đặc tả phần mềm, có ma trận truy vết BR → FR → UC → US). Phương pháp luận: sách "DX-OS in Action" (TS. Tạ Tuấn Anh, CC BY 4.0).
 
 | # | Sản phẩm | Tệp | Phạm vi chi tiết |
 |---|---|---|---|
