@@ -26,6 +26,9 @@ describe("countResponses / assertSufficient", () => {
   it("accepts executive + staff", () => {
     expect(() => assertSufficient(countResponses([respond("executive", 4), respond("staff", 4)]))).not.toThrow();
   });
+  it("throws when the executive tier is missing", () => {
+    expect(() => assertSufficient(countResponses([respond("manager", 4), respond("staff", 4)]))).toThrow(InsufficientResponses);
+  });
 });
 
 describe("scorePillars", () => {

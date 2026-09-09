@@ -53,6 +53,15 @@ describe("dxforge CLI", () => {
     expect(r.out).toMatch(/version/);
   });
 
+  it("plan exits 2 when the intent's process pack does not exist", () => {
+    const intent = readFileSync(join(ROOT, "examples/intent.example.yaml"), "utf8").replace("pack: dx-ticket", "pack: nope");
+    const f = join(tmp, "missing-pack.yaml");
+    writeFileSync(f, intent);
+    const r = run(["plan", "-f", f]);
+    expect(r.code).toBe(2);
+    expect(r.out).toContain("Pack not found: nope");
+  });
+
   it("packs list shows core and dx-ticket", () => {
     const r = run(["packs", "list"]);
     expect(r.code).toBe(0);

@@ -113,4 +113,13 @@ describe("compile", () => {
     expect(errors).toEqual([]);
     expect(plan.resources.filter((r) => !r.gate.allowed).map((r) => r.layer)).toEqual(["I", "I", "I"]);
   });
+  it("with maturity removed, gates every non-H resource with an 'unmeasured' reason and reports no errors", () => {
+    const unmeasured: IntentV1 = { ...intent, maturity: undefined };
+    const { plan, errors } = compile(unmeasured, packs, new Date("2026-09-10T00:00:00Z"));
+    expect(errors).toEqual([]);
+    const nonH = plan.resources.filter((r) => r.layer !== "H");
+    expect(nonH.length).toBeGreaterThan(0);
+    expect(nonH.every((r) => r.gate.allowed === false)).toBe(true);
+    expect(nonH.every((r) => r.gate.why?.includes("unmeasured"))).toBe(true);
+  });
 });
