@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { getEnv } from "./env.js";
+import { getEnv } from "@/lib/env";
 
 /** Sends an operator notification. Always logs; posts to Telegram when configured. Never throws. */
 export async function notify(text: string): Promise<void> {

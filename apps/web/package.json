@@ -8,7 +8,9 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 3000",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "prebuild": "tsc -b ../../packages/hpdi-engine ../../packages/forge-core",
+    "predev": "tsc -b ../../packages/hpdi-engine ../../packages/forge-core"
   },
   "dependencies": {
     "@dx-forge/forge-core": "0.1.0",

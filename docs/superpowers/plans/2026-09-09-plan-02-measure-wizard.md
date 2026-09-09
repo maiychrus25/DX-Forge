@@ -1279,7 +1279,7 @@ git add apps/web && git -c user.name=maiychrus -c user.email=ninhkhuongpl7@gmail
 
 **Files:**
 - Create: `apps/web/src/lib/assess.ts`, `apps/web/src/lib/notify.ts`, `apps/web/src/app/api/pulse/organization/route.ts`, `apps/web/src/app/api/pulse/assessments/route.ts`, `apps/web/src/app/api/pulse/assessments/[id]/route.ts`, `apps/web/src/app/api/pulse/assessments/[id]/close/route.ts`, `apps/web/src/app/api/pulse/latest/route.ts`
-- Create: `packages/forge-core/src/maturity.ts`; modify `packages/forge-core/src/index.ts`
+- Create: `packages/forge-core/src/maturity.ts`; modify `packages/forge-core/src/index.ts` and `packages/forge-core/src/schema/intent.ts` (add `export type Maturity = z.infer<typeof Maturity>;` beside the const, matching the convention the file already uses for `Layer`, `TargetKind` and `ShapeName`; without it `maturity.ts` declaring its own `Maturity` type collides with the star re-export and `tsc -b` fails with TS2308)
 - Test: `apps/web/test/assess.test.ts`, `packages/forge-core/test/maturity.test.ts`
 
 **Interfaces:**
@@ -1316,8 +1316,10 @@ import * as repo from "../src/lib/repo.js";
 import { closeRound, openRound, surveyUrl } from "../src/lib/assess.js";
 
 const Q = loadQuestionnaireV1();
-function answersFor(tier: Tier, scale: number, supp: number) {
-  return Object.fromEntries(Q.questions.filter((q) => q.tiers.includes(tier)).map((q) => [q.id, q.type === "supp" ? supp : scale]));
+/** Supp questions feed different axes (OPS-06 -> P, DAT-06 -> D, TEC-06 -> I), so a single scalar
+ * cannot express the book example. Take one coefficient per axis. */
+function answersFor(tier: Tier, scale: number, supp: Record<"P" | "D" | "I", number>) {
+  return Object.fromEntries(Q.questions.filter((q) => q.tiers.includes(tier)).map((q) => [q.id, q.type === "supp" ? supp[q.supp!.axis] : scale]));
 }
 let db: Database.Database;
 beforeEach(() => { db = openDb(":memory:"); });
@@ -1334,15 +1336,15 @@ describe("openRound", () => {
 describe("closeRound", () => {
   it("refuses without an executive and a staff response and keeps the round open", () => {
     const { assessment, links } = openRound(db, {});
-    repo.addResponse(db, links.find((l) => l.tier === "executive")!.id, answersFor("executive", 4, 1));
+    repo.addResponse(db, links.find((l) => l.tier === "executive")!.id, answersFor("executive", 4, { P: 1, D: 1, I: 1 }));
     const r = closeRound(db, assessment.id);
     expect(r).toMatchObject({ ok: false, reason: "insufficient", counts: { executive: 1, staff: 0 } });
     expect(repo.getAssessment(db, assessment.id)?.status).toBe("open");
   });
   it("computes and stores ResultV1, then refuses a second close", () => {
     const { assessment, links } = openRound(db, {});
-    repo.addResponse(db, links.find((l) => l.tier === "executive")!.id, answersFor("executive", 4, 0.33));
-    repo.addResponse(db, links.find((l) => l.tier === "staff")!.id, answersFor("staff", 4, 0.33));
+    repo.addResponse(db, links.find((l) => l.tier === "executive")!.id, answersFor("executive", 4, { P: 0.33, D: 0, I: 0 }));
+    repo.addResponse(db, links.find((l) => l.tier === "staff")!.id, answersFor("staff", 4, { P: 0.33, D: 0, I: 0 }));
     const r = closeRound(db, assessment.id);
     expect(r.ok && r.result.hpdi).toEqual({ H: 90, P: 10, D: 0, I: 0 });
     expect(repo.getResult(db, assessment.id)?.engineVersion).toBe("1.0");
@@ -1360,9 +1362,8 @@ describe("closeRound", () => {
 ```ts
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { z } from "zod";
-import { Maturity as MaturitySchema, type ShapeName } from "./schema/intent.js";
+import { Maturity as MaturitySchema, type Maturity, type ShapeName } from "./schema/intent.js";
 
-export type Maturity = z.infer<typeof MaturitySchema>;
 
 export type ResultLike = {
   hpdi: { H: number; P: number; D: number; I: number };

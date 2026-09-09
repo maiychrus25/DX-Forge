@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NextResponse, type NextRequest } from "next/server";
-import { isPublicPath, SESSION_COOKIE } from "@/lib/auth";
+import { isPublicPath, SESSION_COOKIE } from "@/lib/session";
 
 async function verifyEdge(secret: string, cookie: string | undefined): Promise<boolean> {
   if (!cookie) return false;

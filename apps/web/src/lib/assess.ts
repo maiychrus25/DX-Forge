@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { compute, InsufficientResponses, loadQuestionnaireV1, type ResultV1 } from "@dx-forge/hpdi-engine";
 import type Database from "better-sqlite3";
-import * as repo from "./repo.js";
+import * as repo from "@/lib/repo";
 
 const Q = loadQuestionnaireV1();
 
