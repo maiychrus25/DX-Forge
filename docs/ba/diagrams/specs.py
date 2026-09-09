@@ -97,9 +97,9 @@ DIAGRAMS["swimlane-04-lenh-ai"] = dict(
 def ST(i,col,row,label,kind="state"): return N(i,None,col,kind,label,row)
 DIAGRAMS["state-01-dot-do"] = dict(title="Trạng thái 3.1 — Đợt đo (Assessment)",
  nodes=[ST("s",1,0,"Bắt đầu","start"),ST("draft",1,1,"Draft"),ST("open",1,2,"Open"),ST("closed",1,3,"Closed"),ST("arch",1,4,"Archived"),ST("e",1,5,"Kết thúc","end"),
-  ST("cancel",2,2,"Cancelled")],
+  ST("cancel",2,1,"Cancelled")],
  edges=[E("s","draft","Mở đợt đo"),E("draft","open","Sinh token khảo sát"),E("open","closed","Chốt (đủ executive + staff)"),E("closed","arch","Lưu trữ đợt đo"),E("arch","e"),
-  E("draft","cancel"),E("open","cancel","Huỷ (Open: chỉ khi chưa có phản hồi)",below=True)],
+  E("draft","cancel"),E("open","cancel","Huỷ đợt đo (Open: chỉ khi chưa có phản hồi)")],
  legend="Trục giữa: luồng cơ bản. Cánh phải: luồng thay thế.")
 
 DIAGRAMS["state-02-ticket"] = dict(title="Trạng thái 3.2 — Ticket (DX-Ticket)",
